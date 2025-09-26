@@ -1,4 +1,4 @@
-import * as S from "./styles/signUp1";
+import * as S from "../styles/signUp1";
 import { Helmet } from "react-helmet";
 
 export default function SignUp1() {
