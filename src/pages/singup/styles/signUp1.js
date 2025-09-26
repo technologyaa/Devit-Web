@@ -10,11 +10,11 @@ export const Container = styled.div`
 
 export const LoginWrapper = styled.form`
   width: 408px;
-  /* height: 550px; */
+  height: 550px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 36px;
   justify-content: center;
 `;
 
@@ -25,7 +25,7 @@ export const TopOfTop = styled.div`
   gap: 12px;
 `;
 
-export const Top = styled.div`
+export const TopSection = styled.div`
   width: 100%;
   height: 130px;
   display: flex;
@@ -35,7 +35,7 @@ export const Top = styled.div`
   gap: 8px;
 `;
 
-export const DevitLogo = styled.img`
+export const Logo = styled.img`
   width: 160px;
   height: auto;
 `;
@@ -46,9 +46,14 @@ export const DevitText = styled.div`
   font-weight: 500;
 `;
 
-export const Middle = styled.div`
+export const DevitBottomText = styled.div`
   width: 100%;
-  height: 200px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const MiddleSection = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -90,12 +95,12 @@ export const Input = styled.input`
   }
 `;
 
-export const PsInputContainer = styled.div`
+export const InputContainer = styled.div`
   position: relative;
   width: 100%;
 `;
 
-export const EyeIcon = styled.img`
+export const PsIcon = styled.img`
   position: absolute;
   right: 20px;
   top: 50%;
@@ -110,23 +115,7 @@ export const EyeIcon = styled.img`
   }
 `;
 
-export const LosePsWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-`;
-
-export const LosePsLabel = styled.div`
-  color: #ab66dd;
-`;
-
-export const LosePsLink = styled.a`
-  color: #3c239c;
-  text-decoration: none;
-`;
-
-export const Bottom = styled.div`
+export const BottomSection = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -134,7 +123,7 @@ export const Bottom = styled.div`
   gap: 6px;
 `;
 
-export const LoginButton = styled.button`
+export const NextButton = styled.button`
   width: 100%;
   height: 52px;
   border-radius: 8px;
@@ -150,42 +139,6 @@ export const LoginButton = styled.button`
   }
 `;
 
-export const OrText = styled.div`
-  font-size: 14px;
-  color: #666666;
-`;
-
-export const GoogleLoginButton = styled.button`
-  width: 100%;
-  height: 52px;
-  border-radius: 8px;
-  background-color: white;
-  border: 1px solid #ccc;
-  font-size: 18px;
-  outline: none;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  &:hover {
-    background-color: #fbfbfb;
-    cursor: pointer;
-  }
-`;
-
-export const GoogleLogo = styled.img`
-  position: absolute;
-  left: 112px;
-  width: 40px;
-  height: 40px;
-`;
-
-export const GoogleLoginText = styled.div`
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-`;
-
 export const NoAccWrapper = styled.div`
   width: 100%;
   height: 78px;
@@ -195,13 +148,19 @@ export const NoAccWrapper = styled.div`
   font-size: 14px;
 `;
 
-export const NoAccLabel = styled.div`
+export const YesAccLabel = styled.div`
   color: #666666;
 `;
 
-export const NoAccLink = styled.a`
+export const YesAccLink = styled.a`
   color: #ab66dd;
   text-decoration: none;
+`;
+
+export const BackgroundCircle = styled.div`
+  position: fixed;
+  border-radius: 100%;
+  ${({ $position }) => $position}
 `;
 
 export const BackgroundCircle1 = styled.div`
