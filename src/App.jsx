@@ -6,7 +6,7 @@ import SignUp2 from "./pages/signup/types/SignUp2";
 function App() {
   return (
     <>
-      <SignUp2 />
+      <SignIn />
     </>
   );
 }

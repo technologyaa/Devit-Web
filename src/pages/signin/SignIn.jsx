@@ -51,12 +51,14 @@ export default function SignIn() {
           </S.TopOfTop>
 
           <S.Bottom>
-            <S.LoginButton>로그인</S.LoginButton>
-            <S.OrText>또는</S.OrText>
-            <S.GoogleLoginButton>
-              <S.GoogleLogo src="/assets/google-logo.png" alt="구글 로그인" />
-              <S.GoogleLoginText>구글로 로그인</S.GoogleLoginText>
-            </S.GoogleLoginButton>
+            <S.BottomTop>
+              <S.LoginButton>로그인</S.LoginButton>
+              <S.OrText>또는</S.OrText>
+              <S.GoogleLoginButton>
+                <S.GoogleLogo src="/assets/google-logo.png" alt="구글 로그인" />
+                <S.GoogleLoginText>구글로 로그인</S.GoogleLoginText>
+              </S.GoogleLoginButton>
+            </S.BottomTop>
             <S.NoAccWrapper>
               <S.NoAccLabel>계정이 없으신가요?</S.NoAccLabel>
               <S.NoAccLink href="#">회원가입</S.NoAccLink>

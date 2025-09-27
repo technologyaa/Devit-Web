@@ -131,6 +131,14 @@ export const Bottom = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
+`;
+
+export const BottomTop = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 6px;
 `;
 

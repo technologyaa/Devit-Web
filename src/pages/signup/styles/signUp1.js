@@ -120,7 +120,7 @@ export const BottomSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
 `;
 
 export const NextButton = styled.button`
