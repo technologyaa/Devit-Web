@@ -10,22 +10,22 @@ export const Container = styled.div`
 
 export const LoginWrapper = styled.form`
   width: 408px;
-  /* height: 550px; */
+  height: 550px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 40px;
   justify-content: center;
 `;
 
-export const TopOfTop = styled.div`
+export const LoginWrapperTopOfTop = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
 `;
 
-export const Top = styled.div`
+export const LoginWrapperTop = styled.div`
   width: 100%;
   height: 130px;
   display: flex;
@@ -46,87 +46,117 @@ export const DevitText = styled.div`
   font-weight: 500;
 `;
 
-export const Middle = styled.div`
+export const DevitBottomText = styled.div`
   width: 100%;
-  height: 200px;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  justify-content: flex-end;
 `;
 
-export const MiddleTop = styled.div`
+export const LoginWrapperMiddle = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 `;
 
-export const InputWrapper = styled.div`
+export const EmailInputWrapper = styled.div`
   width: 100%;
-  height: 78px;
   display: flex;
+  flex-direction: column;
   gap: 4px;
-  flex-direction: column;
 `;
 
-export const Label = styled.div`
-  width: 100%;
+export const EmailLabel = styled.div`
   font-size: 16px;
   font-weight: 500;
 `;
 
-export const Input = styled.input`
-  width: 100%;
+export const EmailInputContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const EmailInput = styled.input`
+  height: 54px;
+  width: 74%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding-left: 8px;
+  font-size: 15px;
+  outline: none;
+`;
+
+export const SendCodeButton = styled.button`
+  height: 46px;
+  width: 21%;
+  background-color: #883cbe;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #7b35ad;
+  }
+`;
+
+export const CodeInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const CodeLabel = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+export const CodeInput = styled.input`
   height: 54px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding-left: 8px;
-  padding-right: 40px;
-  box-sizing: border-box;
-  outline: none;
   font-size: 15px;
-
-  &::placeholder {
-    color: #aaa;
-  }
+  outline: none;
 `;
 
-export const PsInputContainer = styled.div`
-  position: relative;
-  width: 100%;
+export const RoleSelectWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
-export const EyeIcon = styled.img`
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  opacity: 0.6;
-
-  &:hover {
-    opacity: 1;
-  }
+export const RoleLabel = styled.div`
+  font-size: 16px;
+  font-weight: 500;
 `;
 
-export const LosePsWrapper = styled.div`
-  width: 100%;
+export const RoleButtons = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  gap: 16px;
 `;
 
-export const LosePsLabel = styled.div`
-  color: #ab66dd;
+export const RoleButton = styled.button`
+  flex: 1;
+  height: 48px;
+  border: ${(props) => (props.selected ? "none" : "1px solid #ccc")};
+  border-radius: 8px;
+  background-color: ${(props) => (props.selected ? "#883cbe" : "white")};
+  color: ${(props) => (props.selected ? "white" : "#883cbe")};
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => (props.selected ? "#883cbe" : "#f5f5f5")};
+  }
 `;
 
-export const LosePsLink = styled.a`
-  color: #3c239c;
-  text-decoration: none;
-`;
-
-export const Bottom = styled.div`
+export const LoginWrapperBottom = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -134,15 +164,7 @@ export const Bottom = styled.div`
   gap: 10px;
 `;
 
-export const BottomTop = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-`;
-
-export const LoginButton = styled.button`
+export const SigninButton = styled.button`
   width: 100%;
   height: 52px;
   border-radius: 8px;
@@ -158,42 +180,6 @@ export const LoginButton = styled.button`
   }
 `;
 
-export const OrText = styled.div`
-  font-size: 14px;
-  color: #666666;
-`;
-
-export const GoogleLoginButton = styled.button`
-  width: 100%;
-  height: 52px;
-  border-radius: 8px;
-  background-color: white;
-  border: 1px solid #ccc;
-  font-size: 18px;
-  outline: none;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  &:hover {
-    background-color: #fbfbfb;
-    cursor: pointer;
-  }
-`;
-
-export const GoogleLogo = styled.img`
-  position: absolute;
-  left: 112px;
-  width: 40px;
-  height: 40px;
-`;
-
-export const GoogleLoginText = styled.div`
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-`;
-
 export const NoAccWrapper = styled.div`
   width: 100%;
   height: 78px;
@@ -203,11 +189,11 @@ export const NoAccWrapper = styled.div`
   font-size: 14px;
 `;
 
-export const NoAccLabel = styled.div`
+export const YesAccLabel = styled.div`
   color: #666666;
 `;
 
-export const NoAccLink = styled.a`
+export const YesAccLink = styled.a`
   color: #ab66dd;
   text-decoration: none;
 `;
