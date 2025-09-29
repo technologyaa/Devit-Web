@@ -124,6 +124,9 @@ export const LosePsLabel = styled.div`
 export const LosePsLink = styled.a`
   color: #3c239c;
   text-decoration: none;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Bottom = styled.div`

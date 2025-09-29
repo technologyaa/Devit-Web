@@ -46,7 +46,13 @@ export default function SignIn() {
 
               <S.LosePsWrapper>
                 <S.LosePsLabel>비밀번호를 잊어버리셨나요?</S.LosePsLabel>
-                <S.LosePsLink href="#">비밀번호 찾기</S.LosePsLink>
+                <S.LosePsLink
+                  onClick={() => {
+                    alert("아직 개발 중입니다.");
+                  }}
+                >
+                  비밀번호 찾기
+                </S.LosePsLink>
               </S.LosePsWrapper>
             </S.Middle>
           </S.TopOfTop>
