@@ -46,8 +46,26 @@ export const DevitText = styled.div`
   font-weight: 500;
 `;
 
-export const DevitBottomText = styled.div`
+export const DevitBottom = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
+export const ReturnButton = styled.button`
+  padding: 0;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const ReturnImg = styled.img`
+  width: 20px;
+  height: 15px;
+`;
+
+export const DevitBottomText = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
@@ -147,7 +165,7 @@ export const RoleButtons = styled.div`
 
 export const RoleButton = styled.button`
   flex: 1;
-  height: 48px;
+  height: 50px;
   border: ${(props) => (props.selected ? "none" : "1px solid #ccc")};
   border-radius: 8px;
   background-color: ${(props) => (props.selected ? "#883cbe" : "white")};

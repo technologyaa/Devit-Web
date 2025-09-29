@@ -19,7 +19,17 @@ export default function SignUp2() {
             <S.LoginWrapperTop>
               <S.DevitLogo src="/assets/devit-logo.png" alt="Devit Logo" />
               <S.DevitText>개발자와 기획자를 이어주는 플랫폼</S.DevitText>
-              <S.DevitBottomText>2/2</S.DevitBottomText>
+              <S.DevitBottom>
+                <Link to="/signup/1">
+                  <S.ReturnButton>
+                    <S.ReturnImg
+                      src="/assets/return-icon.png"
+                      alt="돌아가기 버튼"
+                    ></S.ReturnImg>
+                  </S.ReturnButton>
+                </Link>
+                <S.DevitBottomText>2/2</S.DevitBottomText>
+              </S.DevitBottom>
             </S.LoginWrapperTop>
 
             <S.LoginWrapperMiddle>
