@@ -78,13 +78,15 @@ export const EmailInputContainer = styled.div`
 `;
 
 export const EmailInput = styled.input`
+  width: 76%;
   height: 54px;
-  width: 74%;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding-left: 8px;
-  font-size: 15px;
+  padding-right: 40px;
+  box-sizing: border-box;
   outline: none;
+  font-size: 15px;
 `;
 
 export const SendCodeButton = styled.button`
@@ -115,12 +117,15 @@ export const CodeLabel = styled.div`
 `;
 
 export const CodeInput = styled.input`
+  width: 100%;
   height: 54px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding-left: 8px;
-  font-size: 15px;
+  padding-right: 40px;
+  box-sizing: border-box;
   outline: none;
+  font-size: 15px;
 `;
 
 export const RoleSelectWrapper = styled.div`

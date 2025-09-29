@@ -1,5 +1,6 @@
-import * as S from "../styles/signUp1";
+import * as S from "./styles/signUp1";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 export default function SignUp1() {
   return (
@@ -50,10 +51,14 @@ export default function SignUp1() {
           </S.TopOfTop>
 
           <S.BottomSection>
-            <S.NextButton>다음</S.NextButton>
+            <Link to="/signup/2" style={{ display: "block", width: "100%" }}>
+              <S.NextButton>다음</S.NextButton>
+            </Link>
             <S.NoAccWrapper>
               <S.YesAccLabel>계정이 있으신가요?</S.YesAccLabel>
-              <S.YesAccLink href="#">로그인</S.YesAccLink>
+              <Link to="/signin">
+                <S.YesAccLink>로그인</S.YesAccLink>
+              </Link>
             </S.NoAccWrapper>
           </S.BottomSection>
         </S.LoginWrapper>

@@ -1,12 +1,12 @@
-import "./reset.css";
-import SignIn from "./pages/signin/SignIn";
-import SignUp1 from "./pages/signup/types/SignUp1";
-import SignUp2 from "./pages/signup/types/SignUp2";
+import { RouterProvider } from "react-router";
+import { GlobalStyle } from "./GlobalStyle.js";
+import { router } from "./app/routes/router.js";
 
 function App() {
   return (
     <>
-      <SignIn />
+      <GlobalStyle />
+      <RouterProvider router={router} />
     </>
   );
 }

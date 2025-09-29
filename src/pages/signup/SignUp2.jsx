@@ -1,6 +1,7 @@
-import * as S from "../styles/signUp2";
+import * as S from "./styles/signUp2";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function SignUp2() {
   const [selectedRole, setSelectedRole] = useState(null);
@@ -62,7 +63,9 @@ export default function SignUp2() {
             <S.SigninButton>회원가입</S.SigninButton>
             <S.NoAccWrapper>
               <S.YesAccLabel>계정이 있으신가요?</S.YesAccLabel>
-              <S.YesAccLink href="#">로그인</S.YesAccLink>
+              <Link to="/signin">
+                <S.YesAccLink>로그인</S.YesAccLink>
+              </Link>
             </S.NoAccWrapper>
           </S.LoginWrapperBottom>
         </S.LoginWrapper>

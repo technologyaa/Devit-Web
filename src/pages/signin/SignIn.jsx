@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as S from "./styles/signIn";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +62,9 @@ export default function SignIn() {
             </S.BottomTop>
             <S.NoAccWrapper>
               <S.NoAccLabel>계정이 없으신가요?</S.NoAccLabel>
-              <S.NoAccLink href="#">회원가입</S.NoAccLink>
+              <Link to="/signup/1">
+                <S.NoAccLink>회원가입</S.NoAccLink>
+              </Link>
             </S.NoAccWrapper>
           </S.Bottom>
         </S.LoginWrapper>
