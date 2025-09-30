@@ -105,6 +105,10 @@ export const EmailInput = styled.input`
   box-sizing: border-box;
   outline: none;
   font-size: 15px;
+
+  &::placeholder {
+    color: #aaa;
+  }
 `;
 
 export const SendCodeButton = styled.button`
@@ -144,6 +148,10 @@ export const CodeInput = styled.input`
   box-sizing: border-box;
   outline: none;
   font-size: 15px;
+
+  &::placeholder {
+    color: #aaa;
+  }
 `;
 
 export const RoleSelectWrapper = styled.div`
@@ -166,7 +174,8 @@ export const RoleButtons = styled.div`
 export const RoleButton = styled.button`
   flex: 1;
   height: 50px;
-  border: ${(props) => (props.selected ? "none" : "1px solid #ccc")};
+  border: ${(props) =>
+    props.selected ? "1px solid #883cbe" : "1px solid #ccc"};
   border-radius: 8px;
   background-color: ${(props) => (props.selected ? "#883cbe" : "white")};
   color: ${(props) => (props.selected ? "white" : "#883cbe")};
