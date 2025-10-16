@@ -23,6 +23,6 @@ export const Bottom = styled.div`
 
 export const LogoBox = styled.div`
   width: 100%;
-  height: 130px;
-  background-color: yellow;
+  height: 140px;
+  background-color: brown;
 `;

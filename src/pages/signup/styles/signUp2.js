@@ -1,3 +1,4 @@
+import { Image } from "@/styles/Image";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -35,7 +36,7 @@ export const LoginWrapperTop = styled.div`
   gap: 8px;
 `;
 
-export const DevitLogo = styled.img`
+export const DevitLogo = styled(Image)`
   width: 160px;
   height: auto;
 `;
@@ -53,14 +54,14 @@ export const DevitBottom = styled.div`
   align-items: flex-end;
 `;
 
-export const ReturnButton = styled.button`
+export const ReturnButton = styled.div`
   padding: 0;
   &:hover {
     cursor: pointer;
   }
 `;
 
-export const ReturnImg = styled.img`
+export const ReturnImg = styled(Image)`
   width: 20px;
   height: 15px;
 `;
