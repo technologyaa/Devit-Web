@@ -132,12 +132,16 @@ table {
 }
 
 a{
-text-decoration: none;
+  text-decoration: none;
 }
 
 button {
   background-color: transparent;
   border: none;
   outline: none;
+}
+
+img {
+  user-select: none;
 }
 `;

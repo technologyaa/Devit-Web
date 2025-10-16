@@ -1,3 +1,4 @@
+import { Image } from "@/styles/Image";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -35,7 +36,7 @@ export const Top = styled.div`
   gap: 8px;
 `;
 
-export const DevitLogo = styled.img`
+export const DevitLogo = styled(Image)`
   width: 160px;
   height: auto;
 `;
@@ -95,7 +96,7 @@ export const PsInputContainer = styled.div`
   width: 100%;
 `;
 
-export const EyeIcon = styled.img`
+export const EyeIcon = styled(Image)`
   position: absolute;
   right: 20px;
   top: 50%;
@@ -184,7 +185,7 @@ export const GoogleLoginButton = styled.button`
   }
 `;
 
-export const GoogleLogo = styled.img`
+export const GoogleLogo = styled(Image)`
   position: absolute;
   left: 112px;
   width: 40px;

@@ -1,5 +1,12 @@
 import * as S from "./styles";
 
 export default function SideBar() {
-  return <S.Sidebar></S.Sidebar>;
+  return (
+    <S.Container>
+      <S.Top>
+        <S.LogoBox></S.LogoBox>
+      </S.Top>
+      <S.Bottom></S.Bottom>
+    </S.Container>
+  );
 }
