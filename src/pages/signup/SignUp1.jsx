@@ -7,13 +7,13 @@ export default function SignUp1() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+        <link rel="icon" href="/assets/devit-logo(Di).svg"></link>
       </Helmet>
       <S.Container>
         <S.LoginWrapper>
           <S.TopOfTop>
             <S.TopSection>
-              <S.Logo src="/assets/devit-logo.png" alt="Devit Logo" />
+              <S.Logo src="/assets/devit-logo.svg" alt="Devit Logo" />
               <S.DevitText>개발자와 기획자를 이어주는 플랫폼</S.DevitText>
               <S.DevitBottomText>1/2</S.DevitBottomText>
             </S.TopSection>

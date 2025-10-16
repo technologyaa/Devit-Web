@@ -26,3 +26,14 @@ export const LogoBox = styled.div`
   height: 140px;
   background-color: brown;
 `;
+
+export const Navigation = styled.div`
+  width: 100%;
+  height: 220px;
+`;
+
+export const Profile = styled.div`
+  width: 100%;
+  height: 100px;
+  background-color: green;
+`;

@@ -5,8 +5,11 @@ export default function SideBar() {
     <S.Container>
       <S.Top>
         <S.LogoBox></S.LogoBox>
+        <S.Navigation></S.Navigation>
       </S.Top>
-      <S.Bottom></S.Bottom>
+      <S.Bottom>
+        <S.Profile></S.Profile>
+      </S.Bottom>
     </S.Container>
   );
 }

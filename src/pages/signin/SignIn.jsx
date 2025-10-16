@@ -6,20 +6,20 @@ import { Link } from "react-router-dom";
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const eyeOpen = "/assets/eye-open.png";
-  const eyeClosed = "/assets/eye-close.png";
+  const eyeOpen = "/assets/eye-open.svg";
+  const eyeClosed = "/assets/eye-close.svg";
 
   return (
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+        <link rel="icon" href="/assets/devit-logo(Di).svg"></link>
       </Helmet>
       <S.Container>
         <S.LoginWrapper>
           <S.TopOfTop>
             <S.Top>
-              <S.DevitLogo src="/assets/devit-logo.png" alt="logo" />
+              <S.DevitLogo src="/assets/devit-logo.svg" alt="logo" />
               <S.DevitText>개발자와 기획자를 이어주는 플랫폼</S.DevitText>
             </S.Top>
             <S.Middle>
@@ -62,7 +62,7 @@ export default function SignIn() {
               <S.LoginButton>로그인</S.LoginButton>
               <S.OrText>또는</S.OrText>
               <S.GoogleLoginButton>
-                <S.GoogleLogo src="/assets/google-logo.png" alt="구글 로그인" />
+                <S.GoogleLogo src="/assets/google-logo.svg" alt="구글 로그인" />
                 <S.GoogleLoginText>구글로 로그인</S.GoogleLoginText>
               </S.GoogleLoginButton>
             </S.BottomTop>

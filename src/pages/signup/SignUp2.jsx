@@ -15,19 +15,19 @@ export default function SignUp2() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png" />
+        <link rel="icon" href="/assets/devit-logo(Di).svg" />
       </Helmet>
 
       <S.Container>
         <S.LoginWrapper>
           <S.LoginWrapperTopOfTop>
             <S.LoginWrapperTop>
-              <S.DevitLogo src="/assets/devit-logo.png" alt="Devit Logo" />
+              <S.DevitLogo src="/assets/devit-logo.svg" alt="Devit Logo" />
               <S.DevitText>개발자와 기획자를 이어주는 플랫폼</S.DevitText>
               <S.DevitBottom>
                 <S.ReturnButton onClick={back}>
                   <S.ReturnImg
-                    src="/assets/return-icon.png"
+                    src="/assets/return-icon.svg"
                     alt="돌아가기 버튼"
                   ></S.ReturnImg>
                 </S.ReturnButton>
