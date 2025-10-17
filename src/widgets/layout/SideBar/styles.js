@@ -1,3 +1,4 @@
+import { Image } from "@/styles/Image";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -11,29 +12,74 @@ export const Container = styled.div`
 
 export const Top = styled.div`
   width: 100%;
-  height: 460px;
-  background-color: blue;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Bottom = styled.div`
   width: 100%;
-  height: 90px;
-  background-color: pink;
 `;
 
 export const LogoBox = styled.div`
   width: 100%;
   height: 140px;
-  background-color: brown;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Navigation = styled.div`
   width: 100%;
-  height: 220px;
+  display: flex;
+  justify-content: center;
+`;
+
+export const NavigationWrapper = styled.div`
+  width: 86%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const MenuItem = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: none;
+  background-color: ${(props) => (props.active ? "#F8F9FA" : "transparent")};
+  cursor: pointer;
+  transition: 0.2s;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
+`;
+
+export const MenuIcon = styled(Image)`
+  width: 20px;
+`;
+
+export const MenuText = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+`;
+
+export const Credit = styled.div`
+  width: 100%;
+  height: 40px;
+  border-top: 1px solid #d9dce0;
 `;
 
 export const Profile = styled.div`
   width: 100%;
-  height: 100px;
-  background-color: green;
+  height: 80px;
+  border-top: 1px solid #d9dce0;
+`;
+
+export const DevitLogo = styled(Image)`
+  height: 40px;
 `;
