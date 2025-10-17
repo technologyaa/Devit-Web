@@ -1,3 +1,4 @@
+import { Image } from "@/styles/Image";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -35,7 +36,7 @@ export const LoginWrapperTop = styled.div`
   gap: 8px;
 `;
 
-export const DevitLogo = styled.img`
+export const DevitLogo = styled(Image)`
   width: 160px;
   height: auto;
 `;
@@ -46,8 +47,26 @@ export const DevitText = styled.div`
   font-weight: 500;
 `;
 
-export const DevitBottomText = styled.div`
+export const DevitBottom = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
+export const ReturnButton = styled.div`
+  padding: 0;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const ReturnImg = styled(Image)`
+  width: 20px;
+  height: 15px;
+`;
+
+export const DevitBottomText = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
@@ -78,13 +97,19 @@ export const EmailInputContainer = styled.div`
 `;
 
 export const EmailInput = styled.input`
+  width: 76%;
   height: 54px;
-  width: 74%;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding-left: 8px;
-  font-size: 15px;
+  padding-right: 40px;
+  box-sizing: border-box;
   outline: none;
+  font-size: 15px;
+
+  &::placeholder {
+    color: #aaa;
+  }
 `;
 
 export const SendCodeButton = styled.button`
@@ -115,12 +140,19 @@ export const CodeLabel = styled.div`
 `;
 
 export const CodeInput = styled.input`
+  width: 100%;
   height: 54px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding-left: 8px;
-  font-size: 15px;
+  padding-right: 40px;
+  box-sizing: border-box;
   outline: none;
+  font-size: 15px;
+
+  &::placeholder {
+    color: #aaa;
+  }
 `;
 
 export const RoleSelectWrapper = styled.div`
@@ -142,8 +174,9 @@ export const RoleButtons = styled.div`
 
 export const RoleButton = styled.button`
   flex: 1;
-  height: 48px;
-  border: ${(props) => (props.selected ? "none" : "1px solid #ccc")};
+  height: 50px;
+  border: ${(props) =>
+    props.selected ? "1px solid #883cbe" : "1px solid #ccc"};
   border-radius: 8px;
   background-color: ${(props) => (props.selected ? "#883cbe" : "white")};
   color: ${(props) => (props.selected ? "white" : "#883cbe")};

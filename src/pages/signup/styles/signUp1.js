@@ -1,3 +1,4 @@
+import { Image } from "@/styles/Image";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -35,7 +36,7 @@ export const TopSection = styled.div`
   gap: 8px;
 `;
 
-export const Logo = styled.img`
+export const Logo = styled(Image)`
   width: 160px;
   height: auto;
 `;
@@ -100,7 +101,7 @@ export const InputContainer = styled.div`
   width: 100%;
 `;
 
-export const PsIcon = styled.img`
+export const PsIcon = styled(Image)`
   position: absolute;
   right: 20px;
   top: 50%;

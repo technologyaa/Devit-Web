@@ -1,0 +1,11 @@
+// jsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"] // Maps '@/*' to 'src/*' for autocomplete
+      // Add other alias paths, e.g.,
+      // "@components/*": ["src/components/*"]
+    }
+  }
+}

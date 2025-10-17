@@ -1,24 +1,25 @@
 import React, { useState } from "react";
 import * as S from "./styles/signIn";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const eyeOpen = "/assets/eye-open.png";
-  const eyeClosed = "/assets/eye-close.png";
+  const eyeOpen = "/assets/eye-open.svg";
+  const eyeClosed = "/assets/eye-close.svg";
 
   return (
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+        <link rel="icon" href="/assets/devit-logo(Di).svg"></link>
       </Helmet>
       <S.Container>
         <S.LoginWrapper>
           <S.TopOfTop>
             <S.Top>
-              <S.DevitLogo src="/assets/devit-logo.png" alt="logo" />
+              <S.DevitLogo src="/assets/devit-logo.svg" alt="logo" />
               <S.DevitText>개발자와 기획자를 이어주는 플랫폼</S.DevitText>
             </S.Top>
             <S.Middle>
@@ -45,7 +46,13 @@ export default function SignIn() {
 
               <S.LosePsWrapper>
                 <S.LosePsLabel>비밀번호를 잊어버리셨나요?</S.LosePsLabel>
-                <S.LosePsLink href="#">비밀번호 찾기</S.LosePsLink>
+                <S.LosePsLink
+                  onClick={() => {
+                    alert("아직 개발 중입니다.");
+                  }}
+                >
+                  비밀번호 찾기
+                </S.LosePsLink>
               </S.LosePsWrapper>
             </S.Middle>
           </S.TopOfTop>
@@ -55,13 +62,15 @@ export default function SignIn() {
               <S.LoginButton>로그인</S.LoginButton>
               <S.OrText>또는</S.OrText>
               <S.GoogleLoginButton>
-                <S.GoogleLogo src="/assets/google-logo.png" alt="구글 로그인" />
+                <S.GoogleLogo src="/assets/google-logo.svg" alt="구글 로그인" />
                 <S.GoogleLoginText>구글로 로그인</S.GoogleLoginText>
               </S.GoogleLoginButton>
             </S.BottomTop>
             <S.NoAccWrapper>
               <S.NoAccLabel>계정이 없으신가요?</S.NoAccLabel>
-              <S.NoAccLink href="#">회원가입</S.NoAccLink>
+              <Link to="/signup/1">
+                <S.NoAccLink>회원가입</S.NoAccLink>
+              </Link>
             </S.NoAccWrapper>
           </S.Bottom>
         </S.LoginWrapper>
