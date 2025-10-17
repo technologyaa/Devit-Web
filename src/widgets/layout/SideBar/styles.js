@@ -49,10 +49,10 @@ export const MenuItem = styled.button`
   gap: 12px;
   padding: 14px;
   border: none;
-  background-color: ${(props) => (props.active ? "#F8F9FA" : "transparent")};
   cursor: pointer;
   transition: 0.2s;
   border-radius: 8px;
+  background-color: ${(props) => (props.selected ? "#f8f9fa" : "white")};
 
   &:hover {
     background-color: #f8f9fa;

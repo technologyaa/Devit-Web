@@ -1,4 +1,5 @@
 import * as S from "./styles";
+import { useState } from "react";
 
 const menu = [
   {
@@ -34,6 +35,7 @@ const menu = [
 ];
 
 export default function SideBar() {
+  const [selectedMenu, setSelectedMenu] = useState("home");
   return (
     <S.Container>
       <S.Top>
@@ -47,7 +49,12 @@ export default function SideBar() {
           <S.NavigationWrapper>
             {menu.map((item) => {
               return (
-                <S.MenuItem>
+                <S.MenuItem
+                  key={item.text}
+                  type="button"
+                  selected={selectedMenu === item.text}
+                  onClick={() => setSelectedMenu(item.text)}
+                >
                   <S.MenuIcon src={item.logo} alt={item.alt} />
                   <S.MenuText>{item.text}</S.MenuText>
                 </S.MenuItem>

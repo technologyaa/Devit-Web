@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import * as S from "./styles/signIn";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const eyeOpen = "/assets/eye-open.svg";
   const eyeClosed = "/assets/eye-close.svg";
+
+  const home = () => {
+    navigate("/home");
+  };
 
   return (
     <>
@@ -59,7 +64,7 @@ export default function SignIn() {
 
           <S.Bottom>
             <S.BottomTop>
-              <S.LoginButton>로그인</S.LoginButton>
+              <S.LoginButton onClick={home}>로그인</S.LoginButton>
               <S.OrText>또는</S.OrText>
               <S.GoogleLoginButton>
                 <S.GoogleLogo src="/assets/google-logo.svg" alt="구글 로그인" />
