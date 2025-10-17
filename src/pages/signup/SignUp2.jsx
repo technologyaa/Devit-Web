@@ -11,6 +11,10 @@ export default function SignUp2() {
     navigate("/signup/1");
   };
 
+  const home = () => {
+    navigate("/home");
+  };
+
   return (
     <>
       <Helmet>
@@ -73,7 +77,7 @@ export default function SignUp2() {
           </S.LoginWrapperTopOfTop>
 
           <S.LoginWrapperBottom>
-            <S.SigninButton>회원가입</S.SigninButton>
+            <S.SigninButton onClick={home}>회원가입</S.SigninButton>
             <S.NoAccWrapper>
               <S.YesAccLabel>계정이 있으신가요?</S.YesAccLabel>
               <Link to="/signin">
