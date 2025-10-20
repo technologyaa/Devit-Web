@@ -1,4 +1,4 @@
-import * as S from "./styles";
+import * as S from "./styles/sideBar";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
