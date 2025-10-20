@@ -1,0 +1,18 @@
+import * as S from "./styles/projects";
+import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
+import SideBar from "@/widgets/layout/SideBar/SideBar";
+
+export default function Projects() {
+  return (
+    <>
+      <Helmet>
+        <title>Devit</title>
+        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+      </Helmet>
+      <S.Container>
+        <SideBar></SideBar>
+      </S.Container>
+    </>
+  );
+}
