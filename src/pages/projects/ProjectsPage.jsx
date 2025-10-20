@@ -1,9 +1,9 @@
-import * as S from "./styles/developers";
+import * as S from "./styles/projectsPage";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import SideBar from "@/widgets/layout/SideBar/SideBar";
 
-export default function Developers() {
+export default function ProjectsPage() {
   return (
     <>
       <Helmet>

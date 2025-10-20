@@ -1,9 +1,9 @@
-import * as S from "./styles/shop";
+import * as S from "./styles/chatPage";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import SideBar from "@/widgets/layout/SideBar/SideBar";
 
-export default function Shop() {
+export default function ChatPage() {
   return (
     <>
       <Helmet>

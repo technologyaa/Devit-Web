@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import * as S from "./styles/signIn";
+import * as S from "./styles/signInPage";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function SignIn() {
+export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 

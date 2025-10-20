@@ -1,9 +1,9 @@
-import * as S from "./styles/home";
+import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import SideBar from "@/widgets/layout/SideBar/SideBar";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
       <Helmet>

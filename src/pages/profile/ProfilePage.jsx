@@ -1,9 +1,9 @@
-import * as S from "./styles/profile";
+import * as S from "./styles/profilePage";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import SideBar from "@/widgets/layout/SideBar/SideBar";
 
-export default function Profile() {
+export default function ProfilePage() {
   return (
     <>
       <Helmet>
