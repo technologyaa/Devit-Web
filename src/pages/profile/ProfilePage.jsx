@@ -8,7 +8,9 @@ export default function ProfilePage() {
         <title>Devit</title>
         <link rel="icon" href="/assets/devit-logo(Di).png"></link>
       </Helmet>
-      <S.Container></S.Container>
+      <S.Container>
+        <S.Wrapper></S.Wrapper>
+      </S.Container>
     </>
   );
 }
