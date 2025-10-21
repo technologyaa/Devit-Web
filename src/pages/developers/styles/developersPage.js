@@ -10,6 +10,6 @@ export const Container = styled.div`
 
 export const Frame = styled.div`
   width: 88%;
-  height: 92%;
+  height: 93%;
   border: 1px solid #ccc;
 `;

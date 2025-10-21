@@ -5,11 +5,10 @@ import { Wrapper } from "./styles/layout";
 
 const Layout = () => {
   const location = useLocation();
-
   const isChatPage = location.pathname.startsWith("/chat");
 
   return (
-    <Wrapper>
+    <Wrapper isChatPage={isChatPage}>
       {isChatPage ? <SideBarFolded /> : <SideBar />}
       <Outlet />
     </Wrapper>
