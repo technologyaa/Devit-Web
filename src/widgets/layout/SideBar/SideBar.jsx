@@ -1,5 +1,4 @@
 import * as S from "./styles/sideBar";
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const menu = [
@@ -47,10 +46,12 @@ export default function SideBar() {
     <S.Container>
       <S.Top>
         <S.LogoBox>
-          <S.DevitLogo
-            src="/assets/devit-logo.svg"
-            alt="logo image"
-          ></S.DevitLogo>
+          <Link to="/home">
+            <S.DevitLogo
+              src="/assets/devit-logo.svg"
+              alt="logo image"
+            ></S.DevitLogo>
+          </Link>
         </S.LogoBox>
         <S.Navigation>
           <S.NavigationWrapper>
