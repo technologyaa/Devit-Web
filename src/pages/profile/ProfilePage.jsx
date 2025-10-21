@@ -1,7 +1,5 @@
 import * as S from "./styles/profilePage";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
-import SideBar from "@/widgets/layout/SideBar/SideBar";
 
 export default function ProfilePage() {
   return (
@@ -10,9 +8,7 @@ export default function ProfilePage() {
         <title>Devit</title>
         <link rel="icon" href="/assets/devit-logo(Di).png"></link>
       </Helmet>
-      <S.Container>
-        <SideBar></SideBar>
-      </S.Container>
+      <S.Container></S.Container>
     </>
   );
 }

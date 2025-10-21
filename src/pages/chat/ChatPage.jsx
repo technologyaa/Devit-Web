@@ -1,7 +1,5 @@
 import * as S from "./styles/chatPage";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
-import SideBar from "@/widgets/layout/SideBar/SideBar";
 
 export default function ChatPage() {
   return (
@@ -10,9 +8,7 @@ export default function ChatPage() {
         <title>Devit</title>
         <link rel="icon" href="/assets/devit-logo(Di).png"></link>
       </Helmet>
-      <S.Container>
-        <SideBar></SideBar>
-      </S.Container>
+      <S.Container></S.Container>
     </>
   );
 }
