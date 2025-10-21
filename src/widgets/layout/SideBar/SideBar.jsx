@@ -1,5 +1,7 @@
 import * as S from "./styles/sideBar";
 import { Link, useLocation } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import "../SideBar/styles/Toast.css";
 
 const menu = [
   {
@@ -42,6 +44,13 @@ const menu = [
 
 export default function SideBar() {
   const location = useLocation();
+  const notDev = () => {
+    toast("아직 개발 중인 기능입니다!", {
+      icon: "🛠️",
+      duration: 1800,
+      className: "custom-toast",
+    });
+  };
   return (
     <S.Container>
       <S.Top>
@@ -75,8 +84,9 @@ export default function SideBar() {
               })}
             </S.NavigationTop>
             <S.NavigationBottom>
-              <S.MenuItem onClick={() => alert("아직 개발 중입니다.")}>
+              <S.MenuItem onClick={notDev}>
                 <S.MenuIcon src="/assets/setting-icon.svg" alt="설정 아이콘" />
+                <Toaster position="top-right" />
                 <S.MenuText>설정</S.MenuText>
               </S.MenuItem>
             </S.NavigationBottom>
