@@ -26,7 +26,7 @@ export const LogoBox = styled.div`
 
 export const Navigation = styled.div`
   width: 100%;
-  height: 670px;
+  height: 82vh;
   display: flex;
   flex-direction: column;
   align-items: center;

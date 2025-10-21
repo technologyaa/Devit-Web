@@ -19,7 +19,7 @@ export default function SignUp2Page() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).svg" />
+        <link rel="icon" href="./assets/Helmet.svg"></link>
       </Helmet>
 
       <S.Container>
