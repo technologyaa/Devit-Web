@@ -2,7 +2,7 @@ import { Image } from "@/styles/Image";
 import styled from "styled-components";
 
 export const Container = styled.div`
-  width: 100%;
+  width: 80px;
   height: 100vh;
   border-right: 1px solid #d9dce0;
   display: flex;
@@ -24,6 +24,10 @@ export const LogoBox = styled.div`
   align-items: center;
 `;
 
+export const DevitLogo = styled(Image)`
+  height: 32px;
+`;
+
 export const Navigation = styled.div`
   width: 100%;
   height: 82vh;
@@ -43,8 +47,9 @@ export const NavigationWrapper = styled.div`
 export const MenuItem = styled.button`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  padding: 14px;
+  padding: 16px;
   border: none;
   cursor: pointer;
   transition: 0.2s;
@@ -62,24 +67,12 @@ export const MenuIcon = styled(Image)`
   width: 20px;
 `;
 
-export const SettingIcon = styled(Image)`
-  width: 20px;
-`;
-
-export const MenuText = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-`;
-
-export const DevitLogo = styled(Image)`
-  height: 40px;
-`;
-
 export const NavigationTop = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  align-items: center;
 `;
 
 export const NavigationBottom = styled.div`
