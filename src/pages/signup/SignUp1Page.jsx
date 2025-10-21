@@ -1,8 +1,8 @@
-import * as S from "./styles/signUp1";
+import * as S from "./styles/signUp1Page";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
-export default function SignUp1() {
+export default function SignUp1Page() {
   return (
     <>
       <Helmet>

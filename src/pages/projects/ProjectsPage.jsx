@@ -1,0 +1,16 @@
+import * as S from "./styles/projectsPage";
+import { Helmet } from "react-helmet";
+
+export default function ProjectsPage() {
+  return (
+    <>
+      <Helmet>
+        <title>Devit</title>
+        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+      </Helmet>
+      <S.Container>
+        <S.Frame></S.Frame>
+      </S.Container>
+    </>
+  );
+}

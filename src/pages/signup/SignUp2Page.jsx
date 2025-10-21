@@ -1,9 +1,9 @@
-import * as S from "./styles/signUp2";
+import * as S from "./styles/signUp2Page";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function SignUp2() {
+export default function SignUp2Page() {
   const [selectedRole, setSelectedRole] = useState(null);
   const navigate = useNavigate();
 

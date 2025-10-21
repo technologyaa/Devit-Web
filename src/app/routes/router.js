@@ -1,8 +1,14 @@
 import { createBrowserRouter } from "react-router";
-import SignIn from "@/pages/signin/SignIn";
-import SignUp1 from "@/pages/signup/SignUp1";
-import SignUp2 from "@/pages/signup/SignUp2";
-import Home from "@/pages/home/Home";
+import ChatPage from "@/pages/chat/ChatPage";
+import DevelopersPage from "@/pages/developers/DevelopersPage";
+import SignUp1Page from "@/pages/signup/SignUp1Page";
+import SignUp2Page from "@/pages/signup/SignUp2Page";
+import SignInPage from "@/pages/signin/SignInPage";
+import HomePage from "@/pages/home/HomePage";
+import ProjectsPage from "@/pages/projects/ProjectsPage";
+import ShopPage from "@/pages/shop/ShopPage";
+import ProfilePage from "@/pages/profile/ProfilePage";
+import Layout from "@/widgets/layout/Layout/Layout";
 
 export const router = createBrowserRouter([
   {
@@ -10,20 +16,46 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "1",
-        Component: SignUp1,
+        Component: SignUp1Page,
       },
       {
         path: "2",
-        Component: SignUp2,
+        Component: SignUp2Page,
       },
     ],
   },
   {
     path: "/signin",
-    Component: SignIn,
+    Component: SignInPage,
   },
   {
-    path: "/home",
-    Component: Home,
+    path: "/",
+    Component: Layout,
+    children: [
+      {
+        path: "/home",
+        Component: HomePage,
+      },
+      {
+        path: "/projects",
+        Component: ProjectsPage,
+      },
+      {
+        path: "/chat",
+        Component: ChatPage,
+      },
+      {
+        path: "/offer/dev",
+        Component: DevelopersPage,
+      },
+      {
+        path: "/shop",
+        Component: ShopPage,
+      },
+      {
+        path: "/profile",
+        Component: ProfilePage,
+      },
+    ],
   },
 ]);
