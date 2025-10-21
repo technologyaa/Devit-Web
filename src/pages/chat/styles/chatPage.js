@@ -8,7 +8,7 @@ export const Container = styled.div`
   align-items: flex-end;
 `;
 
-export const Wrapper = styled.div`
+export const Frame = styled.div`
   width: 88%;
   height: 92%;
   border: 1px solid #ccc;

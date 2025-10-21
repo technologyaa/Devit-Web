@@ -9,7 +9,7 @@ export default function ProjectsPage() {
         <link rel="icon" href="/assets/devit-logo(Di).png"></link>
       </Helmet>
       <S.Container>
-        <S.Wrapper></S.Wrapper>
+        <S.Frame></S.Frame>
       </S.Container>
     </>
   );
