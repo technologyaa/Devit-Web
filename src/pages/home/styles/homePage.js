@@ -10,7 +10,7 @@ export const Container = styled.div`
 
 export const Frame = styled.div`
   width: 88%;
-  height: 94%;
+  height: 93%;
   display: flex;
   flex-direction: column;
   gap: 55px;
