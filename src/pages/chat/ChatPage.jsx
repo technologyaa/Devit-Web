@@ -6,11 +6,9 @@ export default function ChatPage() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+        <link rel="icon" href="./assets/Helmet.svg"></link>
       </Helmet>
-      <S.Container>
-        <S.Frame></S.Frame>
-      </S.Container>
+      <S.Container></S.Container>
     </>
   );
 }

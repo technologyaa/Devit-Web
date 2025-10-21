@@ -6,7 +6,7 @@ export default function ProfilePage() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+        <link rel="icon" href="./assets/Helmet.svg"></link>
       </Helmet>
       <S.Container>
         <S.Frame></S.Frame>
