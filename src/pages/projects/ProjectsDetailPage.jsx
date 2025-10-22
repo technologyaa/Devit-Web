@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { projectList } from "@/data/projectList";
-import { taskList } from "@/data/taskList";
 
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
@@ -31,15 +30,20 @@ export default function ProjectsDetailPage() {
           <S.Bottom>
             <S.Banner></S.Banner>
             <S.TaskBoxWrapper>
-              {taskList.map((task) => (
+              {project.tasks.map((task) => (
                 <S.TaskBox
                   key={task.id}
-                  onClick={() => navigate(`/tasks/${task.id}`)}
+                  onClick={() =>
+                    navigate(`/tasks/${task.id}`, {
+                      state: { task }, // ✅ task 정보 함께 전달
+                    })
+                  }
                 >
                   <S.TaskBoxLeft>
                     <S.TaskImage src="/assets/task-icon.svg" />
                     <S.TaskTitle>{task.title}</S.TaskTitle>
                   </S.TaskBoxLeft>
+
                   <S.TaskBoxRight>
                     <S.TaskStatus isDone={task.isDone}>
                       {task.isDone ? "완료" : "미완료"}
