@@ -9,6 +9,7 @@ import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ShopPage from "@/pages/shop/ShopPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
 import Layout from "@/widgets/layout/Layout/Layout";
+import ProjectsDetailPage from "@/pages/projects/ProjectsDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "/projects",
-        Component: ProjectsPage,
+        children: [
+          {
+            path: "", // /projects
+            Component: ProjectsPage,
+          },
+          {
+            path: ":id", // /projects/1, /projects/2 ...
+            Component: ProjectsDetailPage,
+          },
+        ],
       },
       {
         path: "/chat",
