@@ -29,29 +29,45 @@ export default function ProjectsDetailPage() {
           </S.Top>
           <S.Bottom>
             <S.Banner></S.Banner>
-            <S.TaskBoxWrapper>
-              {project.tasks.map((task) => (
-                <S.TaskBox
-                  key={task.id}
-                  onClick={() =>
-                    navigate(`/tasks/${task.id}`, {
-                      state: { task }, // ✅ task 정보 함께 전달
-                    })
-                  }
-                >
-                  <S.TaskBoxLeft>
-                    <S.TaskImage src="/assets/task-icon.svg" />
-                    <S.TaskTitle>{task.title}</S.TaskTitle>
-                  </S.TaskBoxLeft>
+            <S.BottomWrapper>
+              <S.TaskBoxWrapper>
+                {project.tasks.map((task) => (
+                  <S.TaskBox
+                    key={task.id}
+                    onClick={() =>
+                      navigate(`/tasks/${task.id}`, {
+                        state: { task },
+                      })
+                    }
+                  >
+                    <S.TaskBoxLeft>
+                      <S.TaskImage src="/assets/task-icon.svg" />
+                      <S.TaskTitle>{task.title}</S.TaskTitle>
+                    </S.TaskBoxLeft>
 
-                  <S.TaskBoxRight>
-                    <S.TaskStatus isDone={task.isDone}>
-                      {task.isDone ? "완료" : "미완료"}
-                    </S.TaskStatus>
-                  </S.TaskBoxRight>
-                </S.TaskBox>
-              ))}
-            </S.TaskBoxWrapper>
+                    <S.TaskBoxRight>
+                      <S.TaskStatus isDone={task.isDone}>
+                        {task.isDone ? "완료" : "미완료"}
+                      </S.TaskStatus>
+                    </S.TaskBoxRight>
+                  </S.TaskBox>
+                ))}
+              </S.TaskBoxWrapper>
+              <S.CreditBox>
+                <S.CreditBoxTop>
+                  <S.CreditText>총 크레딧</S.CreditText>
+                  <S.CreditAmount>1,000</S.CreditAmount>
+                  <S.DescribeText>사용 가능한 크레딧</S.DescribeText>
+                  <S.Line />
+                  <S.DescribeText>크레딧으로 할 수 있는 기능</S.DescribeText>
+                </S.CreditBoxTop>
+                <S.CreditBoxBottom>
+                  <S.ShopButton onClick={() => navigate(`/shop`)}>
+                    상점으로 가기
+                  </S.ShopButton>
+                </S.CreditBoxBottom>
+              </S.CreditBox>
+            </S.BottomWrapper>
           </S.Bottom>
         </S.Frame>
       </S.Container>
