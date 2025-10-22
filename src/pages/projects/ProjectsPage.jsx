@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { projectList } from "@/data/projectList";
 
 export default function ProjectsPage() {
-  const navigate = useNavigate(); // ✅ 네비게이트 훅 사용
+  const navigate = useNavigate();
 
   return (
     <>
@@ -20,8 +20,7 @@ export default function ProjectsPage() {
             {projectList.map((project) => (
               <S.Box
                 key={project.id}
-                onClick={() => navigate(`/projects/${project.id}`)} // ✅ 클릭 시 이동
-                style={{ cursor: "pointer" }} // 마우스 포인터 모양 변경
+                onClick={() => navigate(`/projects/${project.id}`)}
               >
                 <S.Thumbnail
                   src={project.thumbnail}
