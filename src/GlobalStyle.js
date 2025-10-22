@@ -144,4 +144,9 @@ button {
 img {
   user-select: none;
 }
+
+
+body {
+  overflow-x: hidden;
+}
 `;
