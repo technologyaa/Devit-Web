@@ -6,7 +6,7 @@ export const taskList = [
   },
   {
     id: 2,
-    title: "로그인 기능 개발",
+    title: "장그마 개발",
     isDone: true,
   },
   {

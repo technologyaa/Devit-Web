@@ -1,13 +1,12 @@
 import * as S from "./styles/taskDetailPage";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
-import { taskList } from "@/data/taskList";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function TaskDetailPage() {
-  const navigate = useNavigate(); // ✅ 네비게이트 훅 사용
-  const { id } = useParams();
-  const task = taskList.find((p) => p.id === Number(id));
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { task } = location.state || {};
 
   return (
     <>
