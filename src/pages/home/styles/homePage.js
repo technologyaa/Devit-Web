@@ -13,7 +13,7 @@ export const Frame = styled.div`
   height: 93%;
   display: flex;
   flex-direction: column;
-  gap: 55px;
+  gap: 30px;
 `;
 
 export const Topmiddlewrap = styled.div``;
@@ -27,14 +27,30 @@ export const Top = styled.div`
 
 export const Middle = styled.div`
   width: 100%;
-  height: 170px;
-  background-color: gray;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
+
+export const Card = styled.div`
+  height: 82%;
+  background: ${props => props.gradient};
+  border-radius: 22px;
+  position: relative;
+`;
+
+export const Goto = styled.div`
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 `;
 
 export const Bottom = styled.div`
   width: 100%;
-  height: 320px;
-  background-color: green;
+  height: 250px;
+  
 `;
 
 export const Name = styled.div`
@@ -62,4 +78,38 @@ export const Cricle2 = styled.div`
   width: 340px;
   height: 340px;
   border-radius: 100%;
+`;
+
+
+
+export const Gocontainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 30px 20px;
+
+`;
+export const Iconbutton = styled.div`
+display: flex;
+justify-content: space-between;
+`;
+
+export const RecommendDev = styled.div`
+`;
+
+export const Icon = styled.img`
+  width: 2.75rem;
+  height: 2.75rem;
+  aspect-ratio: 1/1;
+`;
+
+export const Button = styled.div`
+  background-color: #BF79FF;
+  width: 90px;
+  height: 30px;
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  border-radius: 24px;
+  color: white;
 `;
