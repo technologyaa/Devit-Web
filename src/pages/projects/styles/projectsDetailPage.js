@@ -56,7 +56,7 @@ export const Banner = styled.div`
 `;
 
 export const TaskBoxWrapper = styled.div`
-  width: 75%;
+  width: 72%;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -102,7 +102,7 @@ export const TaskStatus = styled.div`
 `;
 
 export const CreditBox = styled.div`
-  width: 20%;
+  width: 22%;
   height: 240px;
   border: 1px solid #d3d3d3;
   border-radius: 12px;
