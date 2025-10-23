@@ -16,7 +16,7 @@ export const Frame = styled.div`
   gap: 30px;
 `;
 
-export const Topmiddlewrap = styled.div``;
+export const TopMiddleWrap = styled.div``;
 
 export const Top = styled.div`
   width: 100%;
@@ -37,7 +37,6 @@ export const Card = styled.div`
   height: 82%;
   background: ${props => props.gradient};
   border-radius: 22px;
-  position: relative;
 `;
 
 export const Goto = styled.div`
@@ -82,19 +81,23 @@ export const Cricle2 = styled.div`
 
 
 
-export const Gocontainer = styled.div`
+export const GoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin: 30px 20px;
 
 `;
-export const Iconbutton = styled.div`
+export const IconButton = styled.div`
 display: flex;
 justify-content: space-between;
 `;
 
 export const RecommendDev = styled.div`
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
 `;
 
 export const Icon = styled.img`
@@ -112,4 +115,9 @@ export const Button = styled.div`
   align-items: center;
   border-radius: 24px;
   color: white;
+`;
+
+export const Devloper = styled.div`
+  width: 100%;
+  background-color: black;
 `;
