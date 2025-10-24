@@ -26,8 +26,8 @@ const devlopers = [
   },
   {
     name: "Test",
-    text: "iOS",
-    job: "Test 개발자 프로필..."
+    text: "Test 개발자 프로필...",
+    job: "iOS"
   }
 ]
 

@@ -13,7 +13,7 @@ export const Frame = styled.div`
   height: 93%;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 25px;
 `;
 
 export const TopMiddleWrap = styled.div``;
@@ -49,7 +49,9 @@ export const Goto = styled.div`
 export const Bottom = styled.div`
   width: 100%;
   height: 250px;
-  
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 `;
 
 export const Name = styled.div`
@@ -81,7 +83,7 @@ export const Cricle2 = styled.div`
 
 
 
-export const GoContainer = styled.div`
+export const ElementPlace = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -93,12 +95,7 @@ display: flex;
 justify-content: space-between;
 `;
 
-export const RecommendDev = styled.div`
 
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
-`;
 
 export const Icon = styled.img`
   width: 2.75rem;
@@ -117,7 +114,34 @@ export const Button = styled.div`
   color: white;
 `;
 
-export const Devloper = styled.div`
+
+export const RecommendDev = styled.div`
   width: 100%;
-  background-color: black;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 25px;
+`;
+
+export const Devloper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+
+export const Profile = styled.div`
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  border-radius: 0.625rem;
+  border: 1px solid var(--Input-outline, #CCC);
+  background: #000;
+`;
+
+export const DevAndJob = styled.div`
+  width: 100%;
+  display: flex;
+  height: 2.3rem;
+  justify-content: space-between;
+  align-items: center;
 `;

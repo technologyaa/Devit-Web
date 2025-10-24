@@ -28,18 +28,18 @@ export default function HomePage() {
               <S.Goto>
                 {icons.map((icon, index) => {
                   return (
-                  <S.Card gradient={icon.gradient}>
-                    <Link to={icon.url}>
-                    <S.GoContainer>
-                      <S.IconButton>
-                        <S.Icon src={icons[index].logo} alt="프로젝트바로가기 아이콘"></S.Icon>
-                        <S.Button>바로 가기</S.Button>
-                      </S.IconButton>
-                      <p style={{ color: "white", fontSize: "25px", fontWeight: "500" }}>{icons[index].name}</p>
-                      <p style={{ color: "white", fontSize: '16px' }}>{icons[index].text}</p>
-                    </S.GoContainer>
-                    </Link>
-                  </S.Card>);
+                    <S.Card gradient={icon.gradient}>
+                      <Link to={icon.url}>
+                        <S.ElementPlace>{/*div박스안에 요소 위치*/}
+                          <S.IconButton>
+                            <S.Icon src={icons[index].logo} alt="프로젝트바로가기 아이콘"></S.Icon>
+                            <S.Button>바로 가기</S.Button>
+                          </S.IconButton>
+                          <p style={{ color: "white", fontSize: "25px", fontWeight: "500" }}>{icons[index].name}</p>
+                          <p style={{ color: "white", fontSize: '16px' }}>{icons[index].text}</p>
+                        </S.ElementPlace>
+                      </Link>
+                    </S.Card>);
                 })}
               </S.Goto>
             </S.Middle>
@@ -47,13 +47,19 @@ export default function HomePage() {
           <S.Bottom>
             <p style={{ fontSize: "26px", fontWeight: "500" }}>추천 개발자</p>
             <S.RecommendDev>
-                {devlopers.map((devloper, index)=>{
-                  return(
-                    <S.Devloper>
-                      
-                    </S.Devloper>
-                  );
-                })}
+              {devlopers.map((devloper, index) => {
+                return (
+                  <S.Devloper>
+                    <S.Profile>
+                    </S.Profile>
+                    <S.DevAndJob>
+                      <p style={{ fontSize: "clamp(16px, 1.2vw, 20px)", fontWeight: "440" }}>{devloper.name}</p>
+                      <p style={{fontSize: "clamp(14px, 1vw, 18px)"}}>{devloper.job}</p>
+                    </S.DevAndJob>
+                    <p style={{fontSize: "12px", color: "#747474"}}>{devloper.text}</p>
+                  </S.Devloper>
+                );
+              })}
             </S.RecommendDev>
           </S.Bottom>
         </S.Frame>
