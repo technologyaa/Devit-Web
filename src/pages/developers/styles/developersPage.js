@@ -9,7 +9,7 @@ export const Container = styled.div`
 `;
 
 export const Frame = styled.div`
-  width: 88%;
-  height: 93%;
+  width: 100%;
+  height: 100%;
   border: 1px solid #ccc;
 `;

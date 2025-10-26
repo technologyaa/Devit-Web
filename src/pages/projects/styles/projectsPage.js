@@ -3,15 +3,12 @@ import { Image } from "@/styles/Image";
 
 export const Container = styled.div`
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
 `;
 
 export const Frame = styled.div`
-  width: 88%;
-  height: 93%;
   display: flex;
   flex-direction: column;
   gap: 24px;
