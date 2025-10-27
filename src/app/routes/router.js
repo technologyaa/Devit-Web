@@ -27,6 +27,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
+    ErrorBoundary: SignInPage,
     children: [
       { path: "/home", Component: HomePage },
       {

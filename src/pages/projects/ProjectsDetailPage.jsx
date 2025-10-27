@@ -6,8 +6,8 @@ import { projectList } from "@/data/projectList";
 
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const project = projectList.find((p) => p.id === Number(id));
+  const { projectId } = useParams();
+  const project = projectList.find((p) => p.id == +projectId) ?? [];
 
   return (
     <>
@@ -31,27 +31,31 @@ export default function ProjectsDetailPage() {
             <S.Banner></S.Banner>
             <S.BottomWrapper>
               <S.TaskBoxWrapper>
-                {project.tasks.map((task) => (
-                  <S.TaskBox
-                    key={task.id}
-                    onClick={() =>
-                      navigate(`/projects/${project.id}/tasks/${task.id}`, {
-                        state: { task },
-                      })
-                    }
-                  >
-                    <S.TaskBoxLeft>
-                      <S.TaskImage src="/assets/task-icon.svg" />
-                      <S.TaskTitle>{task.title}</S.TaskTitle>
-                    </S.TaskBoxLeft>
+                {project.tasks ? (
+                  project.tasks.map((task) => (
+                    <S.TaskBox
+                      key={task.id}
+                      onClick={() =>
+                        navigate(`/projects/${project.id}/tasks/${task.id}`, {
+                          state: { task },
+                        })
+                      }
+                    >
+                      <S.TaskBoxLeft>
+                        <S.TaskImage src="/assets/task-icon.svg" />
+                        <S.TaskTitle>{task.title}</S.TaskTitle>
+                      </S.TaskBoxLeft>
 
-                    <S.TaskBoxRight>
-                      <S.TaskStatus isDone={task.isDone}>
-                        {task.isDone ? "완료" : "미완료"}
-                      </S.TaskStatus>
-                    </S.TaskBoxRight>
-                  </S.TaskBox>
-                ))}
+                      <S.TaskBoxRight>
+                        <S.TaskStatus isDone={task.isDone}>
+                          {task.isDone ? "완료" : "미완료"}
+                        </S.TaskStatus>
+                      </S.TaskBoxRight>
+                    </S.TaskBox>
+                  ))
+                ) : (
+                  <h1>작업이 없습니다.</h1>
+                )}
               </S.TaskBoxWrapper>
               <S.CreditBox>
                 <S.CreditBoxTop>
