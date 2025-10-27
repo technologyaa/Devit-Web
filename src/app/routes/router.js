@@ -34,13 +34,21 @@ export const router = createBrowserRouter([
         path: "/projects",
         children: [
           {
-            path: "",
+            index: true,
             Component: ProjectsPage, // /projects
           },
           {
             path: ":projectId",
-            Component: ProjectsDetailPage, // /projects/1
-            children: [{ path: "tasks/:taskId", Component: TaskDetailPage }],
+            children: [
+              {
+                index: true,
+                Component: ProjectsDetailPage,
+              },
+              {
+                path: "tasks/:taskId",
+                Component: TaskDetailPage,
+              },
+            ],
           },
         ],
       },
