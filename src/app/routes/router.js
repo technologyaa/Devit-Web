@@ -11,6 +11,7 @@ import TaskDetailPage from "@/pages/tasks/TaskDetailPage";
 import ShopPage from "@/pages/shop/ShopPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
 import Layout from "@/widgets/layout/Layout/Layout";
+import ErrorPage from "@/pages/errorpage/ErrorPage";
 
 export const router = createBrowserRouter([
   {
@@ -27,7 +28,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
-    ErrorBoundary: SignInPage,
+    ErrorBoundary: ErrorPage,
     children: [
       {
         path: "/home",
