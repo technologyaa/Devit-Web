@@ -35,7 +35,7 @@ export default function ProjectsDetailPage() {
                   <S.TaskBox
                     key={task.id}
                     onClick={() =>
-                      navigate(`/tasks/${task.id}`, {
+                      navigate(`/projects/${project.id}/tasks/${task.id}`, {
                         state: { task },
                       })
                     }

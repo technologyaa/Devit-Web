@@ -37,8 +37,9 @@ export const router = createBrowserRouter([
             Component: ProjectsPage, // /projects
           },
           {
-            path: ":id",
+            path: ":projectId",
             Component: ProjectsDetailPage, // /projects/1
+            children: [{ path: "tasks/:taskId", Component: TaskDetailPage }],
           },
         ],
       },
@@ -46,7 +47,6 @@ export const router = createBrowserRouter([
       { path: "/offer/dev", Component: DevelopersPage },
       { path: "/shop", Component: ShopPage },
       { path: "/profile", Component: ProfilePage },
-      { path: "/tasks/:id", Component: TaskDetailPage },
     ],
   },
 ]);
