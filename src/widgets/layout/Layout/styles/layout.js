@@ -9,3 +9,11 @@ export const Wrapper = styled.div`
       ? "80px 1fr"
       : "240px 1fr"}; // 사이드바 접힘 여부에 따라 변경
 `;
+
+export const Content = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 70px 80px;
+  box-sizing: border-box;
+`;

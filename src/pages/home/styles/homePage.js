@@ -2,18 +2,18 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
 `;
 
 export const Frame = styled.div`
-  width: 88%;
-  height: 93%;
   display: flex;
   flex-direction: column;
   gap: 25px;
+  width: 100%;
+  height: 100%;
 `;
 
 export const TopMiddleWrap = styled.div``;
@@ -35,7 +35,7 @@ export const Middle = styled.div`
 
 export const Card = styled.div`
   height: 82%;
-  background: ${props => props.gradient};
+  background: ${(props) => props.gradient};
   border-radius: 22px;
 `;
 
@@ -81,21 +81,16 @@ export const Cricle2 = styled.div`
   border-radius: 100%;
 `;
 
-
-
 export const ElementPlace = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin: 30px 20px;
-
 `;
 export const IconButton = styled.div`
-display: flex;
-justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 `;
-
-
 
 export const Icon = styled.img`
   width: 2.75rem;
@@ -104,16 +99,15 @@ export const Icon = styled.img`
 `;
 
 export const Button = styled.div`
-  background-color: #BF79FF;
+  background-color: #bf79ff;
   width: 90px;
   height: 30px;
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   border-radius: 24px;
   color: white;
 `;
-
 
 export const RecommendDev = styled.div`
   width: 100%;
@@ -128,13 +122,12 @@ export const Devloper = styled.div`
   width: 100%;
 `;
 
-
 export const Profile = styled.div`
   width: 100%;
   height: 0;
   padding-bottom: 100%;
   border-radius: 0.625rem;
-  border: 1px solid var(--Input-outline, #CCC);
+  border: 1px solid var(--Input-outline, #ccc);
   background: #000;
 `;
 

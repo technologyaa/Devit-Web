@@ -1,17 +1,24 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "../SideBar/SideBar";
 import SideBarFolded from "../SideBar/SideBarFolded";
-import { Wrapper } from "./styles/layout";
+import * as S from "./styles/layout";
+import { useEffect } from "react";
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (location.pathname == "/") navigate("/home");
+  }, [location]);
   const isChatPage = location.pathname.startsWith("/chat");
 
   return (
-    <Wrapper isChatPage={isChatPage}>
+    <S.Wrapper isChatPage={isChatPage}>
       {isChatPage ? <SideBarFolded /> : <SideBar />}
-      <Outlet />
-    </Wrapper>
+      <S.Content>
+        <Outlet />
+      </S.Content>
+    </S.Wrapper>
   );
 };
 
