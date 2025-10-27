@@ -52,6 +52,7 @@ export const Thumbnail = styled(Image)`
 export const BoxBottom = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 export const Title = styled.div`

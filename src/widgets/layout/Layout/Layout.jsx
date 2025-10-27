@@ -1,10 +1,15 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "../SideBar/SideBar";
 import SideBarFolded from "../SideBar/SideBarFolded";
 import * as S from "./styles/layout";
+import { useEffect } from "react";
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (location.pathname == "/") navigate("/home");
+  }, [location]);
   const isChatPage = location.pathname.startsWith("/chat");
 
   return (

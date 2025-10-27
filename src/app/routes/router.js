@@ -29,13 +29,16 @@ export const router = createBrowserRouter([
     Component: Layout,
     ErrorBoundary: SignInPage,
     children: [
-      { path: "/home", Component: HomePage },
+      {
+        path: "/home",
+        Component: HomePage,
+      },
       {
         path: "/projects",
         children: [
           {
             index: true,
-            Component: ProjectsPage, // /projects
+            Component: ProjectsPage,
           },
           {
             path: ":projectId",
