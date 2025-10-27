@@ -5,12 +5,13 @@ export const Container = styled.div`
   min-height: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-end;
 `;
 
 export const Frame = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 25px;
   width: 100%;
   height: 100%;
 `;
