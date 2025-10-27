@@ -6,7 +6,6 @@ export const Container = styled.div`
   min-height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 `;
 
 export const Frame = styled.div`

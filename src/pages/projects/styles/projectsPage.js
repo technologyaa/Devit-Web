@@ -13,6 +13,7 @@ export const Frame = styled.div`
   flex-direction: column;
   gap: 24px;
   width: 100%;
+  height: 100%;
 `;
 
 export const Top = styled.div`
