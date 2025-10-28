@@ -84,14 +84,13 @@ export const ModalOverlay = styled.div`
 export const ModalContent = styled.div`
   background: white;
   border-radius: 12px;
-  width: 420px;
-  padding: 40px 0px;
+  width: 460px;
+  padding: 40px 0px 30px;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 24px;
 `;
 
 export const ModalWrapper = styled.div`
@@ -107,6 +106,7 @@ export const ModalTitle = styled.div`
   display: flex;
   font-size: 22px;
   font-weight: 500;
+  margin-bottom: 20px;
 `;
 
 export const ProjectInputBox = styled.div`
@@ -138,6 +138,36 @@ export const ProjectInput = styled.input`
   font-family: inherit;
 `;
 
+export const ProjectDesInputBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const ProjectDesInputText = styled.div`
+  width: 100%;
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+export const ProjectDesInput = styled.textarea`
+  width: 100%;
+  height: 84px;
+  padding: 12px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  line-height: normal;
+  appearance: none;
+  background-color: #fff;
+  font-family: inherit;
+  resize: none;
+`;
+
 export const ProjectPictureBox = styled.div`
   width: 100%;
   display: flex;
@@ -156,6 +186,7 @@ export const ProjectPictureText = styled.div`
 export const ProjectPictureLabel = styled.label`
   cursor: pointer;
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -173,13 +204,18 @@ export const ProjectPicture = styled(Image)`
   border-radius: 8px;
   object-fit: cover;
   border: 1px solid #e6e6e6;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const CancelButton = styled.button`
+  font-size: 16px;
   background: #eee;
   border: none;
   border-radius: 6px;
-  width: 48%;
+  width: 120px;
   height: 40px;
   cursor: pointer;
   &:hover {
@@ -188,19 +224,24 @@ export const CancelButton = styled.button`
 `;
 
 export const CreateButton = styled.button`
-  background: #eee;
+  color: white;
+  font-size: 16px;
+  background: #883cbe;
+  opacity: 0.9;
   border: none;
   border-radius: 6px;
-  width: 48%;
+  width: 120px;
   height: 40px;
   cursor: pointer;
   &:hover {
-    background: #ddd;
+    opacity: 1;
   }
 `;
 
 export const ButtonGroup = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 12px;
 `;
