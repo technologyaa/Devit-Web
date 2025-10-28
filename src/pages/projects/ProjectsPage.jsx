@@ -11,6 +11,7 @@ export default function ProjectsPage() {
   // 모달 관련 state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const [newThumbnail, setNewThumbnail] = useState(null);
 
   // 모달 열기
   const openModal = () => setIsModalOpen(true);
@@ -18,6 +19,16 @@ export default function ProjectsPage() {
   const closeModal = () => {
     setIsModalOpen(false);
     setNewTitle("");
+    setNewThumbnail(null);
+  };
+
+  // 파일 업로드 처리
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageURL = URL.createObjectURL(file);
+      setNewThumbnail(imageURL);
+    }
   };
 
   // 새 프로젝트 추가
@@ -27,12 +38,12 @@ export default function ProjectsPage() {
     const newProject = {
       id: projects.length + 1,
       title: newTitle,
-      owner: "강장민",
-      thumbnail: "/assets/dummy-thumbnail.svg",
+      owner: "사용자",
+      thumbnail: newThumbnail || "/assets/dummy-thumbnail.svg",
       tasks: [],
     };
 
-    setProjects([...projects, newProject]);
+    initialProjects.push(newProject);
     closeModal();
   };
 
@@ -78,17 +89,47 @@ export default function ProjectsPage() {
       {isModalOpen && (
         <S.ModalOverlay onClick={closeModal}>
           <S.ModalContent onClick={(e) => e.stopPropagation()}>
-            <S.ModalTitle>새 프로젝트 만들기</S.ModalTitle>
-            <S.Input
-              type="text"
-              placeholder="프로젝트 이름 입력"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-            />
-            <S.ButtonGroup>
-              <S.CancelButton onClick={closeModal}>취소</S.CancelButton>
-              <S.CreateButton onClick={handleAddProject}>생성</S.CreateButton>
-            </S.ButtonGroup>
+            <S.ModalWrapper>
+              <S.ModalTitle>새 프로젝트 만들기</S.ModalTitle>
+
+              {/* 프로젝트 이름 */}
+              <S.ProjectInputBox>
+                <S.ProjectInputText>프로젝트</S.ProjectInputText>
+                <S.ProjectInput
+                  type="text"
+                  placeholder="프로젝트 이름 입력"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                />
+              </S.ProjectInputBox>
+
+              {/* 프로젝트 사진 업로드 */}
+              <S.ProjectPictureBox>
+                <S.ProjectPictureText>프로젝트 사진</S.ProjectPictureText>
+
+                {/* label 클릭 시 파일 탐색창 열림 */}
+                <S.ProjectPictureLabel htmlFor="project-file">
+                  <S.ProjectPicture
+                    src={newThumbnail || "./assets/picture-upload.svg"}
+                    alt="업로드 미리보기"
+                  />
+                </S.ProjectPictureLabel>
+
+                {/* 실제 파일 input (숨김) */}
+                <S.ProjectPictureInput
+                  id="project-file"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </S.ProjectPictureBox>
+
+              {/* 버튼 */}
+              <S.ButtonGroup>
+                <S.CancelButton onClick={closeModal}>취소</S.CancelButton>
+                <S.CreateButton onClick={handleAddProject}>생성</S.CreateButton>
+              </S.ButtonGroup>
+            </S.ModalWrapper>
           </S.ModalContent>
         </S.ModalOverlay>
       )}

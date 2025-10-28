@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Image } from "@/styles/Image";
 
 export const Container = styled.div`
   width: 100%;
@@ -121,13 +122,12 @@ export const Devloper = styled.div`
   width: 100%;
 `;
 
-export const Profile = styled.div`
+export const Profile = styled(Image)`
   width: 100%;
-  height: 0;
-  padding-bottom: 100%;
+  object-fit: cover;
   border-radius: 0.625rem;
-  border: 1px solid var(--Input-outline, #ccc);
-  background: #000;
+  border: 1px solid #ccc;
+  aspect-ratio: 1 / 1;
 `;
 
 export const DevAndJob = styled.div`

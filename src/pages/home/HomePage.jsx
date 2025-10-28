@@ -66,7 +66,10 @@ export default function HomePage() {
               {devlopers.map((devloper, index) => {
                 return (
                   <S.Devloper>
-                    <S.Profile></S.Profile>
+                    <S.Profile
+                      src="./assets/dummy-profile.svg"
+                      alt="개발자 프로필"
+                    ></S.Profile>
                     <S.DevAndJob>
                       <p
                         style={{

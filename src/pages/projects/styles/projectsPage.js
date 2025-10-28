@@ -27,7 +27,7 @@ export const Top = styled.div`
 
 export const Bottom = styled.div`
   display: flex;
-  gap: 24px;
+  gap: 14px;
   flex-wrap: wrap;
 `;
 
@@ -85,7 +85,7 @@ export const ModalContent = styled.div`
   background: white;
   border-radius: 12px;
   width: 420px;
-  height: 260px;
+  padding: 40px 0px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -94,25 +94,85 @@ export const ModalContent = styled.div`
   gap: 24px;
 `;
 
+export const ModalWrapper = styled.div`
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+`;
+
 export const ModalTitle = styled.div`
+  width: 100%;
+  display: flex;
   font-size: 22px;
   font-weight: 500;
 `;
 
-export const Input = styled.input`
-  width: 84%;
-  height: 44px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  outline: none;
+export const ProjectInputBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `;
 
-export const ButtonGroup = styled.div`
-  width: 80%;
+export const ProjectInputText = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+export const ProjectInput = styled.input`
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  line-height: normal;
+  appearance: none;
+  background-color: #fff;
+  font-family: inherit;
+`;
+
+export const ProjectPictureBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+`;
+
+export const ProjectPictureText = styled.div`
+  width: 100%;
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+export const ProjectPictureLabel = styled.label`
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+`;
+
+export const ProjectPictureInput = styled.input`
+  display: none;
+`;
+
+export const ProjectPicture = styled(Image)`
+  width: 180px;
+  height: 110px;
+  background-clip: padding-box;
+  margin-top: 10px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e6e6e6;
 `;
 
 export const CancelButton = styled.button`
@@ -137,4 +197,10 @@ export const CreateButton = styled.button`
   &:hover {
     background: #ddd;
   }
+`;
+
+export const ButtonGroup = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 `;

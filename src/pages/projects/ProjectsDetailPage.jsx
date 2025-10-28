@@ -8,7 +8,6 @@ export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const project = projectList.find((p) => p.id == +projectId) ?? [];
-
   return (
     <>
       <Helmet>
@@ -31,7 +30,7 @@ export default function ProjectsDetailPage() {
             <S.Banner></S.Banner>
             <S.BottomWrapper>
               <S.TaskBoxWrapper>
-                {project.tasks ? (
+                {project.tasks?.length ? (
                   project.tasks.map((task) => (
                     <S.TaskBox
                       key={task.id}
@@ -54,7 +53,7 @@ export default function ProjectsDetailPage() {
                     </S.TaskBox>
                   ))
                 ) : (
-                  <h1>작업이 없습니다.</h1>
+                  <p>작업이 없습니다.</p>
                 )}
               </S.TaskBoxWrapper>
               <S.CreditBox>
