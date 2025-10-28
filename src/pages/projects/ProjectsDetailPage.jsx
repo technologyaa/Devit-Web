@@ -8,14 +8,11 @@ export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const project = projectList.find((p) => p.id == +projectId) ?? [];
-
-  // ✅ 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newThumbnail, setNewThumbnail] = useState(null);
 
-  // ✅ 모달 열기/닫기
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
@@ -24,7 +21,6 @@ export default function ProjectsDetailPage() {
     setNewThumbnail(null);
   };
 
-  // ✅ 파일 업로드 핸들러
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -33,27 +29,28 @@ export default function ProjectsDetailPage() {
     }
   };
 
-  // ✅ 새 업무(Task) 추가
   const handleAddProject = () => {
     if (newTitle.trim() === "") return alert("업무 이름을 입력하세요.");
+    const targetProject = projectList.find((p) => p.id === +projectId);
+    if (!targetProject) return alert("프로젝트를 찾을 수 없습니다!");
 
+    targetProject.tasks = targetProject.tasks ?? [];
+
+    // 기존 tasks의 id를 1부터 다시 매기기
+    targetProject.tasks = targetProject.tasks.map((t, i) => ({
+      ...t,
+      id: i + 1,
+    }));
+
+    // 새 task id = 현재 길이 + 1
     const newTask = {
-      id: Date.now(), // 임시로 timestamp를 ID로 사용
+      id: targetProject.tasks.length + 1,
       title: newTitle,
       description: newDescription,
       isDone: false,
     };
 
-    const targetProject = projectList.find((p) => p.id === +projectId);
-
-    if (!targetProject) {
-      alert("프로젝트를 찾을 수 없습니다!");
-      return;
-    }
-
-    // ✅ 현재 프로젝트의 tasks에 push
     targetProject.tasks.push(newTask);
-
     closeModal();
   };
 
@@ -63,19 +60,17 @@ export default function ProjectsDetailPage() {
         <title>Devit</title>
         <link rel="icon" href="./assets/Helmet.svg" />
       </Helmet>
-
       <S.Container>
         <S.Frame>
           <S.Top>
             <S.TopWrapper>
               <S.BackIcon
-                onClick={() => navigate(`/projects`)}
+                onClick={() => navigate("/projects")}
                 src="/assets/back-icon.svg"
               />
               <S.ProjectText>{project?.title}</S.ProjectText>
             </S.TopWrapper>
           </S.Top>
-
           <S.Bottom>
             <S.Banner></S.Banner>
             <S.BottomWrapper>
@@ -120,7 +115,6 @@ export default function ProjectsDetailPage() {
                   )}
                 </S.TaskBoxWrapper>
               </S.BottomLeft>
-
               <S.CreditBox>
                 <S.CreditBoxTop>
                   <S.CreditText>총 크레딧</S.CreditText>
@@ -130,7 +124,7 @@ export default function ProjectsDetailPage() {
                   <S.DescribeText>크레딧으로 할 수 있는 기능</S.DescribeText>
                 </S.CreditBoxTop>
                 <S.CreditBoxBottom>
-                  <S.ShopButton onClick={() => navigate(`/shop`)}>
+                  <S.ShopButton onClick={() => navigate("/shop")}>
                     상점으로 가기
                   </S.ShopButton>
                 </S.CreditBoxBottom>
@@ -139,14 +133,11 @@ export default function ProjectsDetailPage() {
           </S.Bottom>
         </S.Frame>
       </S.Container>
-
-      {/* ✅ ProjectsPage에서 쓰던 모달 그대로 추가 */}
       {isModalOpen && (
         <S.ModalOverlay onClick={closeModal}>
           <S.ModalContent onClick={(e) => e.stopPropagation()}>
             <S.ModalWrapper>
               <S.ModalTitle>새 업무 만들기</S.ModalTitle>
-
               <S.ProjectInputBox>
                 <S.ProjectInputText>업무 이름</S.ProjectInputText>
                 <S.ProjectInput
@@ -156,7 +147,6 @@ export default function ProjectsDetailPage() {
                   onChange={(e) => setNewTitle(e.target.value)}
                 />
               </S.ProjectInputBox>
-
               <S.ProjectDesInputBox>
                 <S.ProjectDesInputText>업무 설명</S.ProjectDesInputText>
                 <S.ProjectDesInput
@@ -166,7 +156,6 @@ export default function ProjectsDetailPage() {
                   onChange={(e) => setNewDescription(e.target.value)}
                 />
               </S.ProjectDesInputBox>
-
               <S.ButtonGroup>
                 <S.CancelButton onClick={closeModal}>취소</S.CancelButton>
                 <S.CreateButton onClick={handleAddProject}>생성</S.CreateButton>
