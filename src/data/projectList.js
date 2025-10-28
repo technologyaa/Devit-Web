@@ -14,7 +14,7 @@ export const projectList = [
       {
         id: 2,
         title: "아이디 2",
-        isDone: true,
+        isDone: false,
         description: "아이디 2번의 설명입니다.",
       },
     ],
