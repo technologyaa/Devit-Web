@@ -93,7 +93,7 @@ export default function ProjectsPage() {
                 <S.ProjectInputText>프로젝트 이름</S.ProjectInputText>
                 <S.ProjectInput
                   type="text"
-                  placeholder="프로젝트 이름을 입력하세요"
+                  placeholder="프로젝트 이름을 입력하세요."
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                 />
@@ -103,7 +103,7 @@ export default function ProjectsPage() {
                 <S.ProjectDesInputText>프로젝트 설명</S.ProjectDesInputText>
                 <S.ProjectDesInput
                   type="text"
-                  placeholder="이 프로젝트에 대한 간단한 설명을 적어주세요"
+                  placeholder="이 프로젝트에 대한 간단한 설명을 적어주세요."
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                 />

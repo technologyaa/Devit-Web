@@ -17,30 +17,6 @@ export const projectList = [
         isDone: true,
         description: "아이디 2번의 설명입니다.",
       },
-      {
-        id: 3,
-        title: "아이디 3",
-        isDone: false,
-        description: "아이디 3번의 설명입니다.",
-      },
-      {
-        id: 4,
-        title: "아이디 4",
-        isDone: false,
-        description: "아이디 4번의 설명입니다.",
-      },
-      {
-        id: 5,
-        title: "아이디 5",
-        isDone: true,
-        description: "아이디 5번의 설명입니다.",
-      },
-      {
-        id: 6,
-        title: "아이디 6",
-        isDone: false,
-        description: "아이디 6번의 설명입니다.",
-      },
     ],
   },
   {
@@ -48,19 +24,6 @@ export const projectList = [
     title: "테크놀로지아",
     owner: "강장민",
     thumbnail: "/assets/dummy-thumbnail.svg",
-    tasks: [
-      {
-        id: 7,
-        title: "아이디 7",
-        isDone: true,
-        description: "아이디 7번의 설명입니다.",
-      },
-      {
-        id: 8,
-        title: "아이디 8",
-        isDone: false,
-        description: "아이디 8번의 설명입니다.",
-      },
-    ],
+    tasks: [],
   },
 ];

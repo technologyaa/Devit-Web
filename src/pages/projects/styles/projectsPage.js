@@ -85,7 +85,8 @@ export const ModalContent = styled.div`
   background: white;
   border-radius: 12px;
   width: 460px;
-  padding: 40px 0px 30px;
+  padding: 40px 36px 20px;
+  box-sizing: border-box;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -94,7 +95,7 @@ export const ModalContent = styled.div`
 `;
 
 export const ModalWrapper = styled.div`
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -136,6 +137,10 @@ export const ProjectInput = styled.input`
   appearance: none;
   background-color: #fff;
   font-family: inherit;
+  outline: none;
+  &:focus {
+    outline: 1px solid #883cbe;
+  }
 `;
 
 export const ProjectDesInputBox = styled.div`
@@ -166,6 +171,9 @@ export const ProjectDesInput = styled.textarea`
   background-color: #fff;
   font-family: inherit;
   resize: none;
+  &:focus {
+    outline: 1px solid #883cbe;
+  }
 `;
 
 export const ProjectPictureBox = styled.div`

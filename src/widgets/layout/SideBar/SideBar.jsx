@@ -51,6 +51,7 @@ export default function SideBar() {
       className: "custom-toast",
     });
   };
+
   return (
     <S.Container>
       <S.Top>
