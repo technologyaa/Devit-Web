@@ -22,10 +22,10 @@ export const Top = styled.div`
 `;
 
 export const Bottom = styled.div`
+  width: 100%;
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
-  display: flex;
   flex-direction: column;
 `;
 
@@ -53,11 +53,34 @@ export const Banner = styled.div`
   border-radius: 12px;
 `;
 
+export const BottomLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+`;
+
+export const BottomTop = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const TaskBoxAddButton = styled(Image)`
+  width: 16px;
+`;
+
 export const TaskBoxWrapper = styled.div`
-  width: 72%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
+`;
+
+export const TaskBoxTitle = styled.div`
+  width: 100%;
+  font-size: 20px;
+  font-weight: 500;
 `;
 
 export const TaskBox = styled.div`
@@ -69,6 +92,7 @@ export const TaskBox = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 18px;
+  box-sizing: border-box;
   cursor: pointer;
 `;
 
@@ -100,7 +124,7 @@ export const TaskStatus = styled.div`
 `;
 
 export const CreditBox = styled.div`
-  width: 22%;
+  width: 28%;
   height: 240px;
   border: 1px solid #d3d3d3;
   border-radius: 12px;

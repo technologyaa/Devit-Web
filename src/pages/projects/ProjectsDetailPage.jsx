@@ -29,33 +29,39 @@ export default function ProjectsDetailPage() {
           <S.Bottom>
             <S.Banner></S.Banner>
             <S.BottomWrapper>
-              <S.TaskBoxWrapper>
-                {project.tasks?.length ? (
-                  project.tasks.map((task) => (
-                    <S.TaskBox
-                      key={task.id}
-                      onClick={() =>
-                        navigate(`/projects/${project.id}/tasks/${task.id}`, {
-                          state: { task },
-                        })
-                      }
-                    >
-                      <S.TaskBoxLeft>
-                        <S.TaskImage src="/assets/task-icon.svg" />
-                        <S.TaskTitle>{task.title}</S.TaskTitle>
-                      </S.TaskBoxLeft>
+              <S.BottomLeft>
+                <S.BottomTop>
+                  <S.TaskBoxTitle>업무</S.TaskBoxTitle>
+                  <S.TaskBoxAddButton src="/assets/plus-icon.svg"></S.TaskBoxAddButton>
+                </S.BottomTop>
+                <S.TaskBoxWrapper>
+                  {project.tasks?.length ? (
+                    project.tasks.map((task) => (
+                      <S.TaskBox
+                        key={task.id}
+                        onClick={() =>
+                          navigate(`/projects/${project.id}/tasks/${task.id}`, {
+                            state: { task },
+                          })
+                        }
+                      >
+                        <S.TaskBoxLeft>
+                          <S.TaskImage src="/assets/task-icon.svg" />
+                          <S.TaskTitle>{task.title}</S.TaskTitle>
+                        </S.TaskBoxLeft>
 
-                      <S.TaskBoxRight>
-                        <S.TaskStatus isDone={task.isDone}>
-                          {task.isDone ? "완료" : "미완료"}
-                        </S.TaskStatus>
-                      </S.TaskBoxRight>
-                    </S.TaskBox>
-                  ))
-                ) : (
-                  <p>작업이 없습니다.</p>
-                )}
-              </S.TaskBoxWrapper>
+                        <S.TaskBoxRight>
+                          <S.TaskStatus isDone={task.isDone}>
+                            {task.isDone ? "완료" : "미완료"}
+                          </S.TaskStatus>
+                        </S.TaskBoxRight>
+                      </S.TaskBox>
+                    ))
+                  ) : (
+                    <p>작업이 없습니다.</p>
+                  )}
+                </S.TaskBoxWrapper>
+              </S.BottomLeft>
               <S.CreditBox>
                 <S.CreditBoxTop>
                   <S.CreditText>총 크레딧</S.CreditText>

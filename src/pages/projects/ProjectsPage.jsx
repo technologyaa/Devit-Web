@@ -41,6 +41,7 @@ export default function ProjectsPage() {
     };
 
     setProjects([...projects, newProject]);
+    initialProjects.push(newProject);
     closeModal();
   };
 
