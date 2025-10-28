@@ -81,7 +81,7 @@ export default function TaskDetailPage() {
 
             <S.SubmitBox>
               <S.SubmitBoxTop>
-                <S.SubmitText>내 과제</S.SubmitText>
+                <S.SubmitText>업무</S.SubmitText>
                 <S.SubmitPrice>가격: 1,000</S.SubmitPrice>
               </S.SubmitBoxTop>
 
