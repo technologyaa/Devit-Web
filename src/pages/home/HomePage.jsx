@@ -1,7 +1,7 @@
 import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
-import devlopers from "@/data/DummyData";
-import icons from "@/data/Icons";
+import devlopers from "@/data/developer-list";
+import icons from "@/data/icon-list";
 import { Link } from "react-router";
 
 const gradients = {};

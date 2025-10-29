@@ -2,7 +2,7 @@ import * as S from "./styles/projectsPage";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { projectList as initialProjects } from "@/data/projectList";
+import { projectList as initialProjects } from "@/data/project-list";
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
