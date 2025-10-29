@@ -191,7 +191,7 @@ export const BottomRight = styled.div`
   border-radius: 12px;
   border: 1px solid #E5E7EB;
   padding: 20px;
-  min-height: 250px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -207,6 +207,9 @@ export const ProjectList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 20px;
 `;
 
 export const ProjectItem = styled.div`

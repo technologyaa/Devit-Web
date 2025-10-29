@@ -9,7 +9,12 @@ const profiles = [
     projectList: [
       { name: "서비스 Devit의 홈 화면 디자인", points: "+300" },
       { name: "서비스 Devit의 서버 구축", points: "+2400" },
-      { name: "테크놀로지아", points: "+4000"}
+      { name: "테크놀로지아", points: "+4000"},
+      { name: "테크놀로지아", points: "+4000"},
+      { name: "테크놀로지아", points: "+4000"},
+      { name: "테크놀로지아", points: "+4000"},
+      { name: "테크놀로지아", points: "+4000"},
+      { name: "테크놀로지아", points: "+4000"},
     ],
   },
 ];
