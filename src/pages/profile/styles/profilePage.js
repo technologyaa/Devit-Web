@@ -180,6 +180,8 @@ export const ProgressBar = styled.div`
   width: ${(props) => props.width || "0%"}; 
   background-color: ${(props) => props.color || "#ccc"}; 
   border-radius: 3px;
+
+  transition: width 0.5s ease-in-out;
 `;
 
 // --- 오른쪽 하단 (프로젝트 목록) ---
