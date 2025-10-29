@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as S from "./styles/signInPage";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
-import "../../widgets/layout/SideBar/styles/Toast.css";
+import { Alarm } from "@/toasts/Alarm";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function SignInPage() {
@@ -14,14 +14,6 @@ export default function SignInPage() {
 
   const home = () => {
     navigate("/home");
-  };
-
-  const notDev = () => {
-    toast("아직 개발 중인 기능입니다!", {
-      icon: "🛠️",
-      duration: 1800,
-      className: "custom-toast",
-    });
   };
 
   return (
@@ -61,7 +53,11 @@ export default function SignInPage() {
 
               <S.LosePsWrapper>
                 <S.LosePsLabel>비밀번호를 잊어버리셨나요?</S.LosePsLabel>
-                <S.LosePsLink onClick={notDev}>비밀번호 찾기</S.LosePsLink>
+                <S.LosePsLink
+                  onClick={() => Alarm("🛠️", "아직 개발중인 기능입니다.")}
+                >
+                  비밀번호 찾기
+                </S.LosePsLink>
                 <Toaster position="top-right" />
               </S.LosePsWrapper>
             </S.Middle>
