@@ -8,27 +8,44 @@ export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const project = projectList.find((p) => p.id == +projectId) ?? [];
+
+  // ✅ 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [newThumbnail, setNewThumbnail] = useState(null);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
 
+  // ✅ 업무 추가 모달
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
     setNewTitle("");
     setNewDescription("");
-    setNewThumbnail(null);
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageURL = URL.createObjectURL(file);
-      setNewThumbnail(imageURL);
+  // ✅ 삭제 모달
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+
+  // ✅ 프로젝트 삭제
+  const handleDeleteProject = () => {
+    const index = projectList.findIndex((p) => p.id === +projectId);
+    if (index !== -1) {
+      projectList.splice(index, 1);
+      alert("프로젝트가 삭제되었습니다.");
+      navigate("/projects");
+    } else {
+      alert("프로젝트를 찾을 수 없습니다!");
     }
   };
 
+  // ✅ 더보기 메뉴
+  const moreClicked = () => {
+    setIsMoreOpen((prevIsMoreOpen) => !prevIsMoreOpen);
+  };
+
+  // ✅ 업무 추가
   const handleAddProject = () => {
     if (newTitle.trim() === "") return alert("업무 이름을 입력하세요.");
     const targetProject = projectList.find((p) => p.id === +projectId);
@@ -36,13 +53,11 @@ export default function ProjectsDetailPage() {
 
     targetProject.tasks = targetProject.tasks ?? [];
 
-    // 기존 tasks의 id를 1부터 다시 매기기
     targetProject.tasks = targetProject.tasks.map((t, i) => ({
       ...t,
       id: i + 1,
     }));
 
-    // 새 task id = 현재 길이 + 1
     const newTask = {
       id: targetProject.tasks.length + 1,
       title: newTitle,
@@ -60,17 +75,46 @@ export default function ProjectsDetailPage() {
         <title>Devit</title>
         <link rel="icon" href="./assets/Helmet.svg" />
       </Helmet>
+
       <S.Container>
         <S.Frame>
+          {/* 상단 영역 */}
           <S.Top>
             <S.TopWrapper>
-              <S.BackIcon
-                onClick={() => navigate("/projects")}
-                src="/assets/back-icon.svg"
+              <S.TopLeft>
+                <S.BackIcon
+                  onClick={() => navigate("/projects")}
+                  src="/assets/back-icon.svg"
+                />
+                <S.ProjectText>{project?.title}</S.ProjectText>
+              </S.TopLeft>
+
+              <S.ProjectSettingsIcon
+                src="/assets/more-icon.svg"
+                alt="프로젝트 설정 아이콘"
+                onClick={moreClicked}
               />
-              <S.ProjectText>{project?.title}</S.ProjectText>
+
+              {/* 더보기 메뉴 */}
+              {isMoreOpen && (
+                <S.MoreBox>
+                  <S.MoreItem
+                    onClick={() => alert("아직 개발중인 기능입니다.")}
+                  >
+                    프로젝트 설정
+                  </S.MoreItem>
+                  <S.MoreItem
+                    style={{ color: "red" }}
+                    onClick={openDeleteModal} // ✅ 삭제 모달 열기
+                  >
+                    삭제
+                  </S.MoreItem>
+                </S.MoreBox>
+              )}
             </S.TopWrapper>
           </S.Top>
+
+          {/* 하단 영역 */}
           <S.Bottom>
             <S.Banner></S.Banner>
             <S.BottomWrapper>
@@ -88,6 +132,8 @@ export default function ProjectsDetailPage() {
                     onClick={openModal}
                   />
                 </S.BottomTop>
+
+                {/* 업무 리스트 */}
                 <S.TaskBoxWrapper>
                   {project.tasks?.length ? (
                     project.tasks.map((task) => (
@@ -115,6 +161,8 @@ export default function ProjectsDetailPage() {
                   )}
                 </S.TaskBoxWrapper>
               </S.BottomLeft>
+
+              {/* 크레딧 박스 */}
               <S.CreditBox>
                 <S.CreditBoxTop>
                   <S.CreditText>총 크레딧</S.CreditText>
@@ -133,6 +181,8 @@ export default function ProjectsDetailPage() {
           </S.Bottom>
         </S.Frame>
       </S.Container>
+
+      {/* ✅ 새 업무 추가 모달 */}
       {isModalOpen && (
         <S.ModalOverlay onClick={closeModal}>
           <S.ModalContent onClick={(e) => e.stopPropagation()}>
@@ -147,6 +197,7 @@ export default function ProjectsDetailPage() {
                   onChange={(e) => setNewTitle(e.target.value)}
                 />
               </S.ProjectInputBox>
+
               <S.ProjectDesInputBox>
                 <S.ProjectDesInputText>업무 설명</S.ProjectDesInputText>
                 <S.ProjectDesInput
@@ -156,9 +207,31 @@ export default function ProjectsDetailPage() {
                   onChange={(e) => setNewDescription(e.target.value)}
                 />
               </S.ProjectDesInputBox>
+
               <S.ButtonGroup>
                 <S.CancelButton onClick={closeModal}>취소</S.CancelButton>
                 <S.CreateButton onClick={handleAddProject}>생성</S.CreateButton>
+              </S.ButtonGroup>
+            </S.ModalWrapper>
+          </S.ModalContent>
+        </S.ModalOverlay>
+      )}
+
+      {/* ✅ 삭제 확인 모달 */}
+      {isDeleteModalOpen && (
+        <S.ModalOverlay onClick={closeDeleteModal}>
+          <S.ModalContent onClick={(e) => e.stopPropagation()}>
+            <S.ModalWrapper>
+              <S.ModalTitle>프로젝트 삭제</S.ModalTitle>
+              <S.WarningText>
+                정말로 <strong>{project.title}</strong> 프로젝트를
+                삭제하시겠습니까?
+              </S.WarningText>
+              <S.ButtonGroup>
+                <S.CancelButton onClick={closeDeleteModal}>취소</S.CancelButton>
+                <S.DeleteButton onClick={handleDeleteProject}>
+                  삭제
+                </S.DeleteButton>
               </S.ButtonGroup>
             </S.ModalWrapper>
           </S.ModalContent>

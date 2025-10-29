@@ -18,7 +18,8 @@ export const Frame = styled.div`
 export const Top = styled.div`
   font-size: 26px;
   font-weight: 500;
-  color: #111;
+  color: black;
+  position: relative;
 `;
 
 export const Bottom = styled.div`
@@ -43,7 +44,7 @@ export const ProjectText = styled.span`
 export const TopWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
 `;
 
 export const Banner = styled.div`
@@ -334,4 +335,65 @@ export const ButtonGroup = styled.div`
   gap: 12px;
   justify-content: flex-end;
   margin-top: 12px;
+`;
+
+export const ProjectSettingsIcon = styled(Image)`
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+`;
+
+export const TopLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+export const MoreBox = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 4px;
+  width: 160px;
+  background-color: #fff;
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+`;
+
+export const MoreItem = styled.div`
+  padding: 14px 18px;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    background-color: #f8f9fa;
+  }
+`;
+
+export const WarningText = styled.p`
+  font-size: 15px;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+`;
+
+export const DeleteButton = styled.button`
+  color: white;
+  font-size: 16px;
+  background: #e74c3c;
+  opacity: 0.9;
+  border: none;
+  border-radius: 6px;
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+    background: #c0392b;
+  }
 `;
