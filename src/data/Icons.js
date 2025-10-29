@@ -23,9 +23,6 @@ const icons = [
     name: "상점",
     gradient: "linear-gradient(90deg, #D6B0FF 0%, #BF86FC 100%)",
   },
-  {
-    
-  }
 ];
 
 export default icons;

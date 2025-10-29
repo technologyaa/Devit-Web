@@ -33,6 +33,34 @@ export default function ProfilePage() {
                 </S.EmailInfo>
               </S.PersonalInfo>
             </S.Profile>
+            <S.TopRight>
+                <S.StatBox>
+                    <S.StatValue>{profiles[0].CompletedProjects}</S.StatValue>
+                    <S.StatLabel>완료한 프로젝트</S.StatLabel>
+                    <S.ProgressBarContainer>
+                        <S.ProgressBar width="50%" color="#4D96FF" />
+                    </S.ProgressBarContainer>
+                </S.StatBox>
+                <S.StatBox>
+                    <S.StatValue>{profiles[0].Temp}°C</S.StatValue>
+                    <S.StatLabel>온도</S.StatLabel>
+                    <S.ProgressBarContainer>
+                        <S.ProgressBar width="80%" color="#FF8F4D" />
+                    </S.ProgressBarContainer>
+                </S.StatBox>
+            </S.TopRight>
+
+            <S.BottomRight>
+                <S.SectionTitle>프로젝트 목록</S.SectionTitle>
+                <S.ProjectList>
+                    {profiles[0].projectList.map((project, index) => (
+                        <S.ProjectItem key={index}>
+                            <S.ProjectName>{project.name}</S.ProjectName>
+                            <S.ProjectPoints>{project.points}</S.ProjectPoints>
+                        </S.ProjectItem>
+                    ))}
+                </S.ProjectList>
+            </S.BottomRight>
           </S.ProfileGrid>
         </S.Frame>
       </S.Container>
