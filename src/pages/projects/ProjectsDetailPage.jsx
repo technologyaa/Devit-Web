@@ -217,15 +217,13 @@ export default function ProjectsDetailPage() {
         </S.ModalOverlay>
       )}
 
-      {/* ✅ 삭제 확인 모달 */}
       {isDeleteModalOpen && (
         <S.ModalOverlay onClick={closeDeleteModal}>
-          <S.ModalContent onClick={(e) => e.stopPropagation()}>
-            <S.ModalWrapper>
+          <S.DeleteModalContent onClick={(e) => e.stopPropagation()}>
+            <S.DeleteModalWrapper>
               <S.ModalTitle>프로젝트 삭제</S.ModalTitle>
               <S.WarningText>
-                정말로 <strong>{project.title}</strong> 프로젝트를
-                삭제하시겠습니까?
+                <strong>{project.title}</strong>를 삭제하시겠습니까?
               </S.WarningText>
               <S.ButtonGroup>
                 <S.CancelButton onClick={closeDeleteModal}>취소</S.CancelButton>
@@ -233,8 +231,8 @@ export default function ProjectsDetailPage() {
                   삭제
                 </S.DeleteButton>
               </S.ButtonGroup>
-            </S.ModalWrapper>
-          </S.ModalContent>
+            </S.DeleteModalWrapper>
+          </S.DeleteModalContent>
         </S.ModalOverlay>
       )}
     </>

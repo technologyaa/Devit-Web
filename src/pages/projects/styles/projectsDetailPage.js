@@ -375,7 +375,10 @@ export const MoreItem = styled.div`
 `;
 
 export const WarningText = styled.p`
-  font-size: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 16px;
   color: #333;
   line-height: 1.6;
   margin: 0;
@@ -385,7 +388,7 @@ export const WarningText = styled.p`
 export const DeleteButton = styled.button`
   color: white;
   font-size: 16px;
-  background: #e74c3c;
+  background: red;
   opacity: 0.9;
   border: none;
   border-radius: 6px;
@@ -394,6 +397,22 @@ export const DeleteButton = styled.button`
   cursor: pointer;
   &:hover {
     opacity: 1;
-    background: #c0392b;
+    background: red;
   }
+`;
+
+export const DeleteModalContent = styled.div`
+  background-color: #fff;
+  width: 380px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 36px 20px;
+`;
+
+export const DeleteModalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 `;
