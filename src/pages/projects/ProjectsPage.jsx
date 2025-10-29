@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { projectList as initialProjects } from "@/data/project-list";
+import { Alarm } from "@/toasts/alarm";
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
@@ -29,7 +30,8 @@ export default function ProjectsPage() {
   };
 
   const handleAddProject = () => {
-    if (newTitle.trim() === "") return alert("프로젝트 이름을 입력하세요!");
+    if (newTitle.trim() === "")
+      return Alarm("‼️", "프로젝트 이름을 입력하세요.", "#FF1E1E", "#FFEAEA");
 
     const newProject = {
       id: projects.length + 1,

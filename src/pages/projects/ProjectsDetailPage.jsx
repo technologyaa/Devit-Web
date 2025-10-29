@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { projectList } from "@/data/project-list";
+import { Alarm } from "@/toasts/Alarm";
 
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
@@ -33,10 +34,10 @@ export default function ProjectsDetailPage() {
     const index = projectList.findIndex((p) => p.id === +projectId);
     if (index !== -1) {
       projectList.splice(index, 1);
-      alert("프로젝트가 삭제되었습니다.");
+      Alarm("🗑️", "프로젝트가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
       navigate("/projects");
     } else {
-      alert("프로젝트를 찾을 수 없습니다!");
+      Alarm("‼️", "프로젝트를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
     }
   };
 
@@ -47,9 +48,11 @@ export default function ProjectsDetailPage() {
 
   // ✅ 업무 추가
   const handleAddProject = () => {
-    if (newTitle.trim() === "") return alert("업무 이름을 입력하세요.");
+    if (newTitle.trim() === "")
+      return Alarm("‼️", "업무 이름을 입력하세요!", "#FF1E1E", "#FFEAEA");
     const targetProject = projectList.find((p) => p.id === +projectId);
-    if (!targetProject) return alert("프로젝트를 찾을 수 없습니다!");
+    if (!targetProject)
+      return Alarm("‼️", "프로젝트를 찾을 수 없습니다.!", "#FF1E1E", "#FFEAEA");
 
     targetProject.tasks = targetProject.tasks ?? [];
 
@@ -99,7 +102,14 @@ export default function ProjectsDetailPage() {
               {isMoreOpen && (
                 <S.MoreBox>
                   <S.MoreItem
-                    onClick={() => alert("아직 개발중인 기능입니다.")}
+                    onClick={() =>
+                      Alarm(
+                        "‼️",
+                        "업무 이름을 입력하세요.",
+                        "#FF1E1E",
+                        "#FFEAEA"
+                      )
+                    }
                   >
                     프로젝트 설정
                   </S.MoreItem>

@@ -1,15 +1,31 @@
 import toast from "react-hot-toast";
-import "../toasts/Toast.css";
+import { ToastContainer, ToastContent, ToastIcon, ToastMessage } from "./Toast";
 
-export const Alarm = (icon, message) => {
-  toast(
-    <div className="toast-content">
-      <span className="toast-icon">{icon}</span>
-      <span className="toast-message">{message}</span>
-    </div>,
+export const Alarm = (
+  icon,
+  message,
+  textColor = "#883cbe",
+  bgColor = "#f3e8ff"
+) => {
+  toast.custom(
+    (t) => (
+      <ToastContainer
+        color={textColor}
+        bgColor={bgColor}
+        onClick={(e) => {
+          e.stopPropagation(); // 클릭 이벤트가 부모로 전달되는 걸 막음
+          toast.dismiss(t.id); // 클릭 시 즉시 닫기
+        }}
+      >
+        <ToastContent>
+          <ToastIcon>{icon}</ToastIcon>
+          <ToastMessage>{message}</ToastMessage>
+        </ToastContent>
+      </ToastContainer>
+    ),
     {
-      className: "custom-toast",
       duration: 3000,
+      position: "top-right",
     }
   );
 };
