@@ -2,31 +2,38 @@ import * as S from "./styles/taskDetailPage";
 import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { projectList } from "@/data/project-list";
+import { Alarm } from "@/toasts/Alarm";
 
 export default function TaskDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { task, projectId } = location.state || {}; // projectId 전달 필수
+
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const { task } = location.state || {};
 
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  const moreClicked = () => setIsMoreOpen((prev) => !prev);
 
-  const handleDeleteProject = () => {
-    const index = projectList.findIndex((p) => p.id === +projectId);
-    if (index !== -1) {
-      projectList.splice(index, 1);
-      Alarm("🗑️", "업무가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
-      navigate("/tasks");
-    } else {
-      Alarm("‼️", "업무를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
-    }
+  // ✅ 업무 삭제
+  const handleDeleteTask = () => {
+    const project = projectList.find((p) => p.id === +projectId);
+    if (!project)
+      return Alarm("‼️", "프로젝트를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
+
+    const taskIndex = project.tasks.findIndex((t) => t.id === task.id);
+    if (taskIndex === -1)
+      return Alarm("‼️", "업무를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
+
+    project.tasks.splice(taskIndex, 1);
+    Alarm("🗑️", "업무가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
+
+    navigate(`/projects/${projectId}`); // 삭제 후 프로젝트 상세 페이지로 이동
   };
 
-  // task.files 초기화
   if (!task.files) task.files = [];
-
   const [files, setFiles] = useState(task.files);
   const [isDone, setIsDone] = useState(task?.isDone ?? false);
   const [isSubmitted, setIsSubmitted] = useState(task?.isDone ?? false);
@@ -38,9 +45,7 @@ export default function TaskDetailPage() {
         ? URL.createObjectURL(file)
         : null,
     }));
-
     setFiles((prev) => [...prev, ...newFiles]);
-
     newFiles.forEach((f) => task.files.push(f));
   };
 
@@ -50,25 +55,20 @@ export default function TaskDetailPage() {
       const newFiles = [...prev];
       const removed = newFiles.splice(index, 1)[0];
       if (removed.preview) URL.revokeObjectURL(removed.preview);
-
       task.files.splice(index, 1);
       return newFiles;
     });
   };
 
-  const moreClicked = () => {
-    setIsMoreOpen((prevIsMoreOpen) => !prevIsMoreOpen);
-  };
-
   const handleSubmit = () => {
     if (!isSubmitted) {
-      if (files.length === 0) return; // 파일 없으면 제출 불가
+      if (files.length === 0) return;
       setIsSubmitted(true);
       setIsDone(true);
-      task.isDone = true; // task 객체 완료 반영
+      task.isDone = true;
     } else {
       setIsSubmitted(false);
-      setIsDone(false); // 수정 시 미완료로
+      setIsDone(false);
       task.isDone = false;
     }
   };
@@ -76,8 +76,7 @@ export default function TaskDetailPage() {
   return (
     <>
       <Helmet>
-        <title>Devit</title>
-        <link rel="icon" href="./assets/Helmet.svg" />
+        <title>{task?.title || "업무 상세"}</title>
       </Helmet>
 
       <S.Container>
@@ -94,24 +93,19 @@ export default function TaskDetailPage() {
                   {isDone ? "완료" : "미완료"}
                 </S.TaskStatus>
               </S.TopLeft>
+
               <S.ProjectSettingsIcon
                 src="/assets/more-icon.svg"
-                alt="프로젝트 설정 아이콘"
                 onClick={moreClicked}
               />
               {isMoreOpen && (
                 <S.MoreBox>
                   <S.MoreItem
                     onClick={() =>
-                      Alarm(
-                        "‼️",
-                        "업무 이름을 입력하세요.",
-                        "#FF1E1E",
-                        "#FFEAEA"
-                      )
+                      Alarm("‼️", "업무 설정", "#FF1E1E", "#FFEAEA")
                     }
                   >
-                    프로젝트 설정
+                    업무 설정
                   </S.MoreItem>
                   <S.MoreItem
                     style={{ color: "red" }}
@@ -161,7 +155,7 @@ export default function TaskDetailPage() {
                     type="file"
                     multiple
                     onChange={handleFileChange}
-                    disabled={isSubmitted} // 제출 후 추가 막기
+                    disabled={isSubmitted}
                   />
                 </S.UploadButton>
 
@@ -173,19 +167,19 @@ export default function TaskDetailPage() {
           </S.Bottom>
         </S.Frame>
       </S.Container>
+
+      {/* 삭제 모달 */}
       {isDeleteModalOpen && (
         <S.ModalOverlay onClick={closeDeleteModal}>
           <S.DeleteModalContent onClick={(e) => e.stopPropagation()}>
             <S.DeleteModalWrapper>
-              <S.ModalTitle>프로젝트 삭제</S.ModalTitle>
+              <S.ModalTitle>업무 삭제</S.ModalTitle>
               <S.WarningText>
-                <strong>{project.title}</strong>를 삭제하시겠습니까?
+                <strong>{task.title}</strong>를 삭제하시겠습니까?
               </S.WarningText>
               <S.ButtonGroup>
                 <S.CancelButton onClick={closeDeleteModal}>취소</S.CancelButton>
-                <S.DeleteButton onClick={handleDeleteProject}>
-                  삭제
-                </S.DeleteButton>
+                <S.DeleteButton onClick={handleDeleteTask}>삭제</S.DeleteButton>
               </S.ButtonGroup>
             </S.DeleteModalWrapper>
           </S.DeleteModalContent>

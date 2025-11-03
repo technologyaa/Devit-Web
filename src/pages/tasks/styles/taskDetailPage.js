@@ -307,3 +307,39 @@ export const DeleteModalWrapper = styled.div`
   flex-direction: column;
   gap: 18px;
 `;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+`;
+
+export const ModalTitle = styled.h2`
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+`;
+
+export const CancelButton = styled.button`
+  width: 120px;
+  height: 40px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #ccc;
+  color: #333;
+`;
