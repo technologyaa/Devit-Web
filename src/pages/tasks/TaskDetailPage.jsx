@@ -76,7 +76,7 @@ export default function TaskDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{task?.title || "업무 상세"}</title>
+        <title>Devit</title>
       </Helmet>
 
       <S.Container>
