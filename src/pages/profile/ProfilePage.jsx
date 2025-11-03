@@ -1,6 +1,7 @@
 import * as S from "./styles/profilePage";
 import { Helmet } from "react-helmet";
-import profiles from "@/data/profile"; 
+import { useState } from "react";
+import profiles from "@/data/profile";
 
 const cToHex = (c) => Math.round(c).toString(16).padStart(2, '0');
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -54,8 +55,9 @@ const Progress = (currentValue, maxValue) => {
 
 export default function ProfilePage() {
   
-  // 데이터 추출 및 계산
-  const profile = profiles[0];
+  const [myProfiles, setMyProfiles] = useState(profiles);
+  const profile = myProfiles[0]; 
+  
   const projectsCount = profile.CompletedProjects || "0";
   const tempValue = profile.Temp || "0";
 
@@ -63,6 +65,29 @@ export default function ProfilePage() {
   const tempWidth = Progress(tempValue, 100); // 최대 온도 
   const tempColor = getTempColor(tempValue, 100);
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const newImageUrl = URL.createObjectURL(file);
+
+      // setMyProfiles 함수를 사용하여 myProfiles 상태 업데이트
+      setMyProfiles((prevProfiles) => {
+        const newProfiles = [...prevProfiles];
+
+        const updatedProfile = { 
+          ...newProfiles[0],
+          img: newImageUrl
+        };
+
+        newProfiles[0] = updatedProfile;
+
+        return newProfiles;
+      });
+      event.target.value = null;
+    }
+  }
+  
   return (
     <>
       <Helmet>
@@ -84,7 +109,10 @@ export default function ProfilePage() {
                   <S.Job>{profile.job}</S.Job>
                 </S.NameContainer>
               </S.ProfileInfo>
-              <S.EditButton>프로필 변경</S.EditButton>
+              <S.EditButton>
+                프로필 변경
+                <S.ProfileButton type="file" accept="image/*" onChange={handleImageChange} />
+              </S.EditButton>
               <S.PersonalInfo>
                 <S.EmailInfo>
                     <S.Email>이메일</S.Email>
