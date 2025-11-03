@@ -6,7 +6,23 @@ import { useState } from "react";
 export default function TaskDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { task } = location.state || {};
+
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+
+  const handleDeleteProject = () => {
+    const index = projectList.findIndex((p) => p.id === +projectId);
+    if (index !== -1) {
+      projectList.splice(index, 1);
+      Alarm("🗑️", "업무가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
+      navigate("/tasks");
+    } else {
+      Alarm("‼️", "업무를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
+    }
+  };
 
   // task.files 초기화
   if (!task.files) task.files = [];
@@ -40,6 +56,10 @@ export default function TaskDetailPage() {
     });
   };
 
+  const moreClicked = () => {
+    setIsMoreOpen((prevIsMoreOpen) => !prevIsMoreOpen);
+  };
+
   const handleSubmit = () => {
     if (!isSubmitted) {
       if (files.length === 0) return; // 파일 없으면 제출 불가
@@ -64,16 +84,44 @@ export default function TaskDetailPage() {
         <S.Frame>
           <S.Top>
             <S.TopWrapper>
-              <S.BackIcon
-                onClick={() => navigate(-1)}
-                src="/assets/back-icon.svg"
+              <S.TopLeft>
+                <S.BackIcon
+                  onClick={() => navigate(-1)}
+                  src="/assets/back-icon.svg"
+                />
+                <S.ProjectText>{task?.title}</S.ProjectText>
+                <S.TaskStatus isDone={isDone}>
+                  {isDone ? "완료" : "미완료"}
+                </S.TaskStatus>
+              </S.TopLeft>
+              <S.ProjectSettingsIcon
+                src="/assets/more-icon.svg"
+                alt="프로젝트 설정 아이콘"
+                onClick={moreClicked}
               />
-              <S.ProjectText>{task?.title}</S.ProjectText>
+              {isMoreOpen && (
+                <S.MoreBox>
+                  <S.MoreItem
+                    onClick={() =>
+                      Alarm(
+                        "‼️",
+                        "업무 이름을 입력하세요.",
+                        "#FF1E1E",
+                        "#FFEAEA"
+                      )
+                    }
+                  >
+                    프로젝트 설정
+                  </S.MoreItem>
+                  <S.MoreItem
+                    style={{ color: "red" }}
+                    onClick={openDeleteModal}
+                  >
+                    삭제
+                  </S.MoreItem>
+                </S.MoreBox>
+              )}
             </S.TopWrapper>
-
-            <S.TaskStatus isDone={isDone}>
-              {isDone ? "완료" : "미완료"}
-            </S.TaskStatus>
           </S.Top>
 
           <S.Bottom>
@@ -125,6 +173,24 @@ export default function TaskDetailPage() {
           </S.Bottom>
         </S.Frame>
       </S.Container>
+      {isDeleteModalOpen && (
+        <S.ModalOverlay onClick={closeDeleteModal}>
+          <S.DeleteModalContent onClick={(e) => e.stopPropagation()}>
+            <S.DeleteModalWrapper>
+              <S.ModalTitle>프로젝트 삭제</S.ModalTitle>
+              <S.WarningText>
+                <strong>{project.title}</strong>를 삭제하시겠습니까?
+              </S.WarningText>
+              <S.ButtonGroup>
+                <S.CancelButton onClick={closeDeleteModal}>취소</S.CancelButton>
+                <S.DeleteButton onClick={handleDeleteProject}>
+                  삭제
+                </S.DeleteButton>
+              </S.ButtonGroup>
+            </S.DeleteModalWrapper>
+          </S.DeleteModalContent>
+        </S.ModalOverlay>
+      )}
     </>
   );
 }

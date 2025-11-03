@@ -115,7 +115,7 @@ export default function ProjectsDetailPage() {
                   </S.MoreItem>
                   <S.MoreItem
                     style={{ color: "red" }}
-                    onClick={openDeleteModal} // ✅ 삭제 모달 열기
+                    onClick={openDeleteModal}
                   >
                     삭제
                   </S.MoreItem>

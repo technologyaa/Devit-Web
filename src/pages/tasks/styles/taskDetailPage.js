@@ -54,7 +54,9 @@ export const ProjectText = styled.span`
 `;
 
 export const TopWrapper = styled.div`
+  width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 16px;
 `;
@@ -224,4 +226,84 @@ export const RemoveFileButton = styled.button`
   &:hover {
     background: ${(props) => (props.isSubmitted ? "rgba(0,0,0,0.6)" : "red")};
   }
+`;
+
+export const TopLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+export const ProjectSettingsIcon = styled(Image)`
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+`;
+
+export const MoreBox = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 4px;
+  width: 160px;
+  background-color: #fff;
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+`;
+
+export const MoreItem = styled.div`
+  padding: 14px 18px;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    background-color: #f8f9fa;
+  }
+`;
+
+export const WarningText = styled.p`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+`;
+
+export const DeleteButton = styled.button`
+  color: white;
+  font-size: 16px;
+  background: red;
+  opacity: 0.9;
+  border: none;
+  border-radius: 6px;
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+    background: red;
+  }
+`;
+
+export const DeleteModalContent = styled.div`
+  background-color: #fff;
+  width: 380px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 36px 20px;
+`;
+
+export const DeleteModalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 `;
