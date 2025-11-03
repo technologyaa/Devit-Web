@@ -105,6 +105,15 @@ export const EditButton = styled.button`
   cursor: pointer;
 `;
 
+export const ProfileButton = styled.input`
+  width: 7.5rem;
+  height: 2.5rem;
+  border-radius: 200px;
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+`;
+
 export const PersonalInfo = styled.div``;
 
 export const EmailInfo = styled.div`
