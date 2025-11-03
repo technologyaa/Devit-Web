@@ -55,7 +55,6 @@ export const ImgContainer = styled.div`
   width: 90px;
   height: 90px;
   overflow: visible;
-  /* border-radius: 50%; */
   position: relative;
 `;
 
@@ -176,12 +175,11 @@ export const ProgressBarContainer = styled.div`
 
 export const ProgressBar = styled.div`
   height: 100%;
-  /* props를 받아 width와 color를 동적으로 설정 */
   width: ${(props) => props.width || "0%"}; 
   background-color: ${(props) => props.color || "#ccc"}; 
   border-radius: 3px;
-
-  transition: width 0.5s ease-in-out;
+  
+  transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out; 
 `;
 
 // --- 오른쪽 하단 (프로젝트 목록) ---
