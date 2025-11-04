@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as S from "./styles/signInPage";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
-import { Alarm } from "@/toasts/alarm";
+import { Alarm } from "@/toasts/Alarm";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function SignInPage() {

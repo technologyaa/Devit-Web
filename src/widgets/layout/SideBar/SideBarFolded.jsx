@@ -1,4 +1,4 @@
-import { Alarm } from "@/toasts/alarm";
+import { Alarm } from "@/toasts/Alarm";
 import * as S from "./styles/sideBarFolded";
 import { Link, useLocation } from "react-router-dom";
 
