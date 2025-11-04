@@ -55,7 +55,6 @@ export const ImgContainer = styled.div`
   width: 90px;
   height: 90px;
   overflow: visible;
-  /* border-radius: 50%; */
   position: relative;
 `;
 
@@ -103,6 +102,15 @@ export const EditButton = styled.button`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  cursor: pointer;
+`;
+
+export const ProfileButton = styled.input`
+  width: 7.5rem;
+  height: 2.5rem;
+  border-radius: 200px;
+  opacity: 0;
+  position: absolute;
   cursor: pointer;
 `;
 
@@ -176,10 +184,11 @@ export const ProgressBarContainer = styled.div`
 
 export const ProgressBar = styled.div`
   height: 100%;
-  /* props를 받아 width와 color를 동적으로 설정 */
   width: ${(props) => props.width || "0%"}; 
   background-color: ${(props) => props.color || "#ccc"}; 
   border-radius: 3px;
+  
+  transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out; 
 `;
 
 // --- 오른쪽 하단 (프로젝트 목록) ---
@@ -189,7 +198,7 @@ export const BottomRight = styled.div`
   border-radius: 12px;
   border: 1px solid #E5E7EB;
   padding: 20px;
-  min-height: 250px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -205,6 +214,9 @@ export const ProjectList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 20px;
 `;
 
 export const ProjectItem = styled.div`
