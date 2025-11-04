@@ -3,7 +3,7 @@ const profiles = [
     id: "띠용인",
     job: "iOS",
     email: "whatTV@technologyaa.com",
-    img: "/public/assets/profile-icon.svg",
+    img: "/assets/profile-icon.svg",
     CompletedProjects: "2",
     Temp: "36.5",
     projectList: [
