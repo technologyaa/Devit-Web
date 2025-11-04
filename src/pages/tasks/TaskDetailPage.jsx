@@ -63,10 +63,12 @@ export default function TaskDetailPage() {
   const handleSubmit = () => {
     if (!isSubmitted) {
       if (files.length === 0) return;
+      Alarm("🛠️", "제출되었습니다.", "#4CAF50", "#E8F5E9");
       setIsSubmitted(true);
       setIsDone(true);
       task.isDone = true;
     } else {
+      Alarm("‼️", "제출이 취소되었습니다.", "#FF1E1E", "#FFEAEA");
       setIsSubmitted(false);
       setIsDone(false);
       task.isDone = false;
