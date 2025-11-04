@@ -55,8 +55,10 @@ const Progress = (currentValue, maxValue) => {
 
 export default function ProfilePage() {
   
-  const [myProfiles, setMyProfiles] = useState(profiles);
-  const profile = myProfiles[0]; 
+  // 수정 1: 전역 데이터 (profiles)를 직접 사용합니다.
+  // 수정 2: 변경 후 컴포넌트 강제 리렌더링을 위한 더미 상태를 추가합니다.
+  const [reloadKey, setReloadKey] = useState(0); 
+  const profile = profiles[0]; // 전역 데이터에서 직접 프로필 정보를 가져옵니다.
   
   const projectsCount = profile.CompletedProjects || "0";
   const tempValue = profile.Temp || "0";
@@ -71,19 +73,12 @@ export default function ProfilePage() {
     if (file) {
       const newImageUrl = URL.createObjectURL(file);
 
-      // setMyProfiles 함수를 사용하여 myProfiles 상태 업데이트
-      setMyProfiles((prevProfiles) => {
-        const newProfiles = [...prevProfiles];
+      // 수정 3: imported 'profiles' 배열을 직접 수정합니다. (영속성 확보)
+      profiles[0].img = newImageUrl;
 
-        const updatedProfile = { 
-          ...newProfiles[0],
-          img: newImageUrl
-        };
-
-        newProfiles[0] = updatedProfile;
-
-        return newProfiles;
-      });
+      // 수정 4: 상태를 변경하여 컴포넌트를 강제 리렌더링합니다.
+      setReloadKey(prev => prev + 1); 
+      
       event.target.value = null;
     }
   }
