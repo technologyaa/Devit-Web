@@ -1,7 +1,7 @@
 import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
-import devlopers from "@/data/DummyData";
-import icons from "@/data/Icons";
+import devlopers from "@/data/developer-list";
+import icons from "@/data/icon-list";
 import { Link } from "react-router";
 
 const gradients = {};
@@ -66,7 +66,10 @@ export default function HomePage() {
               {devlopers.map((devloper, index) => {
                 return (
                   <S.Devloper>
-                    <S.Profile></S.Profile>
+                    <S.Profile
+                      src="./assets/dummy-profile.svg"
+                      alt="개발자 프로필"
+                    ></S.Profile>
                     <S.DevAndJob>
                       <p
                         style={{

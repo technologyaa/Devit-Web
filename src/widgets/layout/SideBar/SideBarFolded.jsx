@@ -1,3 +1,4 @@
+import { Alarm } from "@/toasts/Alarm";
 import * as S from "./styles/sideBarFolded";
 import { Link, useLocation } from "react-router-dom";
 
@@ -38,7 +39,11 @@ export default function SideBarFolded() {
             </S.NavigationTop>
 
             <S.NavigationBottom>
-              <S.MenuItem onClick={() => alert("아직 개발 중입니다.")}>
+              <S.MenuItem
+                onClick={() =>
+                  Alarm("🛠️", "아직 개발중인 기능입니다.", "#883cbe", "#f3e8ff")
+                }
+              >
                 <S.MenuIcon src="/assets/setting-icon.svg" alt="설정 아이콘" />
               </S.MenuItem>
             </S.NavigationBottom>
