@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Image } from "@/styles/Image";
+import { Link } from "react-router";
 
 export const Container = styled.div`
   width: 100%;
@@ -34,16 +35,27 @@ export const Middle = styled.div`
 `;
 
 export const Card = styled.div`
-  height: 82%;
+  height: 170px;
   background: ${(props) => props.gradient};
   border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 export const Goto = styled.div`
-  flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  align-items: stretch
+`;
+
+export const styledLink = styled(Link)`
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
 `;
 
 export const Bottom = styled.div`
@@ -85,7 +97,7 @@ export const ElementPlace = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin: 30px 20px;
+  margin: 0 20px;
 `;
 export const IconButton = styled.div`
   display: flex;
