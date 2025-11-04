@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Image } from "@/styles/Image";
 
 export const Container = styled.div`
   width: 100%;
@@ -65,7 +66,7 @@ export const NameContainer = styled.div`
   gap: 5px;
 `;
 
-export const ProfileImg = styled.img`
+export const ProfileImg = styled(Image)`
   width: 100%;
   height: 100%;
   object-fit: cover;
