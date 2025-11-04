@@ -102,7 +102,12 @@ export default function TaskDetailPage() {
                 <S.MoreBox>
                   <S.MoreItem
                     onClick={() =>
-                      Alarm("‼️", "업무 설정", "#FF1E1E", "#FFEAEA")
+                      Alarm(
+                        "🛠️",
+                        "아직 개발중인 기능입니다.",
+                        "#883cbe",
+                        "#f3e8ff"
+                      )
                     }
                   >
                     업무 설정

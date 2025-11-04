@@ -104,10 +104,10 @@ export default function ProjectsDetailPage() {
                   <S.MoreItem
                     onClick={() =>
                       Alarm(
-                        "‼️",
-                        "업무 이름을 입력하세요.",
-                        "#FF1E1E",
-                        "#FFEAEA"
+                        "🛠️",
+                        "아직 개발중인 기능입니다.",
+                        "#883cbe",
+                        "#f3e8ff"
                       )
                     }
                   >

@@ -242,8 +242,8 @@ export const ProjectSettingsIcon = styled(Image)`
 
 export const MoreBox = styled.div`
   position: absolute;
-  top: 30px;
-  right: 4px;
+  top: 100px;
+  right: 100px;
   width: 160px;
   background-color: #fff;
   border: 1px solid #d3d3d3;
