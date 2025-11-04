@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { projectList } from "@/data/project-list";
-import { Alarm } from "@/toasts/Alarm";
+import { Alarm } from "@/toasts/alarm";
 
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();

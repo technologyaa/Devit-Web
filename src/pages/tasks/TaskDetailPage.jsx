@@ -3,41 +3,25 @@ import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { projectList } from "@/data/project-list";
-import { Alarm } from "@/toasts/Alarm";
+import { Alarm } from "@/toasts/alarm";
 
 export default function TaskDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { task, projectId } = location.state || {}; // projectId 전달 필수
+  const { task, projectId } = location.state || {};
 
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const openDeleteModal = () => setIsDeleteModalOpen(true);
-  const closeDeleteModal = () => setIsDeleteModalOpen(false);
-  const moreClicked = () => setIsMoreOpen((prev) => !prev);
-
-  // ✅ 업무 삭제
-  const handleDeleteTask = () => {
-    const project = projectList.find((p) => p.id === +projectId);
-    if (!project)
-      return Alarm("‼️", "프로젝트를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
-
-    const taskIndex = project.tasks.findIndex((t) => t.id === task.id);
-    if (taskIndex === -1)
-      return Alarm("‼️", "업무를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
-
-    project.tasks.splice(taskIndex, 1);
-    Alarm("🗑️", "업무가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
-
-    navigate(`/projects/${projectId}`); // 삭제 후 프로젝트 상세 페이지로 이동
-  };
-
-  if (!task.files) task.files = [];
-  const [files, setFiles] = useState(task.files);
   const [isDone, setIsDone] = useState(task?.isDone ?? false);
   const [isSubmitted, setIsSubmitted] = useState(task?.isDone ?? false);
+  const [files, setFiles] = useState(task.files ?? []);
 
+  // ✅ 더보기 메뉴 토글
+  const moreClicked = () => setIsMoreOpen((prev) => !prev);
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+
+  // ✅ 파일 추가
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files).map((file) => ({
       file,
@@ -46,23 +30,24 @@ export default function TaskDetailPage() {
         : null,
     }));
     setFiles((prev) => [...prev, ...newFiles]);
-    newFiles.forEach((f) => task.files.push(f));
   };
 
+  // ✅ 파일 삭제
   const handleRemoveFile = (index) => {
     if (isSubmitted) return;
     setFiles((prev) => {
       const newFiles = [...prev];
       const removed = newFiles.splice(index, 1)[0];
       if (removed.preview) URL.revokeObjectURL(removed.preview);
-      task.files.splice(index, 1);
       return newFiles;
     });
   };
 
+  // ✅ 제출/수정
   const handleSubmit = () => {
     if (!isSubmitted) {
-      if (files.length === 0) return;
+      if (files.length === 0)
+        return Alarm("⚠️", "파일을 추가해주세요!", "#FF1E1E", "#FFEAEA");
       Alarm("🛠️", "제출되었습니다.", "#4CAF50", "#E8F5E9");
       setIsSubmitted(true);
       setIsDone(true);
@@ -75,6 +60,19 @@ export default function TaskDetailPage() {
     }
   };
 
+  // ✅ 업무 삭제
+  const handleDeleteTask = () => {
+    const project = projectList.find((p) => p.id === Number(projectId));
+    if (!project)
+      return Alarm("‼️", "프로젝트를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
+
+    const updatedTasks = project.tasks.filter((t) => t.id !== task.id);
+    project.tasks = updatedTasks; // 실제 배열 갱신
+    Alarm("🗑️", "업무가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
+
+    navigate(`/projects/${projectId}`, { replace: true }); // 바로 반영
+  };
+
   return (
     <>
       <Helmet>
@@ -83,6 +81,7 @@ export default function TaskDetailPage() {
 
       <S.Container>
         <S.Frame>
+          {/* 상단 */}
           <S.Top>
             <S.TopWrapper>
               <S.TopLeft>
@@ -125,6 +124,7 @@ export default function TaskDetailPage() {
             </S.TopWrapper>
           </S.Top>
 
+          {/* 하단 */}
           <S.Bottom>
             <S.DescriptionText>{task?.description}</S.DescriptionText>
 

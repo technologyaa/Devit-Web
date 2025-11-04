@@ -1,6 +1,6 @@
 import * as S from "./styles/sideBar";
 import { Link, useLocation } from "react-router-dom";
-import { Alarm } from "@/toasts/Alarm";
+import { Alarm } from "@/toasts/alarm";
 import toast, { Toaster } from "react-hot-toast";
 
 const menu = [
