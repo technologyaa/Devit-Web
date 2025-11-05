@@ -9,15 +9,12 @@ export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const project = projectList.find((p) => p.id == +projectId) ?? [];
-
-  // ✅ 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
-  // ✅ 업무 추가 모달
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
@@ -25,11 +22,9 @@ export default function ProjectsDetailPage() {
     setNewDescription("");
   };
 
-  // ✅ 삭제 모달
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
-  // ✅ 프로젝트 삭제
   const handleDeleteProject = () => {
     const index = projectList.findIndex((p) => p.id === +projectId);
     if (index !== -1) {
@@ -41,12 +36,10 @@ export default function ProjectsDetailPage() {
     }
   };
 
-  // ✅ 더보기 메뉴
   const moreClicked = () => {
     setIsMoreOpen((prevIsMoreOpen) => !prevIsMoreOpen);
   };
 
-  // ✅ 업무 추가
   const handleAddProject = () => {
     if (newTitle.trim() === "")
       return Alarm("‼️", "업무 이름을 입력하세요!", "#FF1E1E", "#FFEAEA");
@@ -81,7 +74,6 @@ export default function ProjectsDetailPage() {
 
       <S.Container>
         <S.Frame>
-          {/* 상단 영역 */}
           <S.Top>
             <S.TopWrapper>
               <S.TopLeft>
@@ -98,7 +90,6 @@ export default function ProjectsDetailPage() {
                 onClick={moreClicked}
               />
 
-              {/* 더보기 메뉴 */}
               {isMoreOpen && (
                 <S.MoreBox>
                   <S.MoreItem
@@ -124,7 +115,6 @@ export default function ProjectsDetailPage() {
             </S.TopWrapper>
           </S.Top>
 
-          {/* 하단 영역 */}
           <S.Bottom>
             <S.Banner></S.Banner>
             <S.BottomWrapper>
@@ -143,7 +133,6 @@ export default function ProjectsDetailPage() {
                   />
                 </S.BottomTop>
 
-                {/* 업무 리스트 */}
                 <S.TaskBoxWrapper>
                   {project.tasks?.length ? (
                     project.tasks.map((task) => (
@@ -172,7 +161,6 @@ export default function ProjectsDetailPage() {
                 </S.TaskBoxWrapper>
               </S.BottomLeft>
 
-              {/* 크레딧 박스 */}
               <S.CreditBox>
                 <S.CreditBoxTop>
                   <S.CreditText>총 크레딧</S.CreditText>
@@ -192,7 +180,6 @@ export default function ProjectsDetailPage() {
         </S.Frame>
       </S.Container>
 
-      {/* ✅ 새 업무 추가 모달 */}
       {isModalOpen && (
         <S.ModalOverlay onClick={closeModal}>
           <S.ModalContent onClick={(e) => e.stopPropagation()}>
