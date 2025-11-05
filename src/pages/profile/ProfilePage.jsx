@@ -47,6 +47,7 @@ const Progress = (currentValue, maxValue) => {
   const value = parseFloat(currentValue);
   const max = parseFloat(maxValue);
 
+  if (value < 0) return "0%"
   if (isNaN(value) || isNaN(max) || max <= 0) return "0%";
 
   const percentage = (value / max) * 100;
@@ -60,9 +61,13 @@ export default function ProfilePage() {
   const [reloadKey, setReloadKey] = useState(0); 
   const profile = profiles[0]; // 전역 데이터에서 직접 프로필 정보를 가져옵니다.
   
-  const projectsCount = profile.CompletedProjects || "0";
-  const tempValue = profile.Temp || "0";
+  const projectsCountValue = parseFloat(profile?.CompletedProjects ?? "");
+  const tempValueValue = parseFloat(profile?.Temp ?? "");
 
+  const projectsCount = isNaN(projectsCountValue) ? "0" : String(projectsCountValue);
+  const tempValue = isNaN(tempValueValue) ? "0" : String(tempValueValue);
+
+  
   const completedProjectsWidth = Progress(projectsCount, 20); // 최대 프로젝트 길이
   const tempWidth = Progress(tempValue, 100); // 최대 온도 
   const tempColor = getTempColor(tempValue, 100);
@@ -117,14 +122,14 @@ export default function ProfilePage() {
             </S.Profile>
             <S.TopRight>
                 <S.StatBox>
-                    <S.StatValue>{profile.CompletedProjects}</S.StatValue>
+                    <S.StatValue>{projectsCount}</S.StatValue>
                     <S.StatLabel>완료한 프로젝트</S.StatLabel>
                     <S.ProgressBarContainer>
                         <S.ProgressBar width={completedProjectsWidth} color="#4D96FF" />
                     </S.ProgressBarContainer>
                 </S.StatBox>
                 <S.StatBox>
-                    <S.StatValue>{profile.Temp}°C</S.StatValue>
+                    <S.StatValue>{tempValue}°C</S.StatValue>
                     <S.StatLabel>온도</S.StatLabel>
                     <S.ProgressBarContainer>
                         <S.ProgressBar width={tempWidth} color={tempColor} />
