@@ -11,7 +11,7 @@ export default function HomePage() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+        <link rel="icon" href="./assets/Helmet.svg" />
       </Helmet>
       <S.Container>
         <S.Frame>
