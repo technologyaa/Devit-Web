@@ -32,7 +32,6 @@ export default function HomePage() {
                     <S.Card gradient={icon.gradient}>
                       <Link to={icon.url}>
                         <S.ElementPlace>
-                          {/*div박스안에 요소 위치*/}
                           <S.IconButton>
                             <S.Icon
                               src={icons[index].logo}
