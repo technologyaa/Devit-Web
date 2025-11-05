@@ -48,7 +48,7 @@ export default function TaskDetailPage() {
     if (!isSubmitted) {
       if (files.length === 0)
         return Alarm("⚠️", "파일을 추가해주세요!", "#FF1E1E", "#FFEAEA");
-      Alarm("🛠️", "제출되었습니다.", "#4CAF50", "#E8F5E9");
+      Alarm("✅", "제출되었습니다.", "#4CAF50", "#E8F5E9");
       setIsSubmitted(true);
       setIsDone(true);
       task.isDone = true;
