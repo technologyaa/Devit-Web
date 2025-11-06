@@ -269,7 +269,6 @@ export const ProjectInput = styled.input`
   }
 `;
 
-// ✅ 설명 입력
 export const ProjectDesInputBox = styled.div`
   display: flex;
   flex-direction: column;
