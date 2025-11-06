@@ -81,9 +81,9 @@ export default function SideBar() {
               <S.MenuItem
                 onClick={() => Alarm("🛠️", "아직 개발 중인 기능입니다!")}
               >
-                <S.MenuIcon src="/assets/setting-icon.svg" alt="설정 아이콘" />
+                <S.MenuIcon src="/assets/more-icon2.svg" alt="설정 아이콘" />
                 <Toaster position="top-right" />
-                <S.MenuText>설정</S.MenuText>
+                <S.MenuText>더보기</S.MenuText>
               </S.MenuItem>
             </S.NavigationBottom>
           </S.NavigationWrapper>

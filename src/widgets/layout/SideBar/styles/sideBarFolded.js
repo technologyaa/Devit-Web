@@ -76,7 +76,7 @@ export const NavigationTop = styled.div`
 `;
 
 export const NavigationBottom = styled.div`
-  width: 100%;
+  width: 86%;
   display: flex;
   flex-direction: column;
   align-items: center;

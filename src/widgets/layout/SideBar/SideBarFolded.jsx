@@ -44,7 +44,7 @@ export default function SideBarFolded() {
                   Alarm("🛠️", "아직 개발중인 기능입니다.", "#883cbe", "#f3e8ff")
                 }
               >
-                <S.MenuIcon src="/assets/setting-icon.svg" alt="설정 아이콘" />
+                <S.MenuIcon src="/assets/more-icon2.svg" alt="설정 아이콘" />
               </S.MenuItem>
             </S.NavigationBottom>
           </S.NavigationWrapper>
