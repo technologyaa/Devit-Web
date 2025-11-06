@@ -333,7 +333,7 @@ export const CreateButton = styled.button`
 export const ButtonGroup = styled.div`
   width: 100%;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: flex-end;
   margin-top: 12px;
 `;
@@ -389,7 +389,7 @@ export const WarningText = styled.p`
 export const DeleteButton = styled.button`
   color: white;
   font-size: 16px;
-  background: red;
+  background: #ef0000ff;
   opacity: 0.9;
   border: none;
   border-radius: 6px;
@@ -398,7 +398,6 @@ export const DeleteButton = styled.button`
   cursor: pointer;
   &:hover {
     opacity: 1;
-    background: red;
   }
 `;
 

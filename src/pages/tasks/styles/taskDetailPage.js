@@ -287,7 +287,7 @@ export const WarningText = styled.p`
 export const DeleteButton = styled.button`
   color: white;
   font-size: 16px;
-  background: red;
+  background: #ef0000ff;
   opacity: 0.9;
   border: none;
   border-radius: 6px;
@@ -296,7 +296,6 @@ export const DeleteButton = styled.button`
   cursor: pointer;
   &:hover {
     opacity: 1;
-    background: red;
   }
 `;
 
@@ -330,24 +329,30 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalTitle = styled.h2`
-  font-size: 20px;
-  font-weight: 600;
-  text-align: center;
+  width: 100%;
+  display: flex;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 20px;
 `;
 
 export const ButtonGroup = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
 `;
 
 export const CancelButton = styled.button`
+  font-size: 16px;
+  background: #eee;
+  border: none;
+  border-radius: 6px;
   width: 120px;
   height: 40px;
-  border-radius: 6px;
-  border: none;
   cursor: pointer;
-  background: #ccc;
-  color: #333;
+  &:hover {
+    background: #ddd;
+  }
 `;
