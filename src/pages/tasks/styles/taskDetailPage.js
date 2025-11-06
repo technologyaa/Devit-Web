@@ -128,6 +128,9 @@ export const UploadButton = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  &:hover {
+    background-color: #fbfbfbff;
+  }
 `;
 
 export const FileInput = styled.input`
@@ -147,6 +150,11 @@ export const SubmitButton = styled.button`
   cursor: pointer;
   width: 100%;
   height: 40px;
+  opacity: 0.9;
+
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const FilePreviewArea = styled.div`
@@ -259,7 +267,7 @@ export const MoreItem = styled.div`
   font-size: 16px;
   color: black;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease;
   &:hover {
     background-color: #f8f9fa;
   }

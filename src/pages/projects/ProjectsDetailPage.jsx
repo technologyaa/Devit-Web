@@ -140,7 +140,7 @@ export default function ProjectsDetailPage() {
                         key={task.id}
                         onClick={() =>
                           navigate(`/projects/${project.id}/tasks/${task.id}`, {
-                            state: { task },
+                            state: { task, projectId },
                           })
                         }
                       >
