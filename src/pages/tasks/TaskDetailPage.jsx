@@ -16,12 +16,10 @@ export default function TaskDetailPage() {
   const [isSubmitted, setIsSubmitted] = useState(task?.isDone ?? false);
   const [files, setFiles] = useState(task.files ?? []);
 
-  // ✅ 더보기 메뉴 토글
   const moreClicked = () => setIsMoreOpen((prev) => !prev);
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
-  // ✅ 파일 추가
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files).map((file) => ({
       file,
