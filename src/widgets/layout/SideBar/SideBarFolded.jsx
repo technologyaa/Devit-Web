@@ -1,5 +1,5 @@
 import * as S from "./styles/sideBarFolded";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const menu = [
