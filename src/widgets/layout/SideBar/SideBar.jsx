@@ -47,6 +47,11 @@ export default function SideBar() {
   const navigate = useNavigate();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
+  const logout = () => {
+    navigate("/signin");
+    Alarm("🚪", "로그아웃 되었습니다.", "#FF1E1E", "#FFEAEA");
+  };
+
   const moreClicked = () => setIsMoreOpen((prev) => !prev);
 
   return (
@@ -96,10 +101,7 @@ export default function SideBar() {
       {isMoreOpen && (
         <S.MoreBox>
           <S.MoreItem>업무 설정</S.MoreItem>
-          <S.MoreItem
-            style={{ color: "red" }}
-            onClick={() => navigate("/signin")}
-          >
+          <S.MoreItem style={{ color: "red" }} onClick={logout}>
             로그아웃
           </S.MoreItem>
         </S.MoreBox>

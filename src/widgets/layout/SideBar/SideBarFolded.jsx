@@ -1,6 +1,7 @@
 import * as S from "./styles/sideBarFolded";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Alarm } from "@/toasts/Alarm";
 
 const menu = [
   { url: "/home", logo: "/assets/home-icon.svg", alt: "홈 아이콘" },
@@ -15,6 +16,11 @@ export default function SideBarFolded() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+
+  const logout = () => {
+    navigate("/signin");
+    Alarm("🚪", "로그아웃 되었습니다.", "#FF1E1E", "#FFEAEA");
+  };
 
   const moreClicked = () => setIsMoreOpen((prev) => !prev);
 
@@ -54,11 +60,8 @@ export default function SideBarFolded() {
       </S.Container>
       {isMoreOpen && (
         <S.MoreBox>
-          <S.MoreItem>업무 설정</S.MoreItem>
-          <S.MoreItem
-            style={{ color: "red" }}
-            onClick={() => navigate("/signin")}
-          >
+          <S.MoreItem>설정</S.MoreItem>
+          <S.MoreItem style={{ color: "red" }} onClick={logout}>
             로그아웃
           </S.MoreItem>
         </S.MoreBox>
