@@ -100,7 +100,7 @@ export default function SideBar() {
       </S.Container>
       {isMoreOpen && (
         <S.MoreBox>
-          <S.MoreItem>업무 설정</S.MoreItem>
+          <S.MoreItem>개인정보 처리 방침</S.MoreItem>
           <S.MoreItem style={{ color: "red" }} onClick={logout}>
             로그아웃
           </S.MoreItem>
