@@ -76,8 +76,33 @@ export const NavigationTop = styled.div`
 `;
 
 export const NavigationBottom = styled.div`
-  width: 100%;
+  width: 86%;
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+export const MoreBox = styled.div`
+  position: absolute;
+  bottom: 60px;
+  left: 28px;
+  width: 160px;
+  background-color: #fff;
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+`;
+
+export const MoreItem = styled.div`
+  padding: 14px 18px;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: #f8f9fa;
+  }
 `;

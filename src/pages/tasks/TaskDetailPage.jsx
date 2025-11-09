@@ -16,12 +16,10 @@ export default function TaskDetailPage() {
   const [isSubmitted, setIsSubmitted] = useState(task?.isDone ?? false);
   const [files, setFiles] = useState(task.files ?? []);
 
-  // ✅ 더보기 메뉴 토글
   const moreClicked = () => setIsMoreOpen((prev) => !prev);
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
-  // ✅ 파일 추가
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files).map((file) => ({
       file,
@@ -32,7 +30,6 @@ export default function TaskDetailPage() {
     setFiles((prev) => [...prev, ...newFiles]);
   };
 
-  // ✅ 파일 삭제
   const handleRemoveFile = (index) => {
     if (isSubmitted) return;
     setFiles((prev) => {
@@ -43,24 +40,24 @@ export default function TaskDetailPage() {
     });
   };
 
-  // ✅ 제출/수정
   const handleSubmit = () => {
     if (!isSubmitted) {
       if (files.length === 0)
         return Alarm("⚠️", "파일을 추가해주세요!", "#FF1E1E", "#FFEAEA");
-      Alarm("🛠️", "제출되었습니다.", "#4CAF50", "#E8F5E9");
+      Alarm("✅", "제출되었습니다.", "#4CAF50", "#E8F5E9");
       setIsSubmitted(true);
       setIsDone(true);
       task.isDone = true;
+      task.files = files;
     } else {
       Alarm("‼️", "제출이 취소되었습니다.", "#FF1E1E", "#FFEAEA");
       setIsSubmitted(false);
       setIsDone(false);
-      task.isDone = false;
+      task.files = files;
+      task.isDone = [];
     }
   };
 
-  // ✅ 업무 삭제
   const handleDeleteTask = () => {
     const project = projectList.find((p) => p.id === Number(projectId));
     if (!project)
@@ -167,7 +164,7 @@ export default function TaskDetailPage() {
                 </S.UploadButton>
 
                 <S.SubmitButton onClick={handleSubmit}>
-                  {isSubmitted ? "수정하기" : "제출하기"}
+                  {isSubmitted ? "취소하기" : "제출하기"}
                 </S.SubmitButton>
               </S.SubmitBoxBottom>
             </S.SubmitBox>

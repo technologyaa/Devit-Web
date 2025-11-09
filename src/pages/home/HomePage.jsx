@@ -11,7 +11,7 @@ export default function HomePage() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="/assets/devit-logo(Di).png"></link>
+        <link rel="icon" href="./assets/Helmet.svg" />
       </Helmet>
       <S.Container>
         <S.Frame>
@@ -32,7 +32,6 @@ export default function HomePage() {
                     <S.Card gradient={icon.gradient}>
                       <Link to={icon.url}>
                         <S.ElementPlace>
-                          {/*div박스안에 요소 위치*/}
                           <S.IconButton>
                             <S.Icon
                               src={icons[index].logo}

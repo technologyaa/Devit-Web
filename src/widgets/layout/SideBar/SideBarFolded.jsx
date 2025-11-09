@@ -1,6 +1,7 @@
-import { Alarm } from "@/toasts/Alarm";
 import * as S from "./styles/sideBarFolded";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Alarm } from "@/toasts/Alarm";
 
 const menu = [
   { url: "/home", logo: "/assets/home-icon.svg", alt: "홈 아이콘" },
@@ -12,44 +13,59 @@ const menu = [
 ];
 
 export default function SideBarFolded() {
+  const navigate = useNavigate();
   const location = useLocation();
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+
+  const logout = () => {
+    navigate("/signin");
+    Alarm("🚪", "로그아웃 되었습니다.", "#FF1E1E", "#FFEAEA");
+  };
+
+  const moreClicked = () => setIsMoreOpen((prev) => !prev);
 
   return (
-    <S.Container>
-      <S.Top>
-        <S.LogoBox>
-          <Link to="/home">
-            <S.DevitLogo src="/assets/DI-logo.svg" alt="로고" />
-          </Link>
-        </S.LogoBox>
+    <>
+      <S.Container>
+        <S.Top>
+          <S.LogoBox>
+            <Link to="/home">
+              <S.DevitLogo src="/assets/DI-logo.svg" alt="로고" />
+            </Link>
+          </S.LogoBox>
 
-        <S.Navigation>
-          <S.NavigationWrapper>
-            <S.NavigationTop>
-              {menu.map((item) => (
-                <Link key={item.url} to={item.url}>
-                  <S.MenuItem
-                    selected={location.pathname.match(item.url)}
-                    type="button"
-                  >
-                    <S.MenuIcon src={item.logo} alt={item.alt} />
-                  </S.MenuItem>
-                </Link>
-              ))}
-            </S.NavigationTop>
+          <S.Navigation>
+            <S.NavigationWrapper>
+              <S.NavigationTop>
+                {menu.map((item) => (
+                  <Link key={item.url} to={item.url}>
+                    <S.MenuItem
+                      selected={location.pathname.match(item.url)}
+                      type="button"
+                    >
+                      <S.MenuIcon src={item.logo} alt={item.alt} />
+                    </S.MenuItem>
+                  </Link>
+                ))}
+              </S.NavigationTop>
 
-            <S.NavigationBottom>
-              <S.MenuItem
-                onClick={() =>
-                  Alarm("🛠️", "아직 개발중인 기능입니다.", "#883cbe", "#f3e8ff")
-                }
-              >
-                <S.MenuIcon src="/assets/setting-icon.svg" alt="설정 아이콘" />
-              </S.MenuItem>
-            </S.NavigationBottom>
-          </S.NavigationWrapper>
-        </S.Navigation>
-      </S.Top>
-    </S.Container>
+              <S.NavigationBottom>
+                <S.MenuItem onClick={moreClicked}>
+                  <S.MenuIcon src="/assets/more-icon2.svg" alt="설정 아이콘" />
+                </S.MenuItem>
+              </S.NavigationBottom>
+            </S.NavigationWrapper>
+          </S.Navigation>
+        </S.Top>
+      </S.Container>
+      {isMoreOpen && (
+        <S.MoreBox>
+          <S.MoreItem>개인정보 처리 방침</S.MoreItem>
+          <S.MoreItem style={{ color: "red" }} onClick={logout}>
+            로그아웃
+          </S.MoreItem>
+        </S.MoreBox>
+      )}
+    </>
   );
 }

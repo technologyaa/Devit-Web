@@ -194,7 +194,7 @@ export const ProjectPictureText = styled.div`
 export const ProjectPictureLabel = styled.label`
   cursor: pointer;
   display: flex;
-  width: 100%;
+  width: 182px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -249,7 +249,7 @@ export const CreateButton = styled.button`
 export const ButtonGroup = styled.div`
   width: 100%;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: flex-end;
   margin-top: 12px;
 `;
