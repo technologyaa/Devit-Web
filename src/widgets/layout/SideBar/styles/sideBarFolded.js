@@ -84,8 +84,8 @@ export const NavigationBottom = styled.div`
 
 export const MoreBox = styled.div`
   position: absolute;
-  top: 700px;
-  right: 1260px;
+  bottom: 60px;
+  left: 28px;
   width: 160px;
   background-color: #fff;
   border: 1px solid #d3d3d3;
