@@ -2,6 +2,7 @@ import * as S from "./styles/sideBar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
+import { Alarm } from "@/toasts/Alarm";
 
 const menu = [
   {
