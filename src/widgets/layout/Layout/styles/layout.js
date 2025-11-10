@@ -15,6 +15,6 @@ export const Content = styled.div`
   height: 100%;
   overflow: auto;
   scrollbar-gutter: stable both-edges;
-  padding: 70px 80px;
+  padding: ${(props) => (props.isChatPage ? "0 30px 0 0" : "70px 80px")};
   box-sizing: border-box;
 `;
