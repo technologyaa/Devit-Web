@@ -2,6 +2,7 @@ import * as S from "./styles/signUp2Page";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Alarm } from "@/toasts/Alarm";
 
 export default function SignUp2Page() {
   const [selectedRole, setSelectedRole] = useState(null);
@@ -11,8 +12,9 @@ export default function SignUp2Page() {
     navigate("/signup/1");
   };
 
-  const home = () => {
-    navigate("/home");
+  const signUp = () => {
+    navigate("/signin");
+    Alarm("🚪", "회원가입 되었습니다.", "#4CAF50", "#E8F5E9");
   };
 
   return (
@@ -77,7 +79,7 @@ export default function SignUp2Page() {
           </S.LoginWrapperTopOfTop>
 
           <S.LoginWrapperBottom>
-            <S.SigninButton onClick={home}>회원가입</S.SigninButton>
+            <S.SigninButton onClick={signUp}>회원가입</S.SigninButton>
             <S.NoAccWrapper>
               <S.YesAccLabel>계정이 있으신가요?</S.YesAccLabel>
               <Link to="/signin">
