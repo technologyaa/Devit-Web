@@ -10,7 +10,10 @@ export default function ChatPage() {
       </Helmet>
       <S.Container>
         <S.ChatList>
-          <S.ChatListHeader>채팅</S.ChatListHeader>
+          <S.ChatListHeader>
+            <S.ChatIcon src="/assets/chat-icon.svg"></S.ChatIcon>
+            채팅
+          </S.ChatListHeader>
           <S.ChatItemList>
             <S.ChatItem> ... </S.ChatItem>
             <S.ChatItem> ... </S.ChatItem>
