@@ -8,7 +8,17 @@ export default function ChatPage() {
         <title>Devit</title>
         <link rel="icon" href="./assets/Helmet.svg"></link>
       </Helmet>
-      <S.Container></S.Container>
+      <S.Container>
+        <ChatList>
+          <ChatListHeader>채팅</ChatListHeader>
+          <ChatItemList>
+            <ChatItem> ... </ChatItem>
+            <ChatItem> ... </ChatItem>
+            <ChatItem> ... </ChatItem>
+          </ChatItemList>
+        </ChatList>
+        <S.ChatRoom></S.ChatRoom>
+      </S.Container>
     </>
   );
 }
