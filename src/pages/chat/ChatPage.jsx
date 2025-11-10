@@ -9,14 +9,14 @@ export default function ChatPage() {
         <link rel="icon" href="./assets/Helmet.svg"></link>
       </Helmet>
       <S.Container>
-        <ChatList>
-          <ChatListHeader>채팅</ChatListHeader>
-          <ChatItemList>
-            <ChatItem> ... </ChatItem>
-            <ChatItem> ... </ChatItem>
-            <ChatItem> ... </ChatItem>
-          </ChatItemList>
-        </ChatList>
+        <S.ChatList>
+          <S.ChatListHeader>채팅</S.ChatListHeader>
+          <S.ChatItemList>
+            <S.ChatItem> ... </S.ChatItem>
+            <S.ChatItem> ... </S.ChatItem>
+            <S.ChatItem> ... </S.ChatItem>
+          </S.ChatItemList>
+        </S.ChatList>
         <S.ChatRoom></S.ChatRoom>
       </S.Container>
     </>
