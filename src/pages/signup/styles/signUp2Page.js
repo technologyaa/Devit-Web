@@ -106,6 +106,9 @@ export const EmailInput = styled.input`
   box-sizing: border-box;
   outline: none;
   font-size: 15px;
+  &:focus {
+    outline: 1px solid #883cbe;
+  }
 
   &::placeholder {
     color: #aaa;
@@ -149,6 +152,9 @@ export const CodeInput = styled.input`
   box-sizing: border-box;
   outline: none;
   font-size: 15px;
+  &:focus {
+    outline: 1px solid #883cbe;
+  }
 
   &::placeholder {
     color: #aaa;
