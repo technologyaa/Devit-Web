@@ -90,6 +90,9 @@ export const Input = styled.input`
   box-sizing: border-box;
   outline: none;
   font-size: 15px;
+  &:focus {
+    outline: 1px solid #883cbe;
+  }
 
   &::placeholder {
     color: #aaa;
@@ -124,7 +127,7 @@ export const BottomSection = styled.div`
   gap: 10px;
 `;
 
-export const NextButton = styled.button`
+export const NextButton = styled.div`
   width: 100%;
   height: 52px;
   border-radius: 8px;
@@ -133,6 +136,9 @@ export const NextButton = styled.button`
   color: white;
   outline: none;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: #7b35ad;
