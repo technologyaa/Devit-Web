@@ -2,12 +2,13 @@ import { Image } from "@/styles/Image";
 import styled from "styled-components";
 
 export const Container = styled.div`
-  width: 82px;
+  width: 100%;
   height: 100vh;
   border-right: 1px solid #d9dce0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
 `;
 
 export const Top = styled.div`
