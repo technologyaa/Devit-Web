@@ -12,8 +12,9 @@ export default function SignInPage() {
   const eyeOpen = "/assets/eye-open.svg";
   const eyeClosed = "/assets/eye-close.svg";
 
-  const home = () => {
+  const signIn = () => {
     navigate("/home");
+    Alarm("🚪", "로그인 되었습니다.", "#4CAF50", "#E8F5E9");
   };
 
   return (
@@ -65,7 +66,7 @@ export default function SignInPage() {
 
           <S.Bottom>
             <S.BottomTop>
-              <S.LoginButton onClick={home}>로그인</S.LoginButton>
+              <S.LoginButton onClick={signIn}>로그인</S.LoginButton>
               <S.OrText>또는</S.OrText>
               <S.GoogleLoginButton>
                 <S.GoogleLogo src="/assets/google-logo.svg" alt="구글 로그인" />
