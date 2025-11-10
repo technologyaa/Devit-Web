@@ -149,7 +149,7 @@ export const BottomTop = styled.div`
   gap: 6px;
 `;
 
-export const LoginButton = styled.button`
+export const LoginButton = styled.div`
   width: 100%;
   height: 52px;
   border-radius: 8px;
@@ -158,6 +158,9 @@ export const LoginButton = styled.button`
   color: white;
   outline: none;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: #7b35ad;
