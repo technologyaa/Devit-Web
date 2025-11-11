@@ -111,7 +111,7 @@ export const ChatRoomProfile = styled.img`
 
 export const ChatRoomUserName = styled.div`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
   color: #1e1e1e;
 `;
 
