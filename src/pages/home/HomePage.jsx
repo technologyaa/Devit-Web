@@ -25,7 +25,7 @@ export default function HomePage() {
               <S.Cricle2></S.Cricle2>
             </S.Top>
             <S.Middle>
-              <p style={{ fontSize: "26px", fontWeight: "500" }}>바로가기</p>
+              <S.Text>바로가기</S.Text>
               <S.Goto>
                 {icons.map((icon, index) => {
                   return (
@@ -60,7 +60,7 @@ export default function HomePage() {
           </S.Middle>
         </S.TopMiddleWrap>
         <S.Bottom>
-          <p style={{ fontSize: "26px", fontWeight: "500" }}>추천 개발자</p>
+          <S.Text>추천 개발자</S.Text>
           <S.RecommendDev>
             {devlopers.map((devloper, index) => {
               return (

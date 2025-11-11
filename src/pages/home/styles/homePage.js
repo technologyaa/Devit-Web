@@ -149,3 +149,9 @@ export const DevAndJob = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
+export const Text = styled.p`
+  font-size: 26px;
+  font-weight: 500;
+  color: black;
+`;

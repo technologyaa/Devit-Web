@@ -1,6 +1,7 @@
 import * as S from "./styles/developersPage";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Alarm } from "@/toasts/Alarm";
 import users from "@/data/user-list";
 
@@ -27,10 +28,17 @@ export default function DevelopersPage() {
 
   const [selectedCategory, setSelectedCategory] = useState("전체");
 
+  const navigate = useNavigate();
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     // 여기서 선택된 카테고리에 따른 데이터 필터링 로직을 추가할 수 있습니다.
-    console.log(`Selected category: ${category}`);
+  };
+
+  const handleCardClick = (userId) => {
+    // 요청하신 경로 형식 'profile/id'로 이동합니다.
+    navigate(`/profile/${userId}`);
+    console.log(`Navigating to profile: /profile/${userId}`);
   };
 
   const filteredUsers = users.filter((user) => {
@@ -86,7 +94,7 @@ export default function DevelopersPage() {
 
           <S.DevUser>
             {displayedUsers.map((user) => (
-              <S.DeveloperCard key={user.id}>
+              <S.DeveloperCard key={user.id} onClick={() => handleCardClick(user.id)}>
                 <S.ProfileArea>
                   <S.TemperatureBar $temp={user.temp} />
                   <S.ProfileImg src={user.img}></S.ProfileImg>

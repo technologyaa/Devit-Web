@@ -57,7 +57,14 @@ const users = [
     temp: 100,
     img: "/assets/profile-icon.svg"
   },
-  
+  {
+    id: "amso",
+    name: "김우성",
+    job: "게임",
+    info: "게임 잘합니다",
+    temp: 100,
+    img: "/assets/profile-icon.svg"
+  },
 ];
 
 export default users;
