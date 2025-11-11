@@ -4,15 +4,23 @@ import { Helmet } from "react-helmet";
 import { chatList as initialChatList } from "@/data/chat-list";
 
 export default function ChatPage() {
-  const [chatList, setChatList] = useState(initialChatList);
-  const [selectedChat, setSelectedChat] = useState(initialChatList[0]);
+  // 💾 localStorage에 저장된 채팅이 있으면 그걸 불러오고, 없으면 초기값 사용
+  const [chatList, setChatList] = useState(() => {
+    const saved = localStorage.getItem("chatList");
+    return saved ? JSON.parse(saved) : initialChatList;
+  });
+
+  const [selectedChat, setSelectedChat] = useState(
+    chatList.find((c) => c.id === 1) || chatList[0]
+  );
   const [messageInput, setMessageInput] = useState("");
-  const [isComposing, setIsComposing] = useState(false); // 👈 한글 조합 중 여부
+  const [isComposing, setIsComposing] = useState(false);
   const isSending = useRef(false);
   const messageListRef = useRef(null);
 
+  // 💬 메시지 전송 함수
   const handleSend = () => {
-    if (isSending.current || isComposing) return; // 👈 조합 중이면 return
+    if (isSending.current || isComposing) return;
     if (!messageInput.trim()) return;
 
     isSending.current = true;
@@ -25,16 +33,28 @@ export default function ChatPage() {
       isMine: true,
     };
 
+    // 🔄 선택된 채팅 업데이트
     const updatedChat = {
       ...selectedChat,
       messages: [...selectedChat.messages, newMessage],
     };
 
-    setChatList((prev) =>
-      prev.map((chat) => (chat.id === updatedChat.id ? updatedChat : chat))
+    // 🧩 chatList 상태 갱신
+    const updatedChatList = chatList.map((chat) =>
+      chat.id === updatedChat.id ? updatedChat : chat
     );
+
+    // 🧠 마지막 메시지 정보 자동 반영
+    const lastMsg = updatedChat.messages[updatedChat.messages.length - 1];
+    updatedChat.lastMessage = lastMsg?.content || "";
+    updatedChat.lastTime = lastMsg?.time || "";
+
+    setChatList(updatedChatList);
     setSelectedChat(updatedChat);
     setMessageInput("");
+
+    // 💾 localStorage에 즉시 저장 (push 효과)
+    localStorage.setItem("chatList", JSON.stringify(updatedChatList));
 
     setTimeout(() => {
       isSending.current = false;
@@ -45,12 +65,15 @@ export default function ChatPage() {
   useEffect(() => {
     const el = messageListRef.current;
     if (el) {
-      el.scrollTo({
-        top: el.scrollHeight,
-        behavior: "smooth",
-      });
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
   }, [selectedChat.messages]);
+
+  // ✅ 선택된 채팅 변경 시에도 스크롤 유지
+  useEffect(() => {
+    localStorage.setItem("chatList", JSON.stringify(chatList));
+  }, [chatList]);
+
   return (
     <>
       <Helmet>
@@ -82,7 +105,9 @@ export default function ChatPage() {
                 />
                 <S.ChatInfo>
                   <S.ChatUserName>{chat.userName}</S.ChatUserName>
-                  <S.ChatLastMessage>{chat.lastMessage}</S.ChatLastMessage>
+                  <S.ChatLastMessage>
+                    {chat.lastMessage || "메시지가 없습니다."}
+                  </S.ChatLastMessage>
                 </S.ChatInfo>
               </S.ChatItem>
             ))}

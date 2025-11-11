@@ -3,15 +3,13 @@ export const chatList = [
     id: 1,
     userName: "강장민",
     userProfile: "/assets/jang.svg",
-    lastMessage: "바로 만들어드릴게요",
-    lastTime: "2025-11-11T08:43:00",
     messages: [
       {
         id: 1,
         sender: "강장민",
         content: "안녕하세요.",
         time: "2025-11-11T08:10:00",
-        isMine: false, // false면 상대방, true면 내가 보낸 메시지
+        isMine: false,
       },
       {
         id: 2,
@@ -63,8 +61,13 @@ export const chatList = [
     id: 2,
     userName: "웹준",
     userProfile: "/assets/dummy-profile.svg",
-    lastMessage: "장강민은 바보 멍청이 입니다 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-    lastTime: "2025-11-10T17:00:00",
     messages: [],
   },
-];
+].map((chat) => {
+  const lastMsg = chat.messages[chat.messages.length - 1];
+  return {
+    ...chat,
+    lastMessage: lastMsg ? lastMsg.content : "",
+    lastTime: lastMsg ? lastMsg.time : "",
+  };
+});

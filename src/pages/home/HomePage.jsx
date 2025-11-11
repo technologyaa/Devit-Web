@@ -29,6 +29,9 @@ export default function HomePage() {
               <S.Goto>
                 {icons.map((icon, index) => {
                   return (
+                    <S.styledLink to={icon.url}>
+                      <S.Card gradient={icon.gradient}>
+
                   <S.styledLink to={icon.url}>
                     <S.Card gradient={icon.gradient}>
                         <S.ElementPlace>
@@ -52,6 +55,9 @@ export default function HomePage() {
                             {icons[index].text}
                           </p>
                         </S.ElementPlace>
+                      </S.Card>
+                    </S.styledLink>
+                  );
                     </S.Card>
                   </S.styledLink>
               );
