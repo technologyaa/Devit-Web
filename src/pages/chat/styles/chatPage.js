@@ -59,15 +59,18 @@ export const ChatItemList = styled.div`
 /* 채팅 목록 하나 */
 export const ChatItem = styled.div`
   width: 100%;
-  height: 72px;
+  height: 68px;
   display: flex;
   align-items: center;
   padding: 0 16px;
   border-bottom: 1px solid #d9dce0;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  background-color: ${(props) => (props.isActive ? "#f8f9fa" : "transparent")};
+
   &:hover {
-    background-color: #f8f9fa;
+    background-color: ${(props) =>
+      props.isActive ? "#f8f9fa" : "#f8f9fa"}; /* ✅ hover 색상 구분 */
   }
 `;
 
