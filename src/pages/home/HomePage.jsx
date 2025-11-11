@@ -1,10 +1,8 @@
 import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
-import devlopers from "@/data/developer-list";
+import developers from "@/data/developer-list";
 import icons from "@/data/icon-list";
 import { Link } from "react-router";
-
-const gradients = {};
 
 export default function HomePage() {
   return (
@@ -24,57 +22,50 @@ export default function HomePage() {
               <S.Cricle1></S.Cricle1>
               <S.Cricle2></S.Cricle2>
             </S.Top>
+
             <S.Middle>
               <p style={{ fontSize: "26px", fontWeight: "500" }}>바로가기</p>
               <S.Goto>
-                {icons.map((icon, index) => {
-                  return (
-                    <S.styledLink to={icon.url}>
-                      <S.Card gradient={icon.gradient}>
-
-                  <S.styledLink to={icon.url}>
+                {icons.map((icon, index) => (
+                  <S.styledLink key={index} to={icon.url}>
                     <S.Card gradient={icon.gradient}>
-                        <S.ElementPlace>
-                          <S.IconButton>
-                            <S.Icon
-                              src={icons[index].logo}
-                              alt="프로젝트바로가기 아이콘"
-                            ></S.Icon>
-                            <S.Button>바로 가기</S.Button>
-                          </S.IconButton>
-                          <p
-                            style={{
-                              color: "white",
-                              fontSize: "25px",
-                              fontWeight: "500",
-                            }}
-                          >
-                            {icons[index].name}
-                          </p>
-                          <p style={{ color: "white", fontSize: "16px" }}>
-                            {icons[index].text}
-                          </p>
-                        </S.ElementPlace>
-                      </S.Card>
-                    </S.styledLink>
-                  );
+                      <S.ElementPlace>
+                        <S.IconButton>
+                          <S.Icon
+                            src={icon.logo}
+                            alt="프로젝트 바로가기 아이콘"
+                          />
+                          <S.Button>바로 가기</S.Button>
+                        </S.IconButton>
+                        <p
+                          style={{
+                            color: "white",
+                            fontSize: "25px",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {icon.name}
+                        </p>
+                        <p style={{ color: "white", fontSize: "16px" }}>
+                          {icon.text}
+                        </p>
+                      </S.ElementPlace>
                     </S.Card>
                   </S.styledLink>
-              );
-                })}
-            </S.Goto>
-          </S.Middle>
-        </S.TopMiddleWrap>
-        <S.Bottom>
-          <p style={{ fontSize: "26px", fontWeight: "500" }}>추천 개발자</p>
-          <S.RecommendDev>
-            {devlopers.map((devloper, index) => {
-              return (
-                <S.Devloper>
+                ))}
+              </S.Goto>
+            </S.Middle>
+          </S.TopMiddleWrap>
+
+          <S.Bottom>
+            <p style={{ fontSize: "26px", fontWeight: "500" }}>추천 개발자</p>
+            <S.RecommendDev>
+              {developers.map((developer, index) => (
+                <S.Devloper key={index}>
                   <S.Profile
                     src="./assets/dummy-profile.svg"
                     alt="개발자 프로필"
-                  ></S.Profile>
+                  />
                   <S.DevAndJob>
                     <p
                       style={{
@@ -82,22 +73,21 @@ export default function HomePage() {
                         fontWeight: "440",
                       }}
                     >
-                      {devloper.name}
+                      {developer.name}
                     </p>
                     <p style={{ fontSize: "clamp(14px, 1vw, 18px)" }}>
-                      {devloper.job}
+                      {developer.job}
                     </p>
                   </S.DevAndJob>
                   <p style={{ fontSize: "12px", color: "#747474" }}>
-                    {devloper.text}
+                    {developer.text}
                   </p>
                 </S.Devloper>
-              );
-            })}
-          </S.RecommendDev>
-        </S.Bottom>
-      </S.Frame>
-    </S.Container >
+              ))}
+            </S.RecommendDev>
+          </S.Bottom>
+        </S.Frame>
+      </S.Container>
     </>
   );
 }
