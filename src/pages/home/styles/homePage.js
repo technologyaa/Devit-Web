@@ -48,6 +48,7 @@ export const Goto = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   align-items: stretch;
+  align-items: stretch
 `;
 
 export const styledLink = styled(Link)`
