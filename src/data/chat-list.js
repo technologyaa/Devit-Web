@@ -2,7 +2,7 @@ export const chatList = [
   {
     id: 1,
     userName: "강장민",
-    userProfile: "/assets/dummy-profile.svg",
+    userProfile: "/assets/jang.svg",
     lastMessage: "바로 만들어드릴게요",
     lastTime: "2025-11-11T08:43:00",
     messages: [
@@ -18,7 +18,7 @@ export const chatList = [
         sender: "나",
         content: "안녕하세요",
         time: "2025-11-11T08:10:10",
-        isMine: true,
+        isMine: false,
       },
       {
         id: 3,

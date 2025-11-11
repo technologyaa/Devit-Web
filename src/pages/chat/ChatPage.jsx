@@ -7,13 +7,12 @@ export default function ChatPage() {
   const [chatList, setChatList] = useState(initialChatList);
   const [selectedChat, setSelectedChat] = useState(initialChatList[0]);
   const [messageInput, setMessageInput] = useState("");
+  const [isComposing, setIsComposing] = useState(false); // 👈 한글 조합 중 여부
   const isSending = useRef(false);
-
-  // ✅ 메시지 리스트 컨테이너 ref
   const messageListRef = useRef(null);
 
   const handleSend = () => {
-    if (isSending.current) return;
+    if (isSending.current || isComposing) return; // 👈 조합 중이면 return
     if (!messageInput.trim()) return;
 
     isSending.current = true;
@@ -42,7 +41,7 @@ export default function ChatPage() {
     }, 100);
   };
 
-  // ✅ 메시지가 바뀔 때마다 자동 스크롤 하단 이동
+  // ✅ 자동 스크롤
   useEffect(() => {
     const el = messageListRef.current;
     if (el) {
@@ -61,7 +60,7 @@ export default function ChatPage() {
       </Helmet>
 
       <S.Container>
-        {/* 💬 왼쪽: 채팅 리스트 */}
+        {/* 💬 왼쪽 채팅 리스트 */}
         <S.ChatList>
           <S.ChatListHeader>
             <S.ChatIcon src="/assets/chat-icon.svg" alt="chat" />
@@ -91,7 +90,7 @@ export default function ChatPage() {
           </S.ChatItemList>
         </S.ChatList>
 
-        {/* 💭 오른쪽: 채팅방 */}
+        {/* 💭 오른쪽 채팅방 */}
         <S.ChatRoom>
           {selectedChat ? (
             <>
@@ -103,15 +102,37 @@ export default function ChatPage() {
                 <S.ChatRoomUserName>{selectedChat.userName}</S.ChatRoomUserName>
               </S.ChatRoomHeader>
 
-              {/* ✅ 메시지 영역에 ref 연결 */}
               <S.MessageList ref={messageListRef}>
-                {selectedChat.messages.map((msg) => (
-                  <S.MessageRow key={msg.id} isMine={msg.isMine}>
-                    <S.MessageBubble isMine={msg.isMine}>
-                      {msg.content}
-                    </S.MessageBubble>
-                  </S.MessageRow>
-                ))}
+                {selectedChat.messages.map((msg, index) => {
+                  const isMine = msg.isMine;
+                  const nextMsg = selectedChat.messages[index + 1];
+                  const isLastOfGroup =
+                    !nextMsg || nextMsg.isMine !== msg.isMine;
+
+                  return (
+                    <S.MessageRow
+                      key={msg.id}
+                      isMine={isMine}
+                      isLastOfGroup={isLastOfGroup}
+                    >
+                      {!isMine && isLastOfGroup && (
+                        <S.ProfileWrapper>
+                          <S.MessageProfile
+                            src={
+                              selectedChat.userProfile ||
+                              "/assets/default-profile.svg"
+                            }
+                            alt={selectedChat.userName}
+                          />
+                        </S.ProfileWrapper>
+                      )}
+
+                      <S.MessageBubble isMine={isMine}>
+                        {msg.content}
+                      </S.MessageBubble>
+                    </S.MessageRow>
+                  );
+                })}
               </S.MessageList>
 
               <S.ChatInputArea
@@ -127,6 +148,11 @@ export default function ChatPage() {
                   placeholder="메시지를 입력하세요..."
                   value={messageInput}
                   onChange={(e) => setMessageInput(e.target.value)}
+                  onCompositionStart={() => setIsComposing(true)}
+                  onCompositionEnd={(e) => {
+                    setIsComposing(false);
+                    setMessageInput(e.target.value);
+                  }}
                 />
                 <S.SendButton onClick={handleSend}>전송</S.SendButton>
               </S.ChatInputArea>

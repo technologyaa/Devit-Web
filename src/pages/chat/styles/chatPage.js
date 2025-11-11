@@ -25,7 +25,7 @@ export const ChatRoom = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #fafafa;
+  background-color: #f8f8f8ff;
 `;
 
 /* 상단 헤더 (채팅 제목 + 아이콘) */
@@ -134,18 +134,36 @@ export const MessageRow = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
+  gap: 6px;
+  margin-bottom: 4px;
+
+  /* 프로필이 붙는 마지막 메시지에는 여백 조금 추가 */
+  ${(props) =>
+    !props.isMine &&
+    props.isLastOfGroup &&
+    `
+      margin-bottom: 10px; /* 프로필 위쪽에 공간 */
+    `}
+`;
+
+export const MessageProfile = styled.img`
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 2px; /* 살짝 아래 정렬 */
 `;
 
 /* 메시지 말풍선 */
 export const MessageBubble = styled.div`
   max-width: 60%;
   padding: 10px 14px;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 14px;
   line-height: 1.4;
-  background-color: ${(props) => (props.isMine ? "#7b5cff" : "#ffffff")};
-  color: ${(props) => (props.isMine ? "#fff" : "#333")};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: ${(props) => (props.isMine ? "none" : "1px solid #f1f1f1ff")};
+  background-color: ${(props) => (props.isMine ? "#883cbe" : "#ffffff")};
+  color: ${(props) => (props.isMine ? "#fff" : "black")};
   white-space: pre-line;
 `;
 
@@ -168,14 +186,14 @@ export const ChatInput = styled.input`
   font-size: 14px;
   outline: none;
   &:focus {
-    border-color: #7b5cff;
+    border-color: #883cbe;
   }
 `;
 
 export const SendButton = styled.button`
   margin-left: 12px;
-  padding: 8px 16px;
-  background-color: #7b5cff;
+  padding: 10px 18px;
+  background-color: #883cbe;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -204,4 +222,12 @@ export const EmptyMessage = styled.div`
   justify-content: center;
   color: #777;
   font-size: 16px;
+`;
+
+// 👤 프로필 이미지 감싸는 박스
+export const ProfileWrapper = styled.div`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: flex-end;
 `;
