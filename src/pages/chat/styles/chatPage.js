@@ -11,7 +11,7 @@ export const Container = styled.div`
 
 /* 왼쪽: 채팅 리스트 */
 export const ChatList = styled.div`
-  width: 320px;
+  min-width: 280px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -83,22 +83,8 @@ export const ChatInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-left: 12px;
+  gap: 6px;
   flex: 1;
-`;
-
-export const ChatUserName = styled.div`
-  font-size: 15px;
-  font-weight: 600;
-  color: #1e1e1e;
-`;
-
-export const ChatLastMessage = styled.div`
-  font-size: 13px;
-  color: #777;
-  margin-top: 3px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 /* ----------------------------- */
@@ -147,8 +133,8 @@ export const MessageRow = styled.div`
 `;
 
 export const MessageProfile = styled.img`
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 2px; /* 살짝 아래 정렬 */
@@ -230,4 +216,22 @@ export const ProfileWrapper = styled.div`
   height: 40px;
   display: flex;
   align-items: flex-end;
+`;
+
+export const ChatUserName = styled.div`
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  overflow: hidden; /* 넘치는 부분 숨김 */
+  text-overflow: ellipsis; /* ... 처리 */
+  max-width: 120px; /* 적절한 최대 너비 (필요시 조정) */
+`;
+
+export const ChatLastMessage = styled.div`
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px; /* 적절한 최대 너비 */
 `;

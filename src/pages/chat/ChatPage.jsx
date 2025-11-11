@@ -51,7 +51,6 @@ export default function ChatPage() {
       });
     }
   }, [selectedChat.messages]);
-
   return (
     <>
       <Helmet>

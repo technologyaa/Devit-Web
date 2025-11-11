@@ -61,9 +61,9 @@ export const chatList = [
   },
   {
     id: 2,
-    userName: "이수진",
+    userName: "웹준",
     userProfile: "/assets/dummy-profile.svg",
-    lastMessage: "다음 회의는 오후 3시로 변경되었습니다.",
+    lastMessage: "장강민은 바보 멍청이 입니다 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
     lastTime: "2025-11-10T17:00:00",
     messages: [],
   },
