@@ -33,6 +33,16 @@ export default function DevelopersPage() {
     console.log(`Selected category: ${category}`);
   };
 
+  const filteredUsers = users.filter((user) => {
+    if (selectedCategory === "전체") {
+      return true;
+    }
+
+    return user.job === selectedCategory;
+  });
+
+  const displayedUsers = filteredUsers;
+
   return (
     <>
       <Helmet>
@@ -75,7 +85,7 @@ export default function DevelopersPage() {
           </S.Top>
 
           <S.DevUser>
-            {users.map((user) => (
+            {displayedUsers.map((user) => (
               <S.DeveloperCard key={user.id}>
                 <S.ProfileArea>
                   <S.TemperatureBar $temp={user.temp} />

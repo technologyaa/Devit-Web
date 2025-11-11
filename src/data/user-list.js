@@ -36,7 +36,7 @@ const users = [
   {
     id: "bung",
     name: "붕붕이",
-    job: "And",
+    job: "Android",
     info: "안녕하세요. 저는 붕붕이...",
     temp: 10,
     img: "/assets/profile-icon.svg"
