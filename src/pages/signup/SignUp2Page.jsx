@@ -13,8 +13,8 @@ export default function SignUp2Page() {
   };
 
   const signUp = () => {
-    navigate("/signin");
     Alarm("🚪", "회원가입 되었습니다.", "#4CAF50", "#E8F5E9");
+    navigate("/signin");
   };
 
   return (

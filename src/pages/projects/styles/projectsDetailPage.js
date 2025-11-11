@@ -50,8 +50,11 @@ export const TopWrapper = styled.div`
 export const Banner = styled.div`
   width: 100%;
   height: 220px;
+  background-image: url(${(props) => props.$backgroundImage});
   background-color: #e0e0e0;
   border-radius: 12px;
+  background-size: cover;
+  background-position: center;
 `;
 
 export const BottomLeft = styled.div`
