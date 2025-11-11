@@ -60,6 +60,7 @@ export const router = createBrowserRouter([
       { path: "/offer/dev", Component: DevelopersPage },
       { path: "/shop", Component: ShopPage },
       { path: "/profile", Component: ProfilePage },
+      { index: true, Component: HomePage },
     ],
   },
 ]);
