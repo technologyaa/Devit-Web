@@ -69,8 +69,7 @@ export const ChatItem = styled.div`
   background-color: ${(props) => (props.isActive ? "#f8f9fa" : "transparent")};
 
   &:hover {
-    background-color: ${(props) =>
-      props.isActive ? "#f8f9fa" : "#f8f9fa"}; /* ✅ hover 색상 구분 */
+    background-color: #f8f9fa;
   }
 `;
 

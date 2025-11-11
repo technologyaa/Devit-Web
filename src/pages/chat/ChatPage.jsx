@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { chatList as initialChatList } from "@/data/chat-list";
 
 export default function ChatPage() {
-  // 💾 localStorage에 저장된 채팅이 있으면 그걸 불러오고, 없으면 초기값 사용
+  // 💾 localStorage에 저장된 채팅이 있으면 불러오고, 없으면 초기값 사용
   const [chatList, setChatList] = useState(() => {
     const saved = localStorage.getItem("chatList");
     return saved ? JSON.parse(saved) : initialChatList;
@@ -53,7 +53,7 @@ export default function ChatPage() {
     setSelectedChat(updatedChat);
     setMessageInput("");
 
-    // 💾 localStorage에 즉시 저장 (push 효과)
+    // 💾 localStorage 저장
     localStorage.setItem("chatList", JSON.stringify(updatedChatList));
 
     setTimeout(() => {
@@ -69,7 +69,7 @@ export default function ChatPage() {
     }
   }, [selectedChat.messages]);
 
-  // ✅ 선택된 채팅 변경 시에도 스크롤 유지
+  // ✅ chatList 변경 시 localStorage 저장
   useEffect(() => {
     localStorage.setItem("chatList", JSON.stringify(chatList));
   }, [chatList]);
@@ -94,10 +94,7 @@ export default function ChatPage() {
               <S.ChatItem
                 key={chat.id}
                 onClick={() => setSelectedChat(chat)}
-                style={{
-                  backgroundColor:
-                    selectedChat.id === chat.id ? "#f3f0ff" : "transparent",
-                }}
+                isActive={selectedChat.id === chat.id} // ✅ props 전달
               >
                 <S.ChatProfile
                   src={chat.userProfile || "/assets/default-profile.svg"}
@@ -120,7 +117,9 @@ export default function ChatPage() {
             <>
               <S.ChatRoomHeader>
                 <S.ChatRoomProfile
-                  src={selectedChat.userProfile}
+                  src={
+                    selectedChat.userProfile || "/assets/default-profile.svg"
+                  }
                   alt={selectedChat.userName}
                 />
                 <S.ChatRoomUserName>{selectedChat.userName}</S.ChatRoomUserName>
