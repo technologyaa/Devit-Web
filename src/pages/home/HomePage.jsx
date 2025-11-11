@@ -29,8 +29,8 @@ export default function HomePage() {
               <S.Goto>
                 {icons.map((icon, index) => {
                   return (
+                  <S.styledLink to={icon.url}>
                     <S.Card gradient={icon.gradient}>
-                      <Link to={icon.url}>
                         <S.ElementPlace>
                           <S.IconButton>
                             <S.Icon
@@ -52,46 +52,46 @@ export default function HomePage() {
                             {icons[index].text}
                           </p>
                         </S.ElementPlace>
-                      </Link>
                     </S.Card>
-                  );
+                  </S.styledLink>
+              );
                 })}
-              </S.Goto>
-            </S.Middle>
-          </S.TopMiddleWrap>
-          <S.Bottom>
-            <p style={{ fontSize: "26px", fontWeight: "500" }}>추천 개발자</p>
-            <S.RecommendDev>
-              {devlopers.map((devloper, index) => {
-                return (
-                  <S.Devloper>
-                    <S.Profile
-                      src="./assets/dummy-profile.svg"
-                      alt="개발자 프로필"
-                    ></S.Profile>
-                    <S.DevAndJob>
-                      <p
-                        style={{
-                          fontSize: "clamp(16px, 1.2vw, 20px)",
-                          fontWeight: "440",
-                        }}
-                      >
-                        {devloper.name}
-                      </p>
-                      <p style={{ fontSize: "clamp(14px, 1vw, 18px)" }}>
-                        {devloper.job}
-                      </p>
-                    </S.DevAndJob>
-                    <p style={{ fontSize: "12px", color: "#747474" }}>
-                      {devloper.text}
+            </S.Goto>
+          </S.Middle>
+        </S.TopMiddleWrap>
+        <S.Bottom>
+          <p style={{ fontSize: "26px", fontWeight: "500" }}>추천 개발자</p>
+          <S.RecommendDev>
+            {devlopers.map((devloper, index) => {
+              return (
+                <S.Devloper>
+                  <S.Profile
+                    src="./assets/dummy-profile.svg"
+                    alt="개발자 프로필"
+                  ></S.Profile>
+                  <S.DevAndJob>
+                    <p
+                      style={{
+                        fontSize: "clamp(16px, 1.2vw, 20px)",
+                        fontWeight: "440",
+                      }}
+                    >
+                      {devloper.name}
                     </p>
-                  </S.Devloper>
-                );
-              })}
-            </S.RecommendDev>
-          </S.Bottom>
-        </S.Frame>
-      </S.Container>
+                    <p style={{ fontSize: "clamp(14px, 1vw, 18px)" }}>
+                      {devloper.job}
+                    </p>
+                  </S.DevAndJob>
+                  <p style={{ fontSize: "12px", color: "#747474" }}>
+                    {devloper.text}
+                  </p>
+                </S.Devloper>
+              );
+            })}
+          </S.RecommendDev>
+        </S.Bottom>
+      </S.Frame>
+    </S.Container >
     </>
   );
 }

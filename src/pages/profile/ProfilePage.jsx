@@ -47,6 +47,7 @@ const Progress = (currentValue, maxValue) => {
   const value = parseFloat(currentValue);
   const max = parseFloat(maxValue);
 
+  if (value < 0) return "0%"
   if (isNaN(value) || isNaN(max) || max <= 0) return "0%";
 
   const percentage = (value / max) * 100;
@@ -55,12 +56,18 @@ const Progress = (currentValue, maxValue) => {
 
 export default function ProfilePage() {
   
-  const [myProfiles, setMyProfiles] = useState(profiles);
-  const profile = myProfiles[0]; 
+  // 수정 1: 전역 데이터 (profiles)를 직접 사용합니다.
+  // 수정 2: 변경 후 컴포넌트 강제 리렌더링을 위한 더미 상태를 추가합니다.
+  const [reloadKey, setReloadKey] = useState(0); 
+  const profile = profiles[0]; // 전역 데이터에서 직접 프로필 정보를 가져옵니다.
   
-  const projectsCount = profile.CompletedProjects || "0";
-  const tempValue = profile.Temp || "0";
+  const projectsCountValue = parseFloat(profile?.CompletedProjects ?? "");
+  const tempValueValue = parseFloat(profile?.Temp ?? "");
 
+  const projectsCount = isNaN(projectsCountValue) ? "0" : String(projectsCountValue);
+  const tempValue = isNaN(tempValueValue) ? "0" : String(tempValueValue);
+
+  
   const completedProjectsWidth = Progress(projectsCount, 20); // 최대 프로젝트 길이
   const tempWidth = Progress(tempValue, 100); // 최대 온도 
   const tempColor = getTempColor(tempValue, 100);
@@ -71,19 +78,12 @@ export default function ProfilePage() {
     if (file) {
       const newImageUrl = URL.createObjectURL(file);
 
-      // setMyProfiles 함수를 사용하여 myProfiles 상태 업데이트
-      setMyProfiles((prevProfiles) => {
-        const newProfiles = [...prevProfiles];
+      // 수정 3: imported 'profiles' 배열을 직접 수정합니다. (영속성 확보)
+      profiles[0].img = newImageUrl;
 
-        const updatedProfile = { 
-          ...newProfiles[0],
-          img: newImageUrl
-        };
-
-        newProfiles[0] = updatedProfile;
-
-        return newProfiles;
-      });
+      // 수정 4: 상태를 변경하여 컴포넌트를 강제 리렌더링합니다.
+      setReloadKey(prev => prev + 1); 
+      
       event.target.value = null;
     }
   }
@@ -122,14 +122,14 @@ export default function ProfilePage() {
             </S.Profile>
             <S.TopRight>
                 <S.StatBox>
-                    <S.StatValue>{profile.CompletedProjects}</S.StatValue>
+                    <S.StatValue>{projectsCount}</S.StatValue>
                     <S.StatLabel>완료한 프로젝트</S.StatLabel>
                     <S.ProgressBarContainer>
                         <S.ProgressBar width={completedProjectsWidth} color="#4D96FF" />
                     </S.ProgressBarContainer>
                 </S.StatBox>
                 <S.StatBox>
-                    <S.StatValue>{profile.Temp}°C</S.StatValue>
+                    <S.StatValue>{tempValue}°C</S.StatValue>
                     <S.StatLabel>온도</S.StatLabel>
                     <S.ProgressBarContainer>
                         <S.ProgressBar width={tempWidth} color={tempColor} />
