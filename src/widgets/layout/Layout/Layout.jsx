@@ -15,7 +15,7 @@ const Layout = () => {
   return (
     <S.Wrapper isChatPage={isChatPage}>
       {isChatPage ? <SideBarFolded /> : <SideBar />}
-      <S.Content>
+      <S.Content isChatPage={isChatPage}>
         <Outlet />
       </S.Content>
     </S.Wrapper>
