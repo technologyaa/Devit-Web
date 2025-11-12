@@ -7,7 +7,8 @@ const users = [
     job: "웹",
     info: "소개글 작성",
     temp: 90,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
+    
   },
   {
     id: "webjoon",
@@ -15,7 +16,7 @@ const users = [
     job: "웹",
     info: "디자인/웹 전문입니다",
     temp: 100,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
   },
   {
     id: "technologyaa",
@@ -23,7 +24,7 @@ const users = [
     job: "서버",
     info: "Devit을 만든 나르샤팀입니다.",
     temp: 40,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
   },
   {
     id: "Devit",
@@ -31,15 +32,15 @@ const users = [
     job: "웹",
     info: "Devit을 만들었습니다.",
     temp: 20,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
   },
   {
     id: "bung",
     name: "붕붕이",
-    job: "Android",
+    job: "And",
     info: "안녕하세요. 저는 붕붕이...",
     temp: 10,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
   },
   {
     id: "test1",
@@ -47,7 +48,7 @@ const users = [
     job: "iOS",
     info: "Test 개발자 프로필입...",
     temp: 36.5,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
   },
   {
     id: "test2",
@@ -55,7 +56,7 @@ const users = [
     job: "디자인",
     info: "안녕하세요. 저는  Devit...",
     temp: 100,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
   },
   {
     id: "amso",
@@ -63,7 +64,7 @@ const users = [
     job: "게임",
     info: "게임 잘합니다",
     temp: 100,
-    img: "/assets/profile-icon.svg"
+    img: "/assets/dummy-profile.svg"
   },
 ];
 
