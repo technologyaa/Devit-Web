@@ -36,8 +36,8 @@ export const DevText = styled.div`
 
 export const SearchBox = styled.div`
   display: flex;
-  padding: 14px;
   padding-left: 16px;
+  padding-right: 16px;
   border-radius: 24px;
   border: 1px solid #cccccc;
   width: 32vw;
@@ -53,6 +53,7 @@ export const Search = styled.input`
   border: none;
   outline: none;
   width: 100vw;
+  height: 40px;
   &::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
