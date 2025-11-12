@@ -46,6 +46,10 @@ export default function DevelopersPage() {
       return true;
     }
 
+    if (selectedCategory === "Android") {
+        return user.job === "And";
+    }
+
     return user.job === selectedCategory;
   });
 
@@ -101,8 +105,10 @@ export default function DevelopersPage() {
                 </S.ProfileArea>
 
                 <S.CardInfoArea>
-                  <S.CardName>{user.name}</S.CardName>
-                  <S.CardJob>{user.job}</S.CardJob>
+                  <S.PersonalInfo>
+                    <S.CardName>{user.name}</S.CardName>
+                    <S.CardJob>{user.job}</S.CardJob>
+                  </S.PersonalInfo>
                   <S.CardInfo>{truncateText(user.info, 15)}</S.CardInfo>
                 </S.CardInfoArea>
               </S.DeveloperCard>
