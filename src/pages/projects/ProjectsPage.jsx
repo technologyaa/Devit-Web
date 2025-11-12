@@ -66,21 +66,37 @@ export default function ProjectsPage() {
           </S.Top>
 
           <S.Bottom>
-            {projects.map((project) => (
-              <S.Box
-                key={project.id}
-                onClick={() => navigate(`/projects/${project.id}`)}
-              >
-                <S.Thumbnail
-                  src={project.thumbnail}
-                  alt={`${project.title} 썸네일`}
+            {projects.length === 0 ? (
+              <S.EmptyState>
+                <S.EmptyIcon
+                  src="/assets/empty-project.svg"
+                  alt="프로젝트 없음"
                 />
-                <S.BoxBottom>
-                  <S.Title>{project.title}</S.Title>
-                  <S.Owner>{project.owner}</S.Owner>
-                </S.BoxBottom>
-              </S.Box>
-            ))}
+                <S.EmptyText>아직 생성된 프로젝트가 없어요.</S.EmptyText>
+                <S.EmptySubText>
+                  아래 버튼을 눌러 새 프로젝트를 만들어보세요!
+                </S.EmptySubText>
+                <S.EmptyButton onClick={openModal}>
+                  새 프로젝트 만들기
+                </S.EmptyButton>
+              </S.EmptyState>
+            ) : (
+              projects.map((project) => (
+                <S.Box
+                  key={project.id}
+                  onClick={() => navigate(`/projects/${project.id}`)}
+                >
+                  <S.Thumbnail
+                    src={project.thumbnail}
+                    alt={`${project.title} 썸네일`}
+                  />
+                  <S.BoxBottom>
+                    <S.Title>{project.title}</S.Title>
+                    <S.Owner>{project.owner}</S.Owner>
+                  </S.BoxBottom>
+                </S.Box>
+              ))
+            )}
           </S.Bottom>
         </S.Frame>
       </S.Container>
