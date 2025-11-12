@@ -55,7 +55,7 @@ const users = [
     name: "test2",
     job: "디자인",
     info: "안녕하세요. 저는  Devit...",
-    temp: 100,
+    temp: 30,
     img: "/assets/dummy-profile.svg"
   },
   {

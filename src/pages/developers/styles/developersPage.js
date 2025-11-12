@@ -121,40 +121,28 @@ export const DropdownButton = styled.button`
 // ⭐️ 개발자 목록 컨테이너 (DevUser 업데이트)
 export const DevUser = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 24px;
 `;
 
 // ⭐️ 개별 개발자 카드 (이미지 디자인 반영)
 export const DeveloperCard = styled.div`
   width: 100%;
-  max-width: 180px;
-  height: 250px; /* 이미지 높이에 맞게 조정 */
+  height: auto; /* 내용에 따라 높이가 결정됨 */
+  position: relative; 
   border-radius: 8px;
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
+  flex-direction: column; 
   cursor: pointer;
 `;
 
 // ⭐️ 프로필 이미지 영역 (카드 상단 절반 차지)
 export const ProfileArea = styled.div`
   width: 100%;
-  height: 100%; /* 카드 상단 60% 차지 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  font-size: 30px; /* 텍스트 크기 */
-  font-weight: 700;
-  color: white;
-
-  /* 실제 이미지를 사용한다면 이 부분을 조정해야 합니다. */
-  background-image: ${(props) =>
-    props.$profileUrl ? `url(${props.$profileUrl})` : "none"};
-  background-size: cover;
-  background-position: center;
+  padding-bottom: 100%; 
+  height: 0;
+  flex-shrink: 0;
+  position: relative; /* 내부 요소 위치의 기준이 됨 */
 `;
 
 export const ProfileImg = styled.img`
@@ -219,13 +207,15 @@ export const TemperatureBar = styled.div`
 // ⭐️ 카드 하단 정보 영역
 export const CardInfoArea = styled.div`
   width: 100%;
-  height: 30%; /* 카드 하단 40% 차지 */
+  flex-shrink: 0;
   padding-top: 10px;
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 3px;
+  /* ⭐️ 수정/확인: CardInfoArea를 벗어나는 모든 내용을 숨김 처리 */
+  overflow: hidden;
 `;
 
 export const PersonalInfo = styled.div`
@@ -250,7 +240,8 @@ export const CardInfo = styled.div`
   font-size: 14px;
   color: #555555;
   line-height: 1.3;
-  height: 28px;
+  /* height: 28px; 제거됨 */
+  /* ⭐️ 수정/확인: 텍스트가 영역을 벗어나지 않도록 overflow: hidden; 적용 */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
