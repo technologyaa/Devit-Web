@@ -38,7 +38,7 @@ export const DevText = styled.div`
 
 export const SearchBox = styled.div`
   display: flex;
-  padding: 10px;
+  padding: 14px;
   padding-left: 16px;
   border-radius: 24px;
   border: 1px solid #cccccc;
