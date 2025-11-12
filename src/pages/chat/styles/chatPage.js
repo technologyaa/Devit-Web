@@ -6,7 +6,8 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  background-color: #f8f8f8;
 `;
 
 /* 왼쪽: 채팅 리스트 */
@@ -15,37 +16,39 @@ export const ChatList = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
   background-color: #fff;
 `;
 
-/* 오른쪽: 채팅방 영역 */
+/* 오른쪽: 채팅방 */
 export const ChatRoom = styled.div`
-  width: 100%;
+  flex: 1;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #f8f8f8ff;
+  background-color: #fafafa;
 `;
 
 /* 상단 헤더 (채팅 제목 + 아이콘) */
 export const ChatListHeader = styled.div`
   width: 100%;
-  height: 140px;
+  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
-  font-weight: 500;
-  gap: 8px;
-  border-bottom: 1px solid #d9dce0;
+  font-size: 22px;
+  font-weight: 600;
+  gap: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fefefe;
 `;
 
 export const ChatIcon = styled(Image)`
-  width: 32px;
+  width: 28px;
+  height: 28px;
 `;
 
-/* 채팅 리스트 전체 */
+/* 채팅 리스트 영역 */
 export const ChatItemList = styled.div`
   width: 100%;
   display: flex;
@@ -56,20 +59,25 @@ export const ChatItemList = styled.div`
   }
 `;
 
-/* 채팅 목록 하나 */
+/* 개별 채팅 항목 */
 export const ChatItem = styled.div`
   width: 100%;
   height: 68px;
   display: flex;
   align-items: center;
   padding: 0 16px;
-  border-bottom: 1px solid #d9dce0;
+  border-bottom: 1px solid #ececec;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  background-color: ${(props) => (props.isActive ? "#f8f9fa" : "transparent")};
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  background-color: ${(props) => (props.isActive ? "#f3f3f3" : "transparent")};
 
   &:hover {
-    background-color: #f8f9fa;
+    background-color: #f5f5f5;
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 `;
 
@@ -78,6 +86,7 @@ export const ChatProfile = styled.img`
   height: 44px;
   border-radius: 50%;
   object-fit: cover;
+  border: 1px solid #e5e5e5;
 `;
 
 export const ChatInfo = styled.div`
@@ -85,22 +94,37 @@ export const ChatInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-left: 12px;
-  gap: 6px;
+  gap: 4px;
   flex: 1;
 `;
 
-/* ----------------------------- */
-/* 🗨️ 오른쪽 ChatRoom 내부 스타일 */
-/* ----------------------------- */
+export const ChatUserName = styled.div`
+  font-weight: 600;
+  font-size: 15px;
+  color: #1e1e1e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
 
-/* 상단 사용자 정보 영역 */
+export const ChatLastMessage = styled.div`
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+`;
+
+/* 오른쪽 채팅방 헤더 */
 export const ChatRoomHeader = styled.div`
   height: 80px;
   display: flex;
   align-items: center;
   padding: 0 24px;
-  border-bottom: 1px solid #d9dce0;
+  border-bottom: 1px solid #e0e0e0;
   background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 `;
 
 export const ChatRoomProfile = styled.img`
@@ -117,52 +141,76 @@ export const ChatRoomUserName = styled.div`
   color: #1e1e1e;
 `;
 
-/* 개별 메시지 행 */
+/* 메시지 리스트 */
+export const MessageList = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  gap: 12px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  background-color: #fafafa;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 4px;
+  }
+`;
+
+/* 메시지 한 줄 */
 export const MessageRow = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
   gap: 6px;
-  margin-bottom: 4px;
+  margin-bottom: ${(props) => (props.isLastOfGroup ? "14px" : "4px")};
+`;
 
-  /* 프로필이 붙는 마지막 메시지에는 여백 조금 추가 */
-  ${(props) =>
-    !props.isMine &&
-    props.isLastOfGroup &&
-    `
-      margin-bottom: 10px; /* 프로필 위쪽에 공간 */
-    `}
+export const ProfileWrapper = styled.div`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: flex-end;
 `;
 
 export const MessageProfile = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 2px; /* 살짝 아래 정렬 */
 `;
 
 /* 메시지 말풍선 */
 export const MessageBubble = styled.div`
   max-width: 60%;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 14px;
   line-height: 1.4;
-  border: ${(props) => (props.isMine ? "none" : "1px solid #f1f1f1ff")};
+  border: ${(props) => (props.isMine ? "none" : "1px solid #ececec")};
   background-color: ${(props) => (props.isMine ? "#883cbe" : "#ffffff")};
-  color: ${(props) => (props.isMine ? "#fff" : "black")};
+  color: ${(props) => (props.isMine ? "#fff" : "#1e1e1e")};
   white-space: pre-line;
+  word-break: break-word;
+  box-shadow: ${(props) =>
+    props.isMine
+      ? "0 1px 2px rgba(136,60,190,0.1)"
+      : "0 1px 3px rgba(0,0,0,0.04)"};
 `;
 
-/* 하단 메시지 입력창 */
+/* 입력창 */
 export const ChatInputArea = styled.div`
   height: 80px;
   display: flex;
   align-items: center;
   padding: 0 24px;
   background-color: #fff;
-  border-top: 1px solid #d9dce0;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.04);
 `;
 
 export const ChatInput = styled.input`
@@ -173,8 +221,12 @@ export const ChatInput = styled.input`
   padding: 0 16px;
   font-size: 14px;
   outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
   &:focus {
     border-color: #883cbe;
+    box-shadow: 0 0 0 2px rgba(136, 60, 190, 0.15);
   }
 `;
 
@@ -184,23 +236,18 @@ export const SendButton = styled.button`
   background-color: #883cbe;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  &:hover {
-    background-color: #6a4be8;
-  }
-`;
+  transition: background-color 0.2s, transform 0.1s;
 
-export const MessageList = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  gap: 12px;
-  overflow-y: auto; /* ✅ 스크롤 가능 */
-  scroll-behavior: smooth; /* ✅ 부드러운 이동 */
+  &:hover {
+    background-color: #7c32b2;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
 `;
 
 export const EmptyMessage = styled.div`
@@ -210,30 +257,4 @@ export const EmptyMessage = styled.div`
   justify-content: center;
   color: #777;
   font-size: 16px;
-`;
-
-// 👤 프로필 이미지 감싸는 박스
-export const ProfileWrapper = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: flex-end;
-`;
-
-export const ChatUserName = styled.div`
-  font-weight: 600;
-  font-size: 15px;
-  white-space: nowrap; /* 줄바꿈 방지 */
-  overflow: hidden; /* 넘치는 부분 숨김 */
-  text-overflow: ellipsis; /* ... 처리 */
-  max-width: 120px; /* 적절한 최대 너비 (필요시 조정) */
-`;
-
-export const ChatLastMessage = styled.div`
-  font-size: 13px;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 180px; /* 적절한 최대 너비 */
 `;
