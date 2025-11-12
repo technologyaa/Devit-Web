@@ -4,27 +4,68 @@ import { Helmet } from "react-helmet";
 import { chatList as initialChatList } from "@/data/chat-list";
 
 export default function ChatPage() {
-  // 💾 localStorage에 저장된 채팅이 있으면 불러오고, 없으면 초기값 사용
+  // ChatPage.jsx 안의 이 부분 수정
+
   const [chatList, setChatList] = useState(() => {
     const saved = localStorage.getItem("chatList");
-    return saved ? JSON.parse(saved) : initialChatList;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // 🔹 메시지가 하나라도 있는 경우에만 localStorage 데이터 사용
+        const hasMessages = parsed.some(
+          (chat) => chat.messages && chat.messages.length > 0
+        );
+        if (hasMessages) return parsed;
+      } catch {
+        console.warn("⚠️ localStorage 데이터 파싱 실패, 기본값 사용");
+      }
+    }
+    return initialChatList;
   });
 
-  const [selectedChat, setSelectedChat] = useState(
-    chatList.find((c) => c.id === 1) || chatList[0]
-  );
+  const [selectedChat, setSelectedChat] = useState(() => {
+    const saved = localStorage.getItem("selectedChatId");
+    const savedList = localStorage.getItem("chatList");
+    if (saved && savedList) {
+      const parsed = JSON.parse(savedList);
+      return parsed.find((chat) => chat.id === Number(saved)) || parsed[0];
+    }
+    return initialChatList[0];
+  });
+
   const [messageInput, setMessageInput] = useState("");
   const [isComposing, setIsComposing] = useState(false);
   const isSending = useRef(false);
   const messageListRef = useRef(null);
 
-  // 💬 메시지 전송 함수
+  // 🔗 링크 자동 감지 함수
+  const renderMessageWithLinks = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <S.LinkText
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {part}
+          </S.LinkText>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
+
+  // ✅ 메시지 전송
   const handleSend = () => {
     if (isSending.current || isComposing) return;
     if (!messageInput.trim()) return;
 
     isSending.current = true;
-
     const newMessage = {
       id: selectedChat.messages.length + 1,
       sender: "나",
@@ -33,27 +74,20 @@ export default function ChatPage() {
       isMine: true,
     };
 
-    // 🔄 선택된 채팅 업데이트
     const updatedChat = {
       ...selectedChat,
       messages: [...selectedChat.messages, newMessage],
     };
 
-    // 🧩 chatList 상태 갱신
     const updatedChatList = chatList.map((chat) =>
       chat.id === updatedChat.id ? updatedChat : chat
     );
-
-    // 🧠 마지막 메시지 정보 자동 반영
-    const lastMsg = updatedChat.messages[updatedChat.messages.length - 1];
-    updatedChat.lastMessage = lastMsg?.content || "";
-    updatedChat.lastTime = lastMsg?.time || "";
 
     setChatList(updatedChatList);
     setSelectedChat(updatedChat);
     setMessageInput("");
 
-    // 💾 localStorage 저장
+    // ✅ localStorage에 저장
     localStorage.setItem("chatList", JSON.stringify(updatedChatList));
 
     setTimeout(() => {
@@ -61,18 +95,18 @@ export default function ChatPage() {
     }, 100);
   };
 
-  // ✅ 자동 스크롤
+  // ✅ 선택된 채팅방 ID 저장 (새로고침 후 유지)
+  useEffect(() => {
+    if (selectedChat) {
+      localStorage.setItem("selectedChatId", selectedChat.id);
+    }
+  }, [selectedChat]);
+
+  // ✅ 메시지 추가 시 자동 스크롤
   useEffect(() => {
     const el = messageListRef.current;
-    if (el) {
-      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-    }
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [selectedChat.messages]);
-
-  // ✅ chatList 변경 시 localStorage 저장
-  useEffect(() => {
-    localStorage.setItem("chatList", JSON.stringify(chatList));
-  }, [chatList]);
 
   return (
     <>
@@ -94,7 +128,7 @@ export default function ChatPage() {
               <S.ChatItem
                 key={chat.id}
                 onClick={() => setSelectedChat(chat)}
-                isActive={selectedChat.id === chat.id} // ✅ props 전달
+                isActive={selectedChat.id === chat.id}
               >
                 <S.ChatProfile
                   src={chat.userProfile || "/assets/default-profile.svg"}
@@ -103,7 +137,8 @@ export default function ChatPage() {
                 <S.ChatInfo>
                   <S.ChatUserName>{chat.userName}</S.ChatUserName>
                   <S.ChatLastMessage>
-                    {chat.lastMessage || "메시지가 없습니다."}
+                    {chat.messages[chat.messages.length - 1]?.content ||
+                      chat.lastMessage}
                   </S.ChatLastMessage>
                 </S.ChatInfo>
               </S.ChatItem>
@@ -117,9 +152,7 @@ export default function ChatPage() {
             <>
               <S.ChatRoomHeader>
                 <S.ChatRoomProfile
-                  src={
-                    selectedChat.userProfile || "/assets/default-profile.svg"
-                  }
+                  src={selectedChat.userProfile}
                   alt={selectedChat.userName}
                 />
                 <S.ChatRoomUserName>{selectedChat.userName}</S.ChatRoomUserName>
@@ -151,7 +184,7 @@ export default function ChatPage() {
                       )}
 
                       <S.MessageBubble isMine={isMine}>
-                        {msg.content}
+                        {renderMessageWithLinks(msg.content)}
                       </S.MessageBubble>
                     </S.MessageRow>
                   );
