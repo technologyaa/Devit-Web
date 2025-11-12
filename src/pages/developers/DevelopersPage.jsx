@@ -64,7 +64,7 @@ export default function DevelopersPage() {
               <S.DevText>개발자</S.DevText>
               <S.DevSearch>
                 <S.SearchBox>
-                  <S.SearchIcon src="/public/assets/Search.svg"></S.SearchIcon>
+                  <S.SearchIcon src="/assets/Search.svg"></S.SearchIcon>
                   <S.Search type="search" placeholder="검색어를 입력해주세요."></S.Search>
                 </S.SearchBox>
               </S.DevSearch>
