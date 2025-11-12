@@ -4,8 +4,8 @@ const profiles = [
     job: "iOS",
     email: "whatTV@technologyaa.com",
     img: "/assets/profile-icon.svg",
-    CompletedProjects: "", // -일때 짝대기 최대로 가는거 변경 해야함
-    Temp: "36.5",
+    CompletedProjects: "1", // -일때 짝대기 최대로 가는거 변경 해야함
+    Temp: "65",
     projectList: [
       { name: "서비스 Devit의 홈 화면 디자인", points: "+300" },
       { name: "서비스 Devit의 서버 구축", points: "+2400" },
