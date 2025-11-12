@@ -68,11 +68,7 @@ export default function ProjectsPage() {
           <S.Bottom>
             {projects.length === 0 ? (
               <S.EmptyState>
-                <S.EmptyIcon
-                  src="/assets/empty-project.svg"
-                  alt="프로젝트 없음"
-                />
-                <S.EmptyText>아직 생성된 프로젝트가 없어요.</S.EmptyText>
+                <S.EmptyText>아직 프로젝트가 없어요.</S.EmptyText>
                 <S.EmptySubText>
                   아래 버튼을 눌러 새 프로젝트를 만들어보세요!
                 </S.EmptySubText>

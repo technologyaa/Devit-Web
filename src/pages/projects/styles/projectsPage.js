@@ -260,8 +260,9 @@ export const EmptyState = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin-top: 60px;
-  color: #666;
+  margin-top: 80px;
+  color: black;
+  font-weight: 400;
 `;
 
 export const EmptyIcon = styled(Image)`
@@ -277,7 +278,7 @@ export const EmptyText = styled.div`
 
 export const EmptySubText = styled.div`
   font-size: 14px;
-  color: #999;
+  color: black;
 `;
 
 export const EmptyButton = styled.button`
