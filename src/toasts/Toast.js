@@ -1,15 +1,18 @@
 import styled, { keyframes } from "styled-components";
 
+// 슬라이드업
 const slideUp = keyframes`
   from { transform: translateY(12px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 `;
 
+// 기본 fadeOut (애니메이션)
 const fadeOut = keyframes`
   from { opacity: 1; }
-  to { transform: translateY(-12px); opacity: 0; }
+  to { opacity: 0; transform: translateY(-12px); }
 `;
 
+// progress bar
 const shrink = keyframes`
   from { width: 100%; }
   to { width: 0; }
@@ -26,11 +29,11 @@ export const ToastContainer = styled.div`
   font-weight: 600;
   font-size: 15px;
   width: 260px;
-  box-shadow: 0 8px 24px rgba(91, 33, 182, 0.2);
+  box-shadow: 0 8px 12px rgba(91, 33, 182, 0.2);
   position: relative;
   overflow: hidden;
-  animation: ${slideUp} 0.4s ease, ${fadeOut} 0.4s ease 2.6s forwards;
   height: 42px;
+  animation: ${slideUp} 0.4s ease forwards;
 
   &::after {
     content: "";
@@ -40,8 +43,13 @@ export const ToastContainer = styled.div`
     height: 4px;
     background: #ffffffaa;
     width: 100%;
-    animation: ${shrink} 2.6s linear forwards;
+    animation: ${shrink} 3s linear forwards;
     border-radius: 0 0 16px 16px;
+  }
+
+  // fadeOut 클래스 적용 시
+  &.fade-out {
+    animation: ${fadeOut} 0s ease forwards;
   }
 `;
 

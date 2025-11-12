@@ -253,3 +253,45 @@ export const ButtonGroup = styled.div`
   justify-content: flex-end;
   margin-top: 12px;
 `;
+
+export const EmptyState = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 80px;
+  color: black;
+  font-weight: 400;
+`;
+
+export const EmptyIcon = styled(Image)`
+  width: 120px;
+  height: 120px;
+  opacity: 0.5;
+`;
+
+export const EmptyText = styled.div`
+  font-size: 20px;
+  font-weight: 500;
+`;
+
+export const EmptySubText = styled.div`
+  font-size: 14px;
+  color: black;
+`;
+
+export const EmptyButton = styled.button`
+  margin-top: 12px;
+  font-size: 16px;
+  color: white;
+  background: #883cbe;
+  border: none;
+  border-radius: 6px;
+  width: 160px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.9;
+  }
+`;
