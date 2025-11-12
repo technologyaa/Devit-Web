@@ -222,42 +222,39 @@ export const NoAccLink = styled.a`
   text-decoration: none;
 `;
 
-export const BackgroundCircle1 = styled.div`
+export const BackgroundCircle = styled.div`
   position: fixed;
+  border-radius: 100%;
+`;
+
+export const BackgroundCircle1 = styled(BackgroundCircle)`
   left: -180px;
   bottom: -300px;
   background-color: rgba(136, 60, 190, 0.4);
   width: 460px;
   height: 460px;
-  border-radius: 100%;
 `;
 
-export const BackgroundCircle2 = styled.div`
-  position: fixed;
+export const BackgroundCircle2 = styled(BackgroundCircle)`
   left: 10px;
   bottom: -320px;
   background-color: rgba(171, 102, 221, 0.7);
   width: 400px;
   height: 400px;
-  border-radius: 100%;
 `;
 
-export const BackgroundCircle3 = styled.div`
-  position: fixed;
+export const BackgroundCircle3 = styled(BackgroundCircle)`
   right: -180px;
   bottom: -300px;
   background-color: rgba(136, 60, 190, 0.4);
   width: 460px;
   height: 460px;
-  border-radius: 100%;
 `;
 
-export const BackgroundCircle4 = styled.div`
-  position: fixed;
+export const BackgroundCircle4 = styled(BackgroundCircle)`
   right: 10px;
   bottom: -320px;
   background-color: rgba(171, 102, 221, 0.7);
   width: 400px;
   height: 400px;
-  border-radius: 100%;
 `;
