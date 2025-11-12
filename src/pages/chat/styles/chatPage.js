@@ -69,7 +69,7 @@ export const ChatItem = styled.div`
   background-color: ${(props) => (props.isActive ? "#f8f9fa" : "transparent")};
 
   &:hover {
-    background-color: #f8f9fa;
+    background-color: ${(props) => (props.isActive ? "#f8f9fa" : "#f8f9fa")};
   }
 `;
 
@@ -93,7 +93,6 @@ export const ChatInfo = styled.div`
 /* 🗨️ 오른쪽 ChatRoom 내부 스타일 */
 /* ----------------------------- */
 
-/* 상단 사용자 정보 영역 */
 export const ChatRoomHeader = styled.div`
   height: 80px;
   display: flex;
@@ -117,20 +116,17 @@ export const ChatRoomUserName = styled.div`
   color: #1e1e1e;
 `;
 
-/* 개별 메시지 행 */
 export const MessageRow = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
   gap: 6px;
   margin-bottom: 4px;
-
-  /* 프로필이 붙는 마지막 메시지에는 여백 조금 추가 */
   ${(props) =>
     !props.isMine &&
     props.isLastOfGroup &&
     `
-      margin-bottom: 10px; /* 프로필 위쪽에 공간 */
+      margin-bottom: 10px;
     `}
 `;
 
@@ -139,10 +135,9 @@ export const MessageProfile = styled.img`
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 2px; /* 살짝 아래 정렬 */
+  margin-bottom: 2px;
 `;
 
-/* 메시지 말풍선 */
 export const MessageBubble = styled.div`
   max-width: 60%;
   padding: 10px 14px;
@@ -153,9 +148,19 @@ export const MessageBubble = styled.div`
   background-color: ${(props) => (props.isMine ? "#883cbe" : "#ffffff")};
   color: ${(props) => (props.isMine ? "#fff" : "black")};
   white-space: pre-line;
+  word-break: break-word;
 `;
 
-/* 하단 메시지 입력창 */
+/* 🔗 메시지 내 링크 스타일 */
+export const LinkText = styled.a`
+  color: ${(props) => (props.isMine ? "#d4bfff" : "white")};
+  text-decoration: underline;
+  word-break: break-all;
+  &:hover {
+    text-decoration: none;
+  }
+`;
+
 export const ChatInputArea = styled.div`
   height: 80px;
   display: flex;
@@ -199,8 +204,8 @@ export const MessageList = styled.div`
   flex-direction: column;
   padding: 16px;
   gap: 12px;
-  overflow-y: auto; /* ✅ 스크롤 가능 */
-  scroll-behavior: smooth; /* ✅ 부드러운 이동 */
+  overflow-y: auto;
+  scroll-behavior: smooth;
 `;
 
 export const EmptyMessage = styled.div`
@@ -212,7 +217,6 @@ export const EmptyMessage = styled.div`
   font-size: 16px;
 `;
 
-// 👤 프로필 이미지 감싸는 박스
 export const ProfileWrapper = styled.div`
   width: 40px;
   height: 40px;
@@ -223,10 +227,10 @@ export const ProfileWrapper = styled.div`
 export const ChatUserName = styled.div`
   font-weight: 600;
   font-size: 15px;
-  white-space: nowrap; /* 줄바꿈 방지 */
-  overflow: hidden; /* 넘치는 부분 숨김 */
-  text-overflow: ellipsis; /* ... 처리 */
-  max-width: 120px; /* 적절한 최대 너비 (필요시 조정) */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 `;
 
 export const ChatLastMessage = styled.div`
@@ -235,5 +239,5 @@ export const ChatLastMessage = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px; /* 적절한 최대 너비 */
+  max-width: 180px;
 `;

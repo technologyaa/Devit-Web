@@ -9,6 +9,7 @@ export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const project = projectList.find((p) => p.id == +projectId) ?? [];
+  console.log(project);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -116,7 +117,7 @@ export default function ProjectsDetailPage() {
           </S.Top>
 
           <S.Bottom>
-            <S.Banner></S.Banner>
+            <S.Banner $backgroundImage={project.thumbnail}></S.Banner>
             <S.BottomWrapper>
               <S.BottomLeft>
                 <S.BottomTop>

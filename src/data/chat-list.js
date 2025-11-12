@@ -9,7 +9,7 @@ export const chatList = [
         sender: "강장민",
         content: "안녕하세요.",
         time: "2025-11-11T08:10:00",
-        isMine: false,
+        isMine: true,
       },
       {
         id: 2,
