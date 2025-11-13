@@ -285,6 +285,7 @@ export const EmptyButton = styled.button`
   margin-top: 12px;
   font-size: 16px;
   color: white;
+  opacity: 0.9;
   background: #883cbe;
   border: none;
   border-radius: 6px;
@@ -292,6 +293,6 @@ export const EmptyButton = styled.button`
   height: 40px;
   cursor: pointer;
   &:hover {
-    opacity: 0.9;
+    opacity: 1;
   }
 `;
