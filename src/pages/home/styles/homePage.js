@@ -48,7 +48,7 @@ export const Goto = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   align-items: stretch;
-  align-items: stretch
+  align-items: stretch;
 `;
 
 export const styledLink = styled(Link)`
@@ -149,4 +149,32 @@ export const DevAndJob = styled.div`
   height: 2.3rem;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const Text = styled.p`
+  font-size: 26px;
+  font-weight: 500;
+  color: black;
+`;
+
+export const NameText = styled.span`
+  color: ${(props) => props.TextColor};
+`;
+
+export const ElementName = styled.p`
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+`;
+
+export const ElementInfo = styled.p`
+  color: white;
+  font-size: 16px;
+`;
+
+export const NameAndJobText = styled.p`
+  font-size: ${(props) => props.FontSize};
+  font-weight: ${(props) =>
+    props.FontWeight >= 1 ? props.FontWeight : "16px"};
+  color: ${(props) => (props.TextColor == null ? "#000000" : props.TextColor)};
 `;

@@ -1,8 +1,10 @@
 import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
-import developers from "@/data/developer-list";
+import devlopers from "@/data/developer-list";
 import icons from "@/data/icon-list";
 import { Link } from "react-router";
+
+const gradients = {};
 
 export default function HomePage() {
   return (
@@ -16,78 +18,75 @@ export default function HomePage() {
           <S.TopMiddleWrap>
             <S.Top>
               <S.Name>
-                <span style={{ color: "#883CBE" }}>개발</span>과{" "}
-                <span style={{ color: "#D4AAF3" }}>기획</span>을 잇다
+                <S.NameText TextColor={"#883CBE"}>개발</S.NameText>과{" "}
+
+                <S.NameText TextColor={"#D4AAF3"}>기획</S.NameText>을 잇다
               </S.Name>
               <S.Cricle1></S.Cricle1>
               <S.Cricle2></S.Cricle2>
             </S.Top>
-
             <S.Middle>
-              <p style={{ fontSize: "26px", fontWeight: "500" }}>바로가기</p>
+              <S.Text>바로가기</S.Text>
               <S.Goto>
-                {icons.map((icon, index) => (
-                  <S.styledLink key={index} to={icon.url}>
-                    <S.Card gradient={icon.gradient}>
-                      <S.ElementPlace>
-                        <S.IconButton>
-                          <S.Icon
-                            src={icon.logo}
-                            alt="프로젝트 바로가기 아이콘"
-                          />
-                          <S.Button>바로 가기</S.Button>
-                        </S.IconButton>
-                        <p
-                          style={{
-                            color: "white",
-                            fontSize: "25px",
-                            fontWeight: "500",
-                          }}
-                        >
-                          {icon.name}
-                        </p>
-                        <p style={{ color: "white", fontSize: "16px" }}>
-                          {icon.text}
-                        </p>
-                      </S.ElementPlace>
-                    </S.Card>
-                  </S.styledLink>
-                ))}
+                {icons.map((icon, index) => {
+                  return (
+                    <S.styledLink to={icon.url}>
+                      <S.Card gradient={icon.gradient}>
+                        <S.ElementPlace>
+                          <S.IconButton>
+                            <S.Icon
+                              src={icons[index].logo}
+                              alt="프로젝트바로가기 아이콘"
+                            ></S.Icon>
+                            <S.Button>바로 가기</S.Button>
+                          </S.IconButton>
+                          <S.ElementName>
+                            {icons[index].name}
+                          </S.ElementName>
+                          <S.ElementInfo>
+                            {icons[index].text}
+                          </S.ElementInfo>
+                        </S.ElementPlace>
+                      </S.Card>
+                    </S.styledLink>
+                  );
+                })}
               </S.Goto>
             </S.Middle>
           </S.TopMiddleWrap>
-
           <S.Bottom>
-            <p style={{ fontSize: "26px", fontWeight: "500" }}>추천 개발자</p>
+            <S.Text>추천 개발자</S.Text>
             <S.RecommendDev>
-              {developers.map((developer, index) => (
-                <S.Devloper key={index}>
-                  <S.Profile
-                    src="./assets/dummy-profile.svg"
-                    alt="개발자 프로필"
-                  />
-                  <S.DevAndJob>
-                    <p
-                      style={{
-                        fontSize: "clamp(16px, 1.2vw, 20px)",
-                        fontWeight: "440",
-                      }}
-                    >
-                      {developer.name}
-                    </p>
-                    <p style={{ fontSize: "clamp(14px, 1vw, 18px)" }}>
-                      {developer.job}
-                    </p>
-                  </S.DevAndJob>
-                  <p style={{ fontSize: "12px", color: "#747474" }}>
-                    {developer.text}
-                  </p>
-                </S.Devloper>
-              ))}
+              {devlopers.map((devloper, index) => {
+                return (
+                  <S.Devloper>
+                    <S.Profile
+                      src="./assets/dummy-profile.svg"
+                      alt="개발자 프로필"
+                    ></S.Profile>
+
+                    <S.DevAndJob>
+                      <S.NameAndJobText
+                        FontSize={"clamp(16px, 1.2vw, 20px)"}
+                        FontWeight={"440"}>
+                        {devloper.name}
+                      </S.NameAndJobText>
+                      <S.NameAndJobText
+                        FontSize={"clamp(14px, 1vw, 18px)"}>
+                        {devloper.job}
+                      </S.NameAndJobText>
+                    </S.DevAndJob>
+
+                    <S.NameAndJobText FontSize={"12px"} TextColor={"#747474"}>
+                      {devloper.text}
+                    </S.NameAndJobText>
+                  </S.Devloper>
+                );
+              })}
             </S.RecommendDev>
           </S.Bottom>
         </S.Frame>
-      </S.Container>
+      </S.Container >
     </>
   );
 }
