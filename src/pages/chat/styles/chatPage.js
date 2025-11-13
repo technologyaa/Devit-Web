@@ -187,6 +187,7 @@ export const SendButton = styled.button`
   margin-left: 12px;
   padding: 10px 18px;
   background-color: #883cbe;
+  opacity: 0.9;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -194,7 +195,7 @@ export const SendButton = styled.button`
   cursor: pointer;
   transition: background-color 0.2s;
   &:hover {
-    background-color: #6a4be8;
+    opacity: 1;
   }
 `;
 
