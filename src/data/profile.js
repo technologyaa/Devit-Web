@@ -4,7 +4,6 @@ const profiles = [
     job: "iOS",
     email: "hello@technologyaa.com",
     img: "/assets/profile-icon.svg",
-feature/chat
     CompletedProjects: "2", // -일때 짝대기 최대로 가는거 변경 해야함
     Temp: "36.5",
     Temp: "65",
