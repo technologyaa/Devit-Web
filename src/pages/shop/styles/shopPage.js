@@ -7,7 +7,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: flex-end;
 `;
-
+  
 export const Frame = styled.div`
   width: 100%;
   height: 100%;
@@ -53,6 +53,24 @@ export const ShopButton = styled.button`
   background: #883CBE;
   color: #ffff;
   border-radius: 12px;
+
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  border: none; // 기본 border 제거
+
+  background: ${(props) => (props.$isSelected ? "#883CBE" : "transparent")};
+  color: ${(props) => (props.$isSelected ? "#ffff" : "#696969")};
+
+  &:hover {
+    background: ${(props) => (props.$isSelected ? "#883CBE" : "#f0f0f0")}; 
+    color: ${(props) => (props.$isSelected ? "#ffff" : "#000")};
+  }
 `;
 
 export const HaveCredit = styled.div`
@@ -84,10 +102,12 @@ export const HaveCreditText = styled.p`
 
 export const CreditBox = styled.div`
   width: 100%;
-  height: 35rem;
+  height: 100%;
   border-radius: 1.25rem;
   border: 1px solid #B0B0B0;
   background: #FFF;
+  box-sizing: border-box;
+  overflow: hidden;
 `;
 
 export const SpanText = styled.span`
@@ -107,6 +127,7 @@ export const CreditHistoryBtn = styled.button`
   background: rgba(226, 187, 255, 0.50);
   color: #ffffff;
   padding: 12px 17px;
+  cursor: pointer;
 `;
 
 export const Cricle = styled.div`
@@ -138,3 +159,62 @@ export const BoxText = styled.div`
   align-items: center;
   padding: 24px 20px;
 `;
+
+export const CardContainer = styled.div`
+  padding:20px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px; /* 카드 사이의 간격 */
+  box-sizing: border-box;
+`;
+
+export const CreditCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 10px;
+  height: 18rem;
+  border-radius: 1.25rem;
+  border: 1px solid #B0B0B0;
+  background: #FFF;
+  text-align: center;
+`;
+
+export const TextContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+`;
+
+export const CreditText = styled.span`
+  font-size: ${(props) => props.FontSize};
+  font-weight: ${(props) => props.FontWeight};
+  color: ${(props) => props.Color || '#000'};
+  padding-bottom: ${(props) => props.PaddingBottom || 0}
+`;
+
+export const PurchaseButton = styled.button`
+  width: 90%;
+  padding: 15px 0;
+  background: #883CBE;
+  color: #ffff;
+  font-size: 18px;
+  font-weight: 500;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #6a2e99;
+  }
+`;
+export const BoxTop = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+// ... (이후 스타일 코드)

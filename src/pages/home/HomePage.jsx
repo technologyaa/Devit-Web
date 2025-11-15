@@ -79,7 +79,7 @@ export default function HomePage() {
           <S.Bottom>
             <S.Text>추천 개발자</S.Text>
             <S.RecommendDev>
-              {devlopers.map((devloper, index) => {
+              {devlopers.map((devloper) => {
                 return (
                   <S.Devloper>
                     <S.Profile
