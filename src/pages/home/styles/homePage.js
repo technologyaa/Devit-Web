@@ -178,3 +178,12 @@ export const NameAndJobText = styled.p`
     props.FontWeight >= 1 ? props.FontWeight : "16px"};
   color: ${(props) => (props.TextColor == null ? "#000000" : props.TextColor)};
 `;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

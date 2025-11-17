@@ -3,10 +3,13 @@ import { Helmet } from "react-helmet";
 import devlopers from "@/data/developer-list";
 import icons from "@/data/icon-list";
 import { Link } from "react-router";
+import { useState } from "react";
 
 const gradients = {};
 
 export default function HomePage() {
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
   return (
     <>
       <Helmet>
@@ -19,7 +22,6 @@ export default function HomePage() {
             <S.Top>
               <S.Name>
                 <S.NameText TextColor={"#883CBE"}>개발</S.NameText>과{" "}
-
                 <S.NameText TextColor={"#D4AAF3"}>기획</S.NameText>을 잇다
               </S.Name>
               <S.Cricle1></S.Cricle1>
@@ -40,12 +42,8 @@ export default function HomePage() {
                             ></S.Icon>
                             <S.Button>바로 가기</S.Button>
                           </S.IconButton>
-                          <S.ElementName>
-                            {icons[index].name}
-                          </S.ElementName>
-                          <S.ElementInfo>
-                            {icons[index].text}
-                          </S.ElementInfo>
+                          <S.ElementName>{icons[index].name}</S.ElementName>
+                          <S.ElementInfo>{icons[index].text}</S.ElementInfo>
                         </S.ElementPlace>
                       </S.Card>
                     </S.styledLink>
@@ -68,11 +66,11 @@ export default function HomePage() {
                     <S.DevAndJob>
                       <S.NameAndJobText
                         FontSize={"clamp(16px, 1.2vw, 20px)"}
-                        FontWeight={"440"}>
+                        FontWeight={"440"}
+                      >
                         {devloper.name}
                       </S.NameAndJobText>
-                      <S.NameAndJobText
-                        FontSize={"clamp(14px, 1vw, 18px)"}>
+                      <S.NameAndJobText FontSize={"clamp(14px, 1vw, 18px)"}>
                         {devloper.job}
                       </S.NameAndJobText>
                     </S.DevAndJob>
@@ -86,7 +84,8 @@ export default function HomePage() {
             </S.RecommendDev>
           </S.Bottom>
         </S.Frame>
-      </S.Container >
+      </S.Container>
+      {isModalOpen && <S.ModalOverlay></S.ModalOverlay>}
     </>
   );
 }
