@@ -110,7 +110,7 @@ export default function HomePage() {
         </S.Frame>
       </S.Container>
       {isModalOpen && (
-        <S.ModalOverlay>
+        <S.ModalOverlay onClick={closeModal}>
           <S.ModalContent>
             <S.ModalWrapper>
               <S.ModalTitle>전공·직무 선택 후 한 줄 소개 작성</S.ModalTitle>

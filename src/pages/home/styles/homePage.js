@@ -206,7 +206,7 @@ export const ModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
 `;
 
 export const ModalTitle = styled.div`
