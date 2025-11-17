@@ -4,6 +4,7 @@ import devlopers from "@/data/developer-list";
 import icons from "@/data/icon-list";
 import { Link } from "react-router";
 import { useState } from "react";
+import { Alarm } from "@/toasts/Alarm";
 
 const gradients = {};
 
@@ -30,7 +31,7 @@ export default function HomePage() {
   const complete = () => {
     console.log("선택한 직무:", selectedJob);
     console.log("소개:", intro);
-
+    Alarm("✅", "정보 수정이 완료 되었습니다.", "#4CAF50", "#E8F5E9");
     setIsModalOpen(false);
   };
 
@@ -111,7 +112,7 @@ export default function HomePage() {
       </S.Container>
       {isModalOpen && (
         <S.ModalOverlay onClick={closeModal}>
-          <S.ModalContent>
+          <S.ModalContent onClick={(e) => e.stopPropagation()}>
             <S.ModalWrapper>
               <S.ModalTitle>전공·직무 선택 후 한 줄 소개 작성</S.ModalTitle>
 
