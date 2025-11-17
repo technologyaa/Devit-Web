@@ -10,41 +10,94 @@ const SHOP = [
 
 const CREDIT = [
   {
-    credit: "1,000", // 1000 크래딧
-    won: "10,000"
+    credit: "1,000",
+    won: "10,000",
+    icon: "/assets/coin-icon.svg"
   },
   {
-    credit: "10,000", // 10000 크래딧
-    won: "100,000"
+    credit: "10,000",
+    won: "100,000",
+    icon: "/assets/coin2-icon.svg"
   },
   {
-    credit: "100,000", // 10000 크래딧
-    won: "1,000,000"
+    credit: "100,000",
+    won: "1,000,000",
+    icon: "/assets/coins-icon.svg"
   }
 ]
 
+const SUBSCRIPTION_PLANS = [
+  {
+    title: "무료 플랜",
+    price: "₩0",
+    period: "",
+    features: [
+      "당일 개발자 매칭",
+      "개인 의뢰자 적합",
+      "소규모·단순 프로젝트",
+    ],
+    borderColor: null, // 무료 플랜은 테두리 없음
+  },
+  {
+    title: "프로 플랜",
+    price: "₩7,900",
+    period: "/Month",
+    features: [
+      "1~3명의 개발자 매칭",
+      "팀 단위 협업 환경 고려",
+      "복합 기술 스택 기반의 프로젝트",
+    ],
+    borderColor: "#AB66DD", // 프로 플랜 테두리 색상 적용
+  },
+  {
+    title: "비즈니스 플랜",
+    price: "₩28,900",
+    period: "/Month",
+    features: [
+      "개발자 매칭에 제한 없음",
+      "대규모 프로젝트",
+      "기업 전용 관리 기능",
+    ],
+    borderColor: "#8748B5", // 비즈니스 플랜 테두리 색상 적용
+  }
+];
+
 const userCredit = profiles[0].credit;
 
-// '구독 플랜' 탭을 위한 더미 컴포넌트
 const SubscriptionPlan = () => (
     <S.CreditBox style={{ padding: 0 }}> 
-      <S.BoxText>구독 플랜 패키지</S.BoxText>
-      <div style={{ padding: '40px 20px', textAlign: 'center', height: '280px' }}>
-        <p style={{ fontSize: '18px', color: '#696969' }}>
-          현재 구독 플랜 컨텐츠 준비 중입니다.
-        </p>
-        <p style={{ marginTop: '10px', fontSize: '16px', color: '#B0B0B0' }}>
-          나중에 실제 구독 플랜 패키지 카드들로 대체해주세요.
-        </p>
-      </div>
+      <S.BoxText>
+        구독 플랜 패키지
+      </S.BoxText>
+      <S.SubscriptionCardContainer>
+        {SUBSCRIPTION_PLANS.map((plan, index) => (
+          <S.SubscriptionCard key={index} $borderColor={plan.borderColor}>
+            <S.PlanHeader>
+              <S.PlanTitle>{plan.title}</S.PlanTitle>
+              <S.PriceText>
+                {plan.price}
+                {plan.period && <span>{plan.period}</span>}
+              </S.PriceText>
+            </S.PlanHeader>
+            
+            <S.FeatureList>
+              {plan.features.map((feature, i) => (
+                <li key={i}>{feature}</li>
+              ))}
+            </S.FeatureList>
+
+            <S.UpgradeButton>
+              플랜 업그레이드
+            </S.UpgradeButton>
+          </S.SubscriptionCard>
+        ))}
+      </S.SubscriptionCardContainer>
     </S.CreditBox>
 );
 
 export default function ShopPage() {
-  // 'selectedShop' 상태 정의. 초기값은 "크레딧 구매"
   const [selectedShop, setSelectedShop] = useState(SHOP[0]);
 
-  // 버튼 클릭 핸들러
   const handleShopClick = (shopName) => {
     setSelectedShop(shopName);
   };
@@ -72,7 +125,6 @@ export default function ShopPage() {
                 ))}
               </S.ShopButtonFrame>
               
-              {/* 👈 변경된 부분: "크레딧 구매" 일 때만 현재 보유 크래딧 섹션 렌더링 */}
               {selectedShop === "크레딧 구매" && (
                 <S.HaveCredit>
                   <S.TextFrame>
@@ -87,10 +139,10 @@ export default function ShopPage() {
                       {userCredit}{" "}<S.SpanText>크래딧</S.SpanText>
                     </S.HaveCreditText>
                     <S.CreditHistoryFrame>
-                      <S.CreditHistoryBtn> {/*사용 내역 보기 버튼*/}
+                      <S.CreditHistoryBtn>
                         사용 내역 보기
                       </S.CreditHistoryBtn>
-                      <S.CreditHistoryBtn> {/*충전 내역 버튼*/}
+                      <S.CreditHistoryBtn>
                         충전 내역
                       </S.CreditHistoryBtn>
                     </S.CreditHistoryFrame>
@@ -105,7 +157,6 @@ export default function ShopPage() {
               )}
             </S.Top>
 
-            {/* 선택된 탭에 따라 하단 컨텐츠 조건부 렌더링 (기존 로직 유지) */}
             {selectedShop === "크레딧 구매" ? (
               <S.CreditBox>
                   <S.BoxText>
@@ -142,6 +193,8 @@ export default function ShopPage() {
                           </S.CreditText>
                         </div>
                         </S.BoxTop>
+                        <S.CoinIcon src={item.icon}>
+                        </S.CoinIcon>
                         <S.PurchaseButton>
                           지금 구매
                         </S.PurchaseButton>

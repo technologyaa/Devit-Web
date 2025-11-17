@@ -62,7 +62,7 @@ export const ShopButton = styled.button`
   border-radius: 12px;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
-  border: none; // 기본 border 제거
+  border: none;
 
   background: ${(props) => (props.$isSelected ? "#883CBE" : "transparent")};
   color: ${(props) => (props.$isSelected ? "#ffff" : "#696969")};
@@ -80,7 +80,7 @@ export const HaveCredit = styled.div`
   border: 2px solid #DBDBDB;
   background: #A63CBE;
   position: relative;
-  overflow: hidden; /* 원형 요소가 넘치는 부분은 숨깁니다 */
+  overflow: hidden;
 `;
 
 export const TextFrame = styled.div`
@@ -90,7 +90,7 @@ export const TextFrame = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  position: relative; /* 텍스트가 원형 위에 오도록 설정 */
+  position: relative;
   z-index: 2;
 `;
 
@@ -131,24 +131,22 @@ export const CreditHistoryBtn = styled.button`
 `;
 
 export const Cricle = styled.div`
-  position: absolute; /* 절대 위치 지정 */
+  position: absolute;
   width: 280px; 
   height: 280px; 
-  border-radius: 50%; /* 원형 */
-  background: rgba(171, 102, 221, 0.60); /* 기본 배경색 */
-  bottom: -40px; /* HaveCredit 영역 밖으로 나가도록 조정 */
-  right: -140px; /* HaveCredit 영역 밖으로 나가도록 조정 */
-  z-index: 1; /* 텍스트 아래에 배치 */
+  border-radius: 50%;
+  background: rgba(171, 102, 221, 0.60);
+  bottom: -40px;
+  right: -140px;
+  z-index: 1;
 
-
-  /* 두 번째 원을 위한 스타일 */
   ${(props) => props.second && `
     width: 280px;
     height: 300px;
-    background: rgba(171, 102, 221, 0.60); /* 첫 번째 원보다 연하게 */
+    background: rgba(171, 102, 221, 0.60);
     bottom: -150px;
     right: -70px;
-    z-index: 0; /* 가장 아래에 배치 */
+    z-index: 0;
   `}
 `;
 export const BoxText = styled.div`
@@ -165,7 +163,7 @@ export const CardContainer = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px; /* 카드 사이의 간격 */
+  gap: 20px;
   box-sizing: border-box;
 `;
 
@@ -217,4 +215,104 @@ export const BoxTop = styled.div`
   gap: 10px;
 `;
 
-// ... (이후 스타일 코드)
+export const CoinIcon = styled.img`
+  width: 20%
+`;
+
+export const SubscriptionCardContainer = styled.div`
+  padding: 20px;
+  width: 100%;
+  /* 카드를 가로로 3개 배치하도록 grid 설정 유지 */
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 20px;
+  box-sizing: border-box;
+`;
+
+export const SubscriptionCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 25px;
+  height: 18rem;
+  border-radius: 1.25rem;
+  border: 1px solid #B0B0B0;
+  background: #FFF;
+  position: relative;
+  overflow: hidden;
+
+  /* $borderColor 값에 따라 테두리와 그림자 동적 적용 */
+  ${(props) => props.$borderColor && `
+    border: 2px solid ${props.$borderColor};
+    /* 테두리 색상을 기반으로 그림자 효과 적용 (50은 투명도) */
+    box-shadow: 0 0 15px ${props.$borderColor}50; 
+  `}
+`;
+
+export const PlanHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
+
+export const PlanTitle = styled.h3`
+  font-size: 20px;
+  font-weight: 500;
+  color: #333;
+`;
+
+export const PriceText = styled.div`
+  font-size: 32px;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+
+  span {
+    font-size: 16px;
+    font-weight: 500;
+    color: #696969;
+    margin-left: 5px;
+  }
+`;
+
+export const FeatureList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 15px 0 15px 0; /* 상하 마진 조정 */
+  /* flex-grow 제거: 높이가 고정되었으므로 남은 공간을 차지할 필요 없음 */
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    font-size: 15px;
+    color: #444;
+    margin-bottom: 10px; /* 아이템 간격 줄임 */
+  }
+
+  li::before {
+    content: '✓';
+    color: #883CBE;
+    font-weight: bold;
+    margin-right: 8px;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+`;
+
+export const UpgradeButton = styled.button`
+  width: 100%;
+  padding: 15px 0;
+  background: #000;
+  color: #ffff;
+  font-size: 18px;
+  font-weight: 500;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 10px;
+
+  &:hover {
+    background: #333;
+  }
+`;
