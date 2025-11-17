@@ -7,8 +7,32 @@ import { useState } from "react";
 
 const gradients = {};
 
+const jobList = [
+  { id: 1, name: "웹" },
+  { id: 2, name: "서버" },
+  { id: 3, name: "Android" },
+  { id: 4, name: "iOS" },
+  { id: 5, name: "게임" },
+  { id: 6, name: "디자인" },
+];
+
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [intro, setIntro] = useState("");
+  const [selectedJob, setSelectedJob] = useState(null);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIntro("");
+    setSelectedJob(null);
+  };
+
+  const complete = () => {
+    console.log("선택한 직무:", selectedJob);
+    console.log("소개:", intro);
+
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -88,7 +112,34 @@ export default function HomePage() {
       {isModalOpen && (
         <S.ModalOverlay>
           <S.ModalContent>
-            <S.ModalWrapper></S.ModalWrapper>
+            <S.ModalWrapper>
+              <S.ModalTitle>전공·직무 선택 후 한 줄 소개 작성</S.ModalTitle>
+
+              <S.ProjectInputBox>
+                <S.ProjectInputText>소개</S.ProjectInputText>
+                <S.ProjectInput
+                  type="text"
+                  placeholder="한 줄로 나를 소개해보세요!"
+                  value={intro}
+                  onChange={(e) => setIntro(e.target.value)}
+                />
+              </S.ProjectInputBox>
+              <S.JobSelectGrid>
+                {jobList.map((job) => (
+                  <S.JobBox
+                    key={job.id}
+                    isSelected={selectedJob === job.name}
+                    onClick={() => setSelectedJob(job.name)}
+                  >
+                    {job.name}
+                  </S.JobBox>
+                ))}
+              </S.JobSelectGrid>
+              <S.ButtonGroup>
+                <S.CancelButton onClick={closeModal}>나중에</S.CancelButton>
+                <S.CreateButton onClick={complete}>완료</S.CreateButton>
+              </S.ButtonGroup>
+            </S.ModalWrapper>
           </S.ModalContent>
         </S.ModalOverlay>
       )}

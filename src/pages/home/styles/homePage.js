@@ -208,3 +208,106 @@ export const ModalWrapper = styled.div`
   align-items: center;
   gap: 24px;
 `;
+
+export const ModalTitle = styled.div`
+  width: 100%;
+  display: flex;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 20px;
+`;
+
+export const ProjectInputBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const ProjectInputText = styled.div`
+  width: 100%;
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+export const ProjectInput = styled.input`
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  line-height: normal;
+  appearance: none;
+  background-color: #fff;
+  font-family: inherit;
+  outline: none;
+  &:focus {
+    outline: 1px solid #883cbe;
+  }
+`;
+
+export const CancelButton = styled.button`
+  font-size: 15px;
+  background: #eee;
+  border: none;
+  border-radius: 6px;
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    background: #ddd;
+  }
+`;
+
+export const CreateButton = styled.button`
+  color: white;
+  font-size: 15px;
+  background: #883cbe;
+  opacity: 0.9;
+  border: none;
+  border-radius: 6px;
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+export const ButtonGroup = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+`;
+
+export const JobSelectGrid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+`;
+
+export const JobBox = styled.div`
+  padding: 16px 0;
+  border-radius: 10px;
+  border: ${(props) =>
+    props.isSelected ? "1px solid #883cbe" : "1px solid #ccc"};
+  background: ${(props) =>
+    props.isSelected ? "rgba(136,60,190,0.1)" : "white"};
+  cursor: pointer;
+  text-align: center;
+  font-size: 15px;
+  transition: 0.15s ease;
+  user-select: none;
+  box-sizing: border-box;
+
+  &:hover {
+    background: #f8f5fb;
+  }
+`;
