@@ -187,3 +187,24 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const ModalContent = styled.div`
+  background: white;
+  border-radius: 12px;
+  width: 460px;
+  padding: 40px 36px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+`;

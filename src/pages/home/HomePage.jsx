@@ -85,7 +85,13 @@ export default function HomePage() {
           </S.Bottom>
         </S.Frame>
       </S.Container>
-      {isModalOpen && <S.ModalOverlay></S.ModalOverlay>}
+      {isModalOpen && (
+        <S.ModalOverlay>
+          <S.ModalContent>
+            <S.ModalWrapper></S.ModalWrapper>
+          </S.ModalContent>
+        </S.ModalOverlay>
+      )}
     </>
   );
 }
