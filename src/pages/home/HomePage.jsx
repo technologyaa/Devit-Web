@@ -30,7 +30,7 @@ export default function HomePage() {
   const complete = () => {
     console.log("선택한 직무:", selectedJob);
     console.log("소개:", intro);
-    Alarm("✅", "정보 수정이 완료 되었습니다.", "#4CAF50", "#E8F5E9");
+    Alarm("💾", "정보가 저장되었습니다.", "#4CAF50", "#E8F5E9");
     setIsModalOpen(false);
   };
 

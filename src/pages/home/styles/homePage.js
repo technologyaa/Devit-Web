@@ -233,7 +233,7 @@ export const ProjectInputText = styled.div`
 
 export const ProjectInput = styled.input`
   width: 100%;
-  height: 44px;
+  height: 46px;
   padding: 0 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -252,7 +252,7 @@ export const ProjectInput = styled.input`
 
 export const CreateButton = styled.button`
   color: white;
-  font-size: 15px;
+  font-size: 16px;
   background: #883cbe;
   opacity: 0.9;
   border: none;
