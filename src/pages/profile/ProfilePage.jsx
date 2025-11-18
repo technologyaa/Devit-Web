@@ -1,6 +1,6 @@
 import * as S from "./styles/profilePage";
 import { Helmet } from "react-helmet";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // useEffect를 추가합니다.
 import profiles from "@/data/profile";
 
 const cToHex = (c) => Math.round(c).toString(16).padStart(2, "0");
@@ -58,11 +58,26 @@ const Progress = (currentValue, maxValue) => {
 };
 
 export default function ProfilePage() {
-  // 수정 1: 전역 데이터 (profiles)를 직접 사용합니다.
-  // 수정 2: 변경 후 컴포넌트 강제 리렌더링을 위한 더미 상태를 추가합니다.
-  const [reloadKey, setReloadKey] = useState(0);
-  const profile = profiles[0]; // 전역 데이터에서 직접 프로필 정보를 가져옵니다.
+  const initialProfile = profiles[0];
+  // 1. 프로필 정보를 상태로 관리합니다.
+  const [userProfile, setUserProfile] = useState(initialProfile);
 
+  // 2. 컴포넌트 마운트 시, LocalStorage에서 최신 직무를 가져와 상태를 업데이트합니다.
+  useEffect(() => {
+    const storedJob = localStorage.getItem("userJob");
+
+    if (storedJob && storedJob !== userProfile.job) {
+      // 기존 프로필 객체를 복사하고 job만 업데이트합니다.
+      setUserProfile((prevProfile) => ({
+        ...prevProfile,
+        job: storedJob,
+      }));
+      // profiles 데이터 소스도 업데이트합니다. (다른 곳에서 참조할 경우)
+      profiles[0].job = storedJob;
+    }
+  }, [userProfile.job]); // userProfile.job이 변경될 때만 재실행합니다.
+
+  const profile = userProfile; // 이제 상태(state)에서 정보를 가져옵니다.
   const projectsCountValue = parseFloat(profile?.CompletedProjects ?? "");
   const tempValueValue = parseFloat(profile?.Temp ?? "");
 
@@ -71,8 +86,8 @@ export default function ProfilePage() {
     : String(projectsCountValue);
   const tempValue = isNaN(tempValueValue) ? "0" : String(tempValueValue);
 
-  const completedProjectsWidth = Progress(projectsCount, 20); // 최대 프로젝트 길이
-  const tempWidth = Progress(tempValue, 100); // 최대 온도
+  const completedProjectsWidth = Progress(projectsCount, 20);
+  const tempWidth = Progress(tempValue, 100);
   const tempColor = getTempColor(tempValue, 100);
 
   const handleImageChange = (event) => {
@@ -81,11 +96,14 @@ export default function ProfilePage() {
     if (file) {
       const newImageUrl = URL.createObjectURL(file);
 
-      // 수정 3: imported 'profiles' 배열을 직접 수정합니다. (영속성 확보)
+      // profiles 배열을 직접 수정 (영속성)
       profiles[0].img = newImageUrl;
 
-      // 수정 4: 상태를 변경하여 컴포넌트를 강제 리렌더링합니다.
-      setReloadKey((prev) => prev + 1);
+      // 상태를 변경하여 컴포넌트를 강제 리렌더링하고 새 이미지를 표시합니다.
+      setUserProfile((prevProfile) => ({
+        ...prevProfile,
+        img: newImageUrl,
+      }));
 
       event.target.value = null;
     }

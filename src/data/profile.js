@@ -1,11 +1,12 @@
+const storedJob = localStorage.getItem("userJob") || "직무 미선택";
+
 const profiles = [
   {
     id: "사용자",
-    job: "iOS",
+    job: storedJob,
     email: "hello@technologyaa.com",
     img: "/assets/profile-icon.svg",
-    CompletedProjects: "2", // -일때 짝대기 최대로 가는거 변경 해야함
-    Temp: "36.5",
+    CompletedProjects: "2",
     Temp: "65",
     credit: "12,500",
     projectList: [
