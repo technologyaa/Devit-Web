@@ -1,4 +1,4 @@
-const storedJob = localStorage.getItem("userJob") || "직무 미선택";
+const storedJob = localStorage.getItem("userJob") || "의뢰인";
 
 const profiles = [
   {
