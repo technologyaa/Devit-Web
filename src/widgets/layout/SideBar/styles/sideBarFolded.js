@@ -95,7 +95,7 @@ export const MoreBox = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 100;
 `;
 
 export const MoreItem = styled.div`
