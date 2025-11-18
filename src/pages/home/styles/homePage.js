@@ -252,7 +252,7 @@ export const ProjectInput = styled.input`
 
 export const CreateButton = styled.button`
   color: white;
-  font-size: 15px;
+  font-size: 16px;
   background: #883cbe;
   opacity: 0.9;
   border: none;
