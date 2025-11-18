@@ -294,6 +294,7 @@ export const JobSelectGrid = styled.div`
 `;
 
 export const JobBox = styled.div`
+  color: ${(props) => (props.isSelected ? "#9B3FEE" : "black")};
   border-radius: 10px;
   border: ${(props) =>
     props.isSelected ? "1.4px solid #883cbe" : "1.4px solid #ccc"};
@@ -304,11 +305,8 @@ export const JobBox = styled.div`
   user-select: none;
   box-sizing: border-box;
   position: relative;
-
-  /* 박스 크기 고정 */
-  height: 95px; /* ★ 박스 크기를 완전히 통일 */
-  padding: 12px 14px; /* 상하 최소 패딩 → 다른 요소 영향 없음 */
-
+  height: 95px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -320,7 +318,7 @@ export const JobBox = styled.div`
 `;
 
 export const JobIcon = styled.img`
-  width: 22px;
+  width: 20px;
   margin-bottom: 12px;
 `;
 
