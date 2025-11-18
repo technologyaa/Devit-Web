@@ -28,6 +28,14 @@ export default function HomePage() {
   };
 
   const complete = () => {
+    if (!selectedJob) {
+      Alarm("⚠️", "직무를 선택해주세요.", "#FF9800", "#FFF3E0");
+      return;
+    }
+
+    localStorage.setItem("userJob", selectedJob);
+    localStorage.setItem("userIntro", intro);
+
     console.log("선택한 직무:", selectedJob);
     console.log("소개:", intro);
     Alarm("💾", "정보가 저장되었습니다.", "#4CAF50", "#E8F5E9");
@@ -56,7 +64,7 @@ export default function HomePage() {
               <S.Goto>
                 {icons.map((icon, index) => {
                   return (
-                    <S.styledLink to={icon.url}>
+                    <S.styledLink to={icon.url} key={index}>
                       <S.Card gradient={icon.gradient}>
                         <S.ElementPlace>
                           <S.IconButton>
@@ -79,9 +87,9 @@ export default function HomePage() {
           <S.Bottom>
             <S.Text>추천 개발자</S.Text>
             <S.RecommendDev>
-              {devlopers.map((devloper) => {
+              {devlopers.map((devloper, index) => {
                 return (
-                  <S.Devloper>
+                  <S.Devloper key={index}>
                     <S.Profile
                       src="./assets/dummy-profile.svg"
                       alt="개발자 프로필"

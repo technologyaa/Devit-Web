@@ -63,7 +63,7 @@ export default function SignUp2Page() {
               <S.RoleSelectWrapper>
                 <S.RoleLabel>내 역할</S.RoleLabel>
                 <S.RoleButtons>
-                  {["개발자", "의뢰자", "TBD"].map((role) => (
+                  {["개발자", "의뢰인", "TBD"].map((role) => (
                     <S.RoleButton
                       key={role}
                       type="button"

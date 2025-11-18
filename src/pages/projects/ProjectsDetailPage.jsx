@@ -3,18 +3,20 @@ import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { projectList } from "@/data/project-list";
+import profiles from "@/data/profile";
 import { Alarm } from "@/toasts/Alarm";
 
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const project = projectList.find((p) => p.id == +projectId) ?? [];
-  console.log(project);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+
+  const userCredit = profiles[0].credit;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -165,7 +167,7 @@ export default function ProjectsDetailPage() {
               <S.CreditBox>
                 <S.CreditBoxTop>
                   <S.CreditText>총 크레딧</S.CreditText>
-                  <S.CreditAmount>1,000</S.CreditAmount>
+                  <S.CreditAmount>{userCredit}</S.CreditAmount>
                   <S.DescribeText>사용 가능한 크레딧</S.DescribeText>
                   <S.Line />
                   <S.DescribeText>크레딧으로 할 수 있는 기능</S.DescribeText>

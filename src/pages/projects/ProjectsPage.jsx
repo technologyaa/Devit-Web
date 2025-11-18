@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { projectList as initialProjects } from "@/data/project-list";
 import { Alarm } from "@/toasts/Alarm";
+import profiles from "@/data/profile";
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ export default function ProjectsPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newThumbnail, setNewThumbnail] = useState(null);
+
+  const userName = profiles[0].id;
+  console.log(userName);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -37,7 +41,7 @@ export default function ProjectsPage() {
       id: projects.length + 1,
       title: newTitle,
       description: newDescription,
-      owner: "사용자",
+      owner: userName,
       thumbnail: newThumbnail || "/assets/dummy-thumbnail.svg",
       tasks: [],
     };
