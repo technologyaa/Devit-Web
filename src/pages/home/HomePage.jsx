@@ -8,12 +8,12 @@ import { Alarm } from "@/toasts/Alarm";
 const gradients = {};
 
 const jobList = [
-  { id: 1, name: "웹" },
-  { id: 2, name: "서버" },
-  { id: 3, name: "Android" },
-  { id: 4, name: "iOS" },
-  { id: 5, name: "게임" },
-  { id: 6, name: "디자인" },
+  { id: 1, name: "웹", icon: "/assets/job-icons/web.svg" },
+  { id: 2, name: "서버", icon: "/assets/job-icons/server.svg" },
+  { id: 3, name: "Android", icon: "/assets/job-icons/android.svg" },
+  { id: 4, name: "iOS", icon: "/assets/job-icons/ios.svg" },
+  { id: 5, name: "게임", icon: "/assets/job-icons/game.svg" },
+  { id: 6, name: "디자인", icon: "/assets/job-icons/design.svg" },
 ];
 
 export default function HomePage() {
@@ -131,7 +131,13 @@ export default function HomePage() {
                     isSelected={selectedJob === job.name}
                     onClick={() => setSelectedJob(job.name)}
                   >
-                    {job.name}
+                    <S.JobIcon src={job.icon} alt={`${job.name} 아이콘`} />
+
+                    <span>{job.name}</span>
+
+                    {selectedJob === job.name && (
+                      <S.CheckIcon src="/assets/check.svg" alt="선택됨" />
+                    )}
                   </S.JobBox>
                 ))}
               </S.JobSelectGrid>

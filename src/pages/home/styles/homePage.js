@@ -191,7 +191,7 @@ export const ModalOverlay = styled.div`
 export const ModalContent = styled.div`
   background: white;
   border-radius: 12px;
-  width: 460px;
+  width: 580px;
   padding: 40px 36px 20px;
   box-sizing: border-box;
   text-align: center;
@@ -306,8 +306,22 @@ export const JobBox = styled.div`
   transition: 0.15s ease;
   user-select: none;
   box-sizing: border-box;
-
-  &:hover {
+  position: relative;
+  ← ★ 체크 아이콘을 올리기 위해 추가 &:hover {
     background: #f8f5fb;
   }
+`;
+
+export const JobIcon = styled.img`
+  width: 34px;
+  height: 34px;
+  margin-bottom: 8px;
+`;
+
+export const CheckIcon = styled.img`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
 `;

@@ -150,5 +150,3 @@ export default function ProjectsPage() {
     </>
   );
 }
-
-// 추후 개발 예정 ㅎㅎ
