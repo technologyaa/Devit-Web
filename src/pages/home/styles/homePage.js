@@ -222,7 +222,7 @@ export const ProjectInputBox = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 `;
 
 export const ProjectInputText = styled.div`
