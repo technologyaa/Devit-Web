@@ -145,7 +145,6 @@ export default function HomePage() {
                 ))}
               </S.JobSelectGrid>
               <S.ButtonGroup>
-                <S.CancelButton onClick={closeModal}>나중에</S.CancelButton>
                 <S.CreateButton onClick={complete}>완료</S.CreateButton>
               </S.ButtonGroup>
             </S.ModalWrapper>

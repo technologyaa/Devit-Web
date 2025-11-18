@@ -250,19 +250,6 @@ export const ProjectInput = styled.input`
   }
 `;
 
-export const CancelButton = styled.button`
-  font-size: 15px;
-  background: #eee;
-  border: none;
-  border-radius: 6px;
-  width: 120px;
-  height: 40px;
-  cursor: pointer;
-  &:hover {
-    background: #ddd;
-  }
-`;
-
 export const CreateButton = styled.button`
   color: white;
   font-size: 15px;
