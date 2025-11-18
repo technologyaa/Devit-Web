@@ -44,7 +44,7 @@ export const chatList = [
       {
         id: 6,
         sender: "나",
-        content: "https://devit.com/projects/123",
+        content: "https://dev1t.com/projects/123",
         time: "2025-11-11T08:14:00",
         isMine: true,
       },

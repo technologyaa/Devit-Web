@@ -2,11 +2,38 @@ import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
 import devlopers from "@/data/developer-list";
 import icons from "@/data/icon-list";
-import { Link } from "react-router";
+import { useState } from "react";
+import { Alarm } from "@/toasts/Alarm";
 
 const gradients = {};
 
+const jobList = [
+  { id: 1, name: "웹", icon: "/assets/job-icons/web.svg" },
+  { id: 2, name: "서버", icon: "/assets/job-icons/server.svg" },
+  { id: 3, name: "Android", icon: "/assets/job-icons/android.svg" },
+  { id: 4, name: "iOS", icon: "/assets/job-icons/ios.svg" },
+  { id: 5, name: "게임", icon: "/assets/job-icons/game.svg" },
+  { id: 6, name: "디자인", icon: "/assets/job-icons/design.svg" },
+];
+
 export default function HomePage() {
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [intro, setIntro] = useState("");
+  const [selectedJob, setSelectedJob] = useState(null);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIntro("");
+    setSelectedJob(null);
+  };
+
+  const complete = () => {
+    console.log("선택한 직무:", selectedJob);
+    console.log("소개:", intro);
+    Alarm("✅", "정보 수정이 완료 되었습니다.", "#4CAF50", "#E8F5E9");
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <Helmet>
@@ -19,7 +46,6 @@ export default function HomePage() {
             <S.Top>
               <S.Name>
                 <S.NameText TextColor={"#883CBE"}>개발</S.NameText>과{" "}
-
                 <S.NameText TextColor={"#D4AAF3"}>기획</S.NameText>을 잇다
               </S.Name>
               <S.Cricle1></S.Cricle1>
@@ -40,12 +66,8 @@ export default function HomePage() {
                             ></S.Icon>
                             <S.Button>바로 가기</S.Button>
                           </S.IconButton>
-                          <S.ElementName>
-                            {icons[index].name}
-                          </S.ElementName>
-                          <S.ElementInfo>
-                            {icons[index].text}
-                          </S.ElementInfo>
+                          <S.ElementName>{icons[index].name}</S.ElementName>
+                          <S.ElementInfo>{icons[index].text}</S.ElementInfo>
                         </S.ElementPlace>
                       </S.Card>
                     </S.styledLink>
@@ -68,11 +90,11 @@ export default function HomePage() {
                     <S.DevAndJob>
                       <S.NameAndJobText
                         FontSize={"clamp(16px, 1.2vw, 20px)"}
-                        FontWeight={"440"}>
+                        FontWeight={"440"}
+                      >
                         {devloper.name}
                       </S.NameAndJobText>
-                      <S.NameAndJobText
-                        FontSize={"clamp(14px, 1vw, 18px)"}>
+                      <S.NameAndJobText FontSize={"clamp(14px, 1vw, 18px)"}>
                         {devloper.job}
                       </S.NameAndJobText>
                     </S.DevAndJob>
@@ -86,7 +108,49 @@ export default function HomePage() {
             </S.RecommendDev>
           </S.Bottom>
         </S.Frame>
-      </S.Container >
+      </S.Container>
+      {isModalOpen && (
+        <S.ModalOverlay>
+          <S.ModalContent onClick={(e) => e.stopPropagation()}>
+            <S.ModalWrapper>
+              <S.ModalTitle>전공·직무 선택 후 한 줄 소개 작성</S.ModalTitle>
+
+              <S.ProjectInputBox>
+                <S.ProjectInputText>소개</S.ProjectInputText>
+                <S.ProjectInput
+                  type="text"
+                  placeholder="한 줄로 나를 소개해보세요!"
+                  value={intro}
+                  onChange={(e) => setIntro(e.target.value)}
+                />
+              </S.ProjectInputBox>
+              <S.JobSelectGrid>
+                {jobList.map((job) => (
+                  <S.JobBox
+                    key={job.id}
+                    isSelected={selectedJob === job.name}
+                    onClick={() => setSelectedJob(job.name)}
+                  >
+                    <S.JobIcon src={job.icon} alt={`${job.name} 아이콘`} />
+
+                    <span>{job.name}</span>
+
+                    {selectedJob === job.name && (
+                      <S.CheckIcon
+                        src="/assets/job-icons/check.svg"
+                        alt="선택됨"
+                      />
+                    )}
+                  </S.JobBox>
+                ))}
+              </S.JobSelectGrid>
+              <S.ButtonGroup>
+                <S.CreateButton onClick={complete}>완료</S.CreateButton>
+              </S.ButtonGroup>
+            </S.ModalWrapper>
+          </S.ModalContent>
+        </S.ModalOverlay>
+      )}
     </>
   );
 }

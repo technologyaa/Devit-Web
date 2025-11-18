@@ -178,3 +178,141 @@ export const NameAndJobText = styled.p`
     props.FontWeight >= 1 ? props.FontWeight : "16px"};
   color: ${(props) => (props.TextColor == null ? "#000000" : props.TextColor)};
 `;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  border-radius: 12px;
+  width: 580px;
+  padding: 40px 36px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+`;
+
+export const ModalTitle = styled.div`
+  width: 100%;
+  display: flex;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 20px;
+`;
+
+export const ProjectInputBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const ProjectInputText = styled.div`
+  width: 100%;
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+export const ProjectInput = styled.input`
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  line-height: normal;
+  appearance: none;
+  background-color: #fff;
+  font-family: inherit;
+  outline: none;
+  &:focus {
+    outline: 1px solid #883cbe;
+  }
+`;
+
+export const CreateButton = styled.button`
+  color: white;
+  font-size: 15px;
+  background: #883cbe;
+  opacity: 0.9;
+  border: none;
+  border-radius: 6px;
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+export const ButtonGroup = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+`;
+
+export const JobSelectGrid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+`;
+
+export const JobBox = styled.div`
+  color: ${(props) => (props.isSelected ? "#9B3FEE" : "black")};
+  border-radius: 10px;
+  border: ${(props) =>
+    props.isSelected ? "1.4px solid #883cbe" : "1.4px solid #ccc"};
+  background: ${(props) =>
+    props.isSelected ? "rgba(136,60,190,0.08)" : "white"};
+  cursor: pointer;
+  transition: 0.15s ease;
+  user-select: none;
+  box-sizing: border-box;
+  position: relative;
+  height: 95px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  &:hover {
+    background: #f8f5fb;
+  }
+`;
+
+export const JobIcon = styled.img`
+  width: 20px;
+  margin-bottom: 12px;
+`;
+
+export const CheckIcon = styled.img`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+`;
