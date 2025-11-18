@@ -255,7 +255,7 @@ export const ProjectInputText = styled.p`
 
 export const ProjectInput = styled.input`
   width: 100%;
-  height: 48px;
+  height: 46px;
   padding: 0 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
