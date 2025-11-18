@@ -294,34 +294,40 @@ export const JobSelectGrid = styled.div`
 `;
 
 export const JobBox = styled.div`
-  padding: 16px 0;
   border-radius: 10px;
   border: ${(props) =>
-    props.isSelected ? "1px solid #883cbe" : "1px solid #ccc"};
+    props.isSelected ? "1.4px solid #883cbe" : "1.4px solid #ccc"};
   background: ${(props) =>
-    props.isSelected ? "rgba(136,60,190,0.1)" : "white"};
+    props.isSelected ? "rgba(136,60,190,0.08)" : "white"};
   cursor: pointer;
-  text-align: center;
-  font-size: 15px;
   transition: 0.15s ease;
   user-select: none;
   box-sizing: border-box;
   position: relative;
-  ← ★ 체크 아이콘을 올리기 위해 추가 &:hover {
+
+  /* 박스 크기 고정 */
+  height: 95px; /* ★ 박스 크기를 완전히 통일 */
+  padding: 12px 14px; /* 상하 최소 패딩 → 다른 요소 영향 없음 */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  &:hover {
     background: #f8f5fb;
   }
 `;
 
 export const JobIcon = styled.img`
-  width: 34px;
-  height: 34px;
-  margin-bottom: 8px;
+  width: 22px;
+  margin-bottom: 12px;
 `;
 
 export const CheckIcon = styled.img`
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 `;

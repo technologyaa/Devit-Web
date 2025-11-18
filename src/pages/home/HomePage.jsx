@@ -136,7 +136,10 @@ export default function HomePage() {
                     <span>{job.name}</span>
 
                     {selectedJob === job.name && (
-                      <S.CheckIcon src="/assets/check.svg" alt="선택됨" />
+                      <S.CheckIcon
+                        src="/assets/job-icons/check.svg"
+                        alt="선택됨"
+                      />
                     )}
                   </S.JobBox>
                 ))}
