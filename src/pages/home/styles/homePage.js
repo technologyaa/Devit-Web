@@ -317,3 +317,10 @@ export const CheckIcon = styled.img`
   width: 20px;
   height: 20px;
 `;
+
+export const JobFrame = styled.div`
+  gap: 6px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
