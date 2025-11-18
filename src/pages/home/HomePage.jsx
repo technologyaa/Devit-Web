@@ -2,7 +2,6 @@ import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
 import devlopers from "@/data/developer-list";
 import icons from "@/data/icon-list";
-import { Link } from "react-router";
 import { useState } from "react";
 import { Alarm } from "@/toasts/Alarm";
 
