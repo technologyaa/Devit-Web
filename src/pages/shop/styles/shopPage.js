@@ -172,12 +172,14 @@ export const CreditCard = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 10px;
-  height: 18rem;
+  padding: 30px 20px; /* 상하 패딩 조정 */
+  height: 20rem; /* 높이 조정 */
   border-radius: 1.25rem;
-  border: 1px solid #B0B0B0;
+  border: 1px solid #B0B0B0; /* 기본 테두리 유지 */
   background: #FFF;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 `;
 
 export const TextContainer = styled.div`
@@ -212,11 +214,12 @@ export const PurchaseButton = styled.button`
 export const BoxTop = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 20px;
 `;
 
 export const CoinIcon = styled.img`
-  width: 20%
+  width: 24%
 `;
 
 export const SubscriptionCardContainer = styled.div`

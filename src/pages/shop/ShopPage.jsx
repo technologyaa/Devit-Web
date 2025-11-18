@@ -11,18 +11,21 @@ const SHOP = [
 const CREDIT = [
   {
     credit: "1,000",
-    won: "10,000",
-    icon: "/assets/coin-icon.svg"
+    won: "9,900",
+    icon: "/assets/coin-icon.svg",
+    description: "기본 패키지"
+  },
+  {
+    credit: "5,000",
+    won: "45,000",
+    icon: "/assets/coin2-icon.svg",
+    description: "10% 할인 (₩5,000 절약)"
   },
   {
     credit: "10,000",
-    won: "100,000",
-    icon: "/assets/coin2-icon.svg"
-  },
-  {
-    credit: "100,000",
-    won: "1,000,000",
-    icon: "/assets/coins-icon.svg"
+    won: "85,000",
+    icon: "/assets/coins-icon.svg",
+    description: "15% 할인 (₩15,000 절약)"
   }
 ]
 
@@ -36,7 +39,7 @@ const SUBSCRIPTION_PLANS = [
       "개인 의뢰자 적합",
       "소규모·단순 프로젝트",
     ],
-    borderColor: null, // 무료 플랜은 테두리 없음
+    borderColor: null,
   },
   {
     title: "프로 플랜",
@@ -47,7 +50,7 @@ const SUBSCRIPTION_PLANS = [
       "팀 단위 협업 환경 고려",
       "복합 기술 스택 기반의 프로젝트",
     ],
-    borderColor: "#AB66DD", // 프로 플랜 테두리 색상 적용
+    borderColor: "#AB66DD",
   },
   {
     title: "비즈니스 플랜",
@@ -58,7 +61,7 @@ const SUBSCRIPTION_PLANS = [
       "대규모 프로젝트",
       "기업 전용 관리 기능",
     ],
-    borderColor: "#8748B5", // 비즈니스 플랜 테두리 색상 적용
+    borderColor: "#8748B5",
   }
 ];
 
@@ -166,35 +169,48 @@ export default function ShopPage() {
                   <S.CardContainer>
                     {CREDIT.map((item, index) => (
                       <S.CreditCard key={index}>
+                        
                         <S.BoxTop>
+                          
                           <S.TextContainer>
+                              <S.CreditText 
+                                FontSize={"32px"} 
+                                FontWeight={"700"} 
+                                Color={"#883CBE"} 
+                              >
+                                {item.credit}
+                              </S.CreditText>
+                              
+                              <S.CreditText 
+                                FontSize={"16px"} 
+                                FontWeight={"500"}
+                                Color={"#696969"}
+                                PaddingBottom={"3px"}
+                              >
+                                크레딧
+                              </S.CreditText>
+                          </S.TextContainer>
+
+
                           <S.CreditText 
-                            FontSize={"32px"} 
-                            FontWeight={"600"} 
-                            Color={"#883CBE"}
-                          >
-                            {item.credit}
-                          </S.CreditText>
-                          <S.CreditText 
-                            FontSize={"16px"} 
+                            FontSize={"24px"} 
                             FontWeight={"500"}
-                            Color={"#696969"}
-                            PaddingBottom={"2px"}
-                          >
-                            크레딧
-                          </S.CreditText>
-                        </S.TextContainer>
-                        <div>
-                          <S.CreditText 
-                            FontSize={"26px"} 
-                            FontWeight={"600"}
+                            Color={"#404040"}
                           >
                             ₩{item.won}
                           </S.CreditText>
-                        </div>
+
+                          <S.CreditText 
+                            FontSize={"16px"} 
+                            FontWeight={"500"}
+                            Color={item.description.includes('할인') ? "#4b295d" : "#883CBE"}
+                            MarginBottom={"20px"} 
+                          >
+                            {item.description}
+                          </S.CreditText>
+                          
                         </S.BoxTop>
-                        <S.CoinIcon src={item.icon}>
-                        </S.CoinIcon>
+                        <S.CoinIcon src={item.icon}></S.CoinIcon>
                         <S.PurchaseButton>
                           지금 구매
                         </S.PurchaseButton>
