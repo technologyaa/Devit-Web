@@ -5,6 +5,8 @@ import { useState } from "react";
 import { projectList as initialProjects } from "@/data/project-list";
 import { Alarm } from "@/toasts/Alarm";
 import profiles from "@/data/profile";
+import { useEffect } from "react";
+import { API_URL } from "@/constants/api";
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
@@ -13,6 +15,10 @@ export default function ProjectsPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newThumbnail, setNewThumbnail] = useState(null);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const userName = profiles[0].id;
   console.log(userName);
@@ -33,22 +39,65 @@ export default function ProjectsPage() {
     }
   };
 
-  const handleAddProject = () => {
-    if (newTitle.trim() === "")
+  // const handleAddProject = () => {
+  //   if (newTitle.trim() === "")
+  //     return Alarm("‼️", "프로젝트 이름을 입력하세요.", "#FF1E1E", "#FFEAEA");
+
+  //   const newProject = {
+  //     id: projects.length + 1,
+  //     title: newTitle,
+  //     description: newDescription,
+  //     owner: userName,
+  //     thumbnail: newThumbnail || "/assets/dummy-thumbnail.svg",
+  //     tasks: [],
+  //   };
+
+  //   setProjects([...projects, newProject]);
+  //   initialProjects.push(newProject);
+  //   closeModal();
+  // };
+
+  const createProject = async () => {
+    if (newTitle.trim() === "") {
       return Alarm("‼️", "프로젝트 이름을 입력하세요.", "#FF1E1E", "#FFEAEA");
+    }
 
-    const newProject = {
-      id: projects.length + 1,
-      title: newTitle,
-      description: newDescription,
-      owner: userName,
-      thumbnail: newThumbnail || "/assets/dummy-thumbnail.svg",
-      tasks: [],
-    };
+    try {
+      const res = await fetch(`${API_URL}/projects`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: newTitle,
+          content: newDescription,
+          major: "BACKEND",
+        }),
+      });
 
-    setProjects([...projects, newProject]);
-    initialProjects.push(newProject);
-    closeModal();
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${ㄱㄷㄴ.status}`);
+      }
+      const data = await res.json();
+      console.log(data);
+
+      Alarm("✅", "프로젝트가 생성되었습니다!", "#4CAF50", "#E8F5E9");
+      await fetchProjects();
+      closeModal();
+    } catch (err) {
+      console.error("Failed to create project:", err);
+      Alarm("❌", "프로젝트 생성에 실패했습니다.", "#FF1E1E", "#FFEAEA");
+    }
+  };
+
+  const fetchProjects = async () => {
+    try {
+      const data = await (await fetch(`${API_URL}/projects`)).json();
+      console.log(data);
+      setProjects(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -83,16 +132,16 @@ export default function ProjectsPage() {
             ) : (
               projects.map((project) => (
                 <S.Box
-                  key={project.id}
-                  onClick={() => navigate(`/projects/${project.id}`)}
+                  key={project.projectId}
+                  onClick={() => navigate(`/projects/${project.projectId}`)}
                 >
                   <S.Thumbnail
-                    src={project.thumbnail}
-                    alt={`${project.title} 썸네일`}
+                    src="/assets/dummy-thumbnail.svg"
+                    alt={`썸네일`}
                   />
                   <S.BoxBottom>
                     <S.Title>{project.title}</S.Title>
-                    <S.Owner>{project.owner}</S.Owner>
+                    <S.Owner>{userName}</S.Owner>
                   </S.BoxBottom>
                 </S.Box>
               ))
@@ -145,7 +194,7 @@ export default function ProjectsPage() {
 
               <S.ButtonGroup>
                 <S.CancelButton onClick={closeModal}>취소</S.CancelButton>
-                <S.CreateButton onClick={handleAddProject}>생성</S.CreateButton>
+                <S.CreateButton onClick={createProject}>생성</S.CreateButton>
               </S.ButtonGroup>
             </S.ModalWrapper>
           </S.ModalContent>

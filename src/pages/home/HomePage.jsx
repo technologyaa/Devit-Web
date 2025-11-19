@@ -132,26 +132,30 @@ export default function HomePage() {
                   onChange={(e) => setIntro(e.target.value)}
                 />
               </S.ProjectInputBox>
-              <S.JobSelectGrid>
-                {jobList.map((job) => (
-                  <S.JobBox
-                    key={job.id}
-                    isSelected={selectedJob === job.name}
-                    onClick={() => setSelectedJob(job.name)}
-                  >
-                    <S.JobIcon src={job.icon} alt={`${job.name} 아이콘`} />
+              <S.JobFrame>
+                <S.ProjectInputText>직무</S.ProjectInputText>
+                <S.JobSelectGrid>
+                  {jobList.map((job) => (
+                    <S.JobBox
+                      key={job.id}
+                      isSelected={selectedJob === job.name}
+                      onClick={() => setSelectedJob(job.name)}
+                    >
+                      <S.JobIcon src={job.icon} alt={`${job.name} 아이콘`} />
 
-                    <span>{job.name}</span>
+                      <span>{job.name}</span>
 
-                    {selectedJob === job.name && (
-                      <S.CheckIcon
-                        src="/assets/job-icons/check.svg"
-                        alt="선택됨"
-                      />
-                    )}
-                  </S.JobBox>
-                ))}
-              </S.JobSelectGrid>
+                      {selectedJob === job.name && (
+                        <S.CheckIcon
+                          src="/assets/job-icons/check.svg"
+                          alt="선택됨"
+                        />
+                      )}
+                    </S.JobBox>
+                  ))}
+                </S.JobSelectGrid>
+              </S.JobFrame>
+
               <S.ButtonGroup>
                 <S.CreateButton onClick={complete}>완료</S.CreateButton>
               </S.ButtonGroup>

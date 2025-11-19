@@ -5,6 +5,7 @@ import { useState } from "react";
 import { projectList } from "@/data/project-list";
 import profiles from "@/data/profile";
 import { Alarm } from "@/toasts/Alarm";
+import { API_URL } from "@/constants/api";
 
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
@@ -28,14 +29,41 @@ export default function ProjectsDetailPage() {
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
-  const handleDeleteProject = () => {
-    const index = projectList.findIndex((p) => p.id === +projectId);
-    if (index !== -1) {
-      projectList.splice(index, 1);
-      Alarm("🗑️", "프로젝트가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
-      navigate("/projects");
-    } else {
-      Alarm("‼️", "프로젝트를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
+  const deleteProject = async () => {
+    try {
+      const res = await fetch(`${API_URL}/projects/${projectId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (res.ok) {
+        const index = projectList.findIndex((p) => p.id === +projectId);
+        if (index !== -1) {
+          projectList.splice(index, 1);
+        }
+        closeDeleteModal();
+        Alarm("🗑️", "프로젝트가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
+        navigate("/projects");
+      } else {
+        const errorData = await res.json();
+        Alarm(
+          "❌",
+          `프로젝트 삭제에 실패했습니다: ${errorData.message || res.status}`,
+          "#FF1E1E",
+          "#FFEAEA"
+        );
+      }
+    } catch (err) {
+      console.error("Failed to delete project:", err);
+      Alarm(
+        "❌",
+        "네트워크 오류로 프로젝트 삭제에 실패했습니다.",
+        "#FF1E1E",
+        "#FFEAEA"
+      );
     }
   };
 
@@ -227,9 +255,7 @@ export default function ProjectsDetailPage() {
               </S.WarningText>
               <S.ButtonGroup>
                 <S.CancelButton onClick={closeDeleteModal}>취소</S.CancelButton>
-                <S.DeleteButton onClick={handleDeleteProject}>
-                  삭제
-                </S.DeleteButton>
+                <S.DeleteButton onClick={deleteProject}>삭제</S.DeleteButton>
               </S.ButtonGroup>
             </S.DeleteModalWrapper>
           </S.DeleteModalContent>
