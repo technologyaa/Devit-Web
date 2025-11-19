@@ -10,7 +10,6 @@ import { API_URL } from "@/constants/api";
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const project = projectList.find((p) => p.id == +projectId) ?? [];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -29,20 +28,11 @@ export default function ProjectsDetailPage() {
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
-  const handleDeleteProject = () => {
-    const index = projectList.findIndex((p) => p.id === +projectId);
-    if (index !== -1) {
-      projectList.splice(index, 1);
-      Alarm("🗑️", "프로젝트가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
-      navigate("/projects");
-    } else {
-      Alarm("‼️", "프로젝트를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
-    }
-  };
-
   const removeProject = async () => {
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(`${API_URL}/projects/${projectId}`, {
+        method: "DELETE",
+      });
     } catch (err) {
       console.error("Failed to remove project:", err);
       Alarm("❌", "프로젝트 삭제에 실패했습니다.", "#FF1E1E", "#FFEAEA");
