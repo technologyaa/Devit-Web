@@ -142,7 +142,7 @@ export default function ProjectsPage() {
                   />
                   <S.BoxBottom>
                     <S.Title>{project.title}</S.Title>
-                    <S.Owner>hxn</S.Owner>
+                    <S.Owner>{userName}</S.Owner>
                   </S.BoxBottom>
                 </S.Box>
               ))
