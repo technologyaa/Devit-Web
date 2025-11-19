@@ -27,7 +27,7 @@ export const Top = styled.div`
 
 export const Bottom = styled.div`
   display: flex;
-  gap: 14px;
+  justify-content: space-between;
   flex-wrap: wrap;
 `;
 
