@@ -70,6 +70,49 @@ export default function TaskDetailPage() {
     navigate(`/projects/${projectId}`, { replace: true }); // 바로 반영
   };
 
+  const createTask = async () => {
+    if (newTitle.trim() === "") {
+      return Alarm("‼️", "프로젝트 이름을 입력하세요.", "#FF1E1E", "#FFEAEA");
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/projects`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: newTitle,
+          content: newDescription,
+          major: "BACKEND",
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${ㄱㄷㄴ.status}`);
+      }
+      const data = await res.json();
+      console.log(data);
+
+      Alarm("✅", "프로젝트가 생성되었습니다!", "#4CAF50", "#E8F5E9");
+      await fetchProjects();
+      closeModal();
+    } catch (err) {
+      console.error("Failed to create project:", err);
+      Alarm("❌", "프로젝트 생성에 실패했습니다.", "#FF1E1E", "#FFEAEA");
+    }
+  };
+
+  const fetchTasks = async () => {
+    try {
+      const data = await (await fetch(`${API_URL}/projects`)).json();
+      console.log(data);
+      setProjects(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <Helmet>
