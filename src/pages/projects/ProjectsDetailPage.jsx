@@ -5,6 +5,7 @@ import { useState } from "react";
 import { projectList } from "@/data/project-list";
 import profiles from "@/data/profile";
 import { Alarm } from "@/toasts/Alarm";
+import { API_URL } from "@/constants/api";
 
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
@@ -36,6 +37,15 @@ export default function ProjectsDetailPage() {
       navigate("/projects");
     } else {
       Alarm("‼️", "프로젝트를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
+    }
+  };
+
+  const removeProject = async () => {
+    try {
+      const res = await fetch(API_URL);
+    } catch (err) {
+      console.error("Failed to remove project:", err);
+      Alarm("❌", "프로젝트 삭제에 실패했습니다.", "#FF1E1E", "#FFEAEA");
     }
   };
 

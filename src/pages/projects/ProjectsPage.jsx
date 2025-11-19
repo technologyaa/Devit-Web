@@ -6,6 +6,7 @@ import { projectList as initialProjects } from "@/data/project-list";
 import { Alarm } from "@/toasts/Alarm";
 import profiles from "@/data/profile";
 import { useEffect } from "react";
+import { API_URL } from "@/constants/api";
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ export default function ProjectsPage() {
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/projects`, {
+      const res = await fetch(`${API_URL}/projects`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,9 +92,7 @@ export default function ProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const data = await (
-        await fetch(`${import.meta.env.VITE_API_URL}/projects`)
-      ).json();
+      const data = await (await fetch(`${API_URL}/projects`)).json();
       console.log(data);
       setProjects(data);
     } catch (err) {
