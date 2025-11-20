@@ -1,8 +1,46 @@
-import * as S from "../styles/signUp1Page";
+import * as S from "../styles/signUpStep1";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Alarm } from "@/toasts/Alarm";
 
 export default function SignUpStep1({ goNext }) {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
+  const handleNext = (e) => {
+    // 폼 submit로 들어올 경우 새로고침 방지
+    if (e) e.preventDefault();
+
+    // 1) 빈 항목 확인
+    if (!id || !password || !passwordConfirm) {
+      Alarm("‼️", "모든 항목을 입력해주세요.", "#FF1E1E", "#FFEAEA");
+      return;
+    }
+
+    // 2) 아이디 형식 검사
+    const idRegex = /^[A-Za-z0-9]+$/;
+    if (!idRegex.test(id)) {
+      Alarm(
+        "‼️",
+        "아이디는 영문/숫자만 입력 가능합니다.",
+        "#FF1E1E",
+        "#FFEAEA"
+      );
+      return;
+    }
+
+    // 3) 비밀번호 확인
+    if (password !== passwordConfirm) {
+      Alarm("‼️", "비밀번호가 일치하지 않습니다.", "#FF1E1E", "#FFEAEA");
+      return;
+    }
+
+    // 모든 조건 통과 → 다음 단계 이동
+    goNext({ id, password });
+  };
+
   return (
     <>
       <Helmet>
@@ -11,7 +49,8 @@ export default function SignUpStep1({ goNext }) {
       </Helmet>
 
       <S.Container>
-        <S.LoginWrapper>
+        {/* 엔터 입력 때문에 submit 발생할 수 있으니 onSubmit 적용 */}
+        <S.LoginWrapper onSubmit={handleNext}>
           <S.TopOfTop>
             <S.TopSection>
               <S.Logo src="/assets/devit-logo.svg" alt="Devit Logo" />
@@ -21,32 +60,39 @@ export default function SignUpStep1({ goNext }) {
 
             <S.MiddleSection>
               <S.MiddleTop>
-                {/* 아이디 */}
+                {/* ID Input */}
                 <S.InputWrapper>
                   <S.Label>아이디</S.Label>
-                  <S.Input placeholder="영문/숫자만 입력하세요." type="text" />
+                  <S.Input
+                    placeholder="영문/숫자만 입력하세요."
+                    type="text"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                  />
                 </S.InputWrapper>
 
-                {/* 비밀번호 */}
+                {/* Password Input */}
                 <S.InputWrapper>
                   <S.Label>비밀번호</S.Label>
                   <S.InputContainer>
                     <S.Input
-                      id="passwordInput"
                       placeholder="8자 이상 입력하세요."
                       type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </S.InputContainer>
                 </S.InputWrapper>
 
-                {/* 비밀번호 확인 */}
+                {/* Password Confirm Input */}
                 <S.InputWrapper>
                   <S.Label>비밀번호 확인</S.Label>
                   <S.InputContainer>
                     <S.Input
-                      id="passwordcInput"
                       placeholder="비밀번호를 입력하세요."
                       type="password"
+                      value={passwordConfirm}
+                      onChange={(e) => setPasswordConfirm(e.target.value)}
                     />
                   </S.InputContainer>
                 </S.InputWrapper>
@@ -55,7 +101,7 @@ export default function SignUpStep1({ goNext }) {
           </S.TopOfTop>
 
           <S.BottomSection>
-            <S.NextButton onClick={goNext}>다음</S.NextButton>
+            <S.NextButton>다음</S.NextButton>
 
             <S.NoAccWrapper>
               <S.YesAccLabel>계정이 있으신가요?</S.YesAccLabel>
@@ -66,6 +112,7 @@ export default function SignUpStep1({ goNext }) {
           </S.BottomSection>
         </S.LoginWrapper>
 
+        {/* 배경 요소 */}
         <S.BackgroundCircle1 />
         <S.BackgroundCircle2 />
         <S.BackgroundCircle3 />

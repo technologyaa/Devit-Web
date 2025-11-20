@@ -1,4 +1,4 @@
-import * as S from "../styles/signUp2Page";
+import * as S from "../styles/signUpStep2";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

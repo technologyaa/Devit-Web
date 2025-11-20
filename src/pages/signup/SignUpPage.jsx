@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SignUpStep1 from "./components/SignUpStep1";
 import SignUpStep2 from "./components/SignUpStep2";
+import { Toaster } from "react-hot-toast";
 
 export default function SignUpPage() {
   const [step, setStep] = useState(1);
@@ -9,6 +10,7 @@ export default function SignUpPage() {
       {step === 1 && <SignUpStep1 goNext={() => setStep(2)} />}
       {step === 2 && <SignUpStep2 goBack={() => setStep(1)} />}
       {console.log(step)}
+      <Toaster position="top-right" />
     </>
   );
 }

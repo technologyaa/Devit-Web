@@ -3,7 +3,7 @@ import * as S from "./styles/signInPage";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import { Alarm } from "@/toasts/Alarm";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +59,6 @@ export default function SignInPage() {
                 >
                   비밀번호 찾기
                 </S.LosePsLink>
-                <Toaster position="top-right" />
               </S.LosePsWrapper>
             </S.Middle>
           </S.TopOfTop>
@@ -86,6 +85,7 @@ export default function SignInPage() {
         <S.BackgroundCircle2 />
         <S.BackgroundCircle3 />
         <S.BackgroundCircle4 />
+        <Toaster position="top-right" />
       </S.Container>
     </>
   );
