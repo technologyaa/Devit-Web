@@ -1,14 +1,15 @@
-import * as S from "./styles/signUp1Page";
+import * as S from "../styles/signUp1Page";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
-export default function SignUp1Page() {
+export default function SignUpStep1({ goNext }) {
   return (
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="./assets/Helmet.svg"></link>
+        <link rel="icon" href="./assets/Helmet.svg" />
       </Helmet>
+
       <S.Container>
         <S.LoginWrapper>
           <S.TopOfTop>
@@ -20,11 +21,13 @@ export default function SignUp1Page() {
 
             <S.MiddleSection>
               <S.MiddleTop>
+                {/* 아이디 */}
                 <S.InputWrapper>
                   <S.Label>아이디</S.Label>
                   <S.Input placeholder="영문/숫자만 입력하세요." type="text" />
                 </S.InputWrapper>
 
+                {/* 비밀번호 */}
                 <S.InputWrapper>
                   <S.Label>비밀번호</S.Label>
                   <S.InputContainer>
@@ -36,6 +39,7 @@ export default function SignUp1Page() {
                   </S.InputContainer>
                 </S.InputWrapper>
 
+                {/* 비밀번호 확인 */}
                 <S.InputWrapper>
                   <S.Label>비밀번호 확인</S.Label>
                   <S.InputContainer>
@@ -51,9 +55,8 @@ export default function SignUp1Page() {
           </S.TopOfTop>
 
           <S.BottomSection>
-            <Link to="/signup/2" style={{ display: "block", width: "100%" }}>
-              <S.NextButton>다음</S.NextButton>
-            </Link>
+            <S.NextButton onClick={goNext}>다음</S.NextButton>
+
             <S.NoAccWrapper>
               <S.YesAccLabel>계정이 있으신가요?</S.YesAccLabel>
               <Link to="/signin">
