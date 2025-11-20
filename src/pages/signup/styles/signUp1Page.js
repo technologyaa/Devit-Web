@@ -159,7 +159,7 @@ export const YesAccLabel = styled.div`
   color: #666666;
 `;
 
-export const YesAccLink = styled.a`
+export const YesAccLink = styled.span`
   color: #ab66dd;
   text-decoration: none;
 `;
