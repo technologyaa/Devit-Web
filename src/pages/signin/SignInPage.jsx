@@ -75,7 +75,7 @@ export default function SignInPage() {
             </S.BottomTop>
             <S.NoAccWrapper>
               <S.NoAccLabel>계정이 없으신가요?</S.NoAccLabel>
-              <Link to="/signup/1">
+              <Link to="/signup">
                 <S.NoAccLink>회원가입</S.NoAccLink>
               </Link>
             </S.NoAccWrapper>
