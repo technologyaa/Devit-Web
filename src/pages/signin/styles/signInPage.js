@@ -217,7 +217,7 @@ export const NoAccLabel = styled.div`
   color: #666666;
 `;
 
-export const NoAccLink = styled.a`
+export const NoAccLink = styled.span`
   color: #ab66dd;
   text-decoration: none;
 `;
