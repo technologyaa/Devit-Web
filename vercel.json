@@ -3,13 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "http://3.36.17.132/:path*"
-    }
-  ],
-  "redirects": [
+    },
     {
-      "source": "/:path*",
-      "destination": "/",
-      "statusCode": 200
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
