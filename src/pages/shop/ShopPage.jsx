@@ -1,33 +1,8 @@
 import * as S from "./styles/shopPage";
 import { Helmet } from "react-helmet";
 import profiles from "@/data/profile";
+import { Link } from "react-router";
 import { useState } from "react";
-
-const SHOP = [
-  "크레딧 구매",
-  "구독 플랜"
-]
-
-const CREDIT = [
-  {
-    credit: "1,000",
-    won: "9,900",
-    icon: "/assets/coin-icon.svg",
-    description: "기본 패키지"
-  },
-  {
-    credit: "5,000",
-    won: "45,000",
-    icon: "/assets/coin2-icon.svg",
-    description: "10% 할인 (₩5,000 절약)"
-  },
-  {
-    credit: "10,000",
-    won: "85,000",
-    icon: "/assets/coins-icon.svg",
-    description: "15% 할인 (₩15,000 절약)"
-  }
-]
 
 const SUBSCRIPTION_PLANS = [
   {
@@ -35,11 +10,11 @@ const SUBSCRIPTION_PLANS = [
     price: "₩0",
     period: "",
     features: [
-      "당일 개발자 매칭",
+      "단일 개발자 매칭",
       "개인 의뢰자 적합",
       "소규모·단순 프로젝트",
     ],
-    borderColor: null,
+    borderColor: "#a8a8a8",
   },
   {
     title: "프로 플랜",
@@ -67,13 +42,39 @@ const SUBSCRIPTION_PLANS = [
 
 const userCredit = profiles[0].credit;
 
-const SubscriptionPlan = () => (
-    <S.CreditBox style={{ padding: 0 }}> 
-      <S.BoxText>
-        구독 플랜 패키지
-      </S.BoxText>
-      <S.SubscriptionCardContainer>
-        {SUBSCRIPTION_PLANS.map((plan, index) => (
+
+// SubscriptionPlan 컴포넌트: 상태와 핸들러를 prop으로 전달받아 사용
+const SubscriptionPlan = ({ currentUserPlan, handlePlanChange, SUBSCRIPTION_PLANS }) => (
+  <S.CreditBox style={{ padding: 0 }}>
+    <S.BoxText>
+      구독 플랜 패키지
+    </S.BoxText>
+    <S.SubscriptionCardContainer>
+      {SUBSCRIPTION_PLANS.map((plan, index) => {
+
+        // 현재 플랜 상태에 따라 버튼 텍스트를 결정
+        const getButtonText = () => {
+          if (plan.title === currentUserPlan) {
+            return "내 플랜";
+          }
+
+          // SUBSCRIPTION_PLANS 배열 순서를 이용해 플랜의 '레벨'을 비교
+          const currentPlanIndex = SUBSCRIPTION_PLANS.findIndex(p => p.title === currentUserPlan);
+          const planIndex = index;
+
+          if (planIndex > currentPlanIndex) {
+            return "플랜 업그레이드"; // 현재보다 인덱스가 크면 업그레이드
+          } else if (planIndex < currentPlanIndex) {
+            return "플랜 다운그레이드"; // 현재보다 인덱스가 작으면 다운그레이드
+          }
+          return "";
+        };
+
+        const buttonText = getButtonText();
+        const isCurrentPlan = plan.title === currentUserPlan;
+        const isClickable = !isCurrentPlan;
+
+        return (
           <S.SubscriptionCard key={index} $borderColor={plan.borderColor}>
             <S.PlanHeader>
               <S.PlanTitle>{plan.title}</S.PlanTitle>
@@ -82,28 +83,45 @@ const SubscriptionPlan = () => (
                 {plan.period && <span>{plan.period}</span>}
               </S.PriceText>
             </S.PlanHeader>
-            
+
             <S.FeatureList>
               {plan.features.map((feature, i) => (
                 <li key={i}>{feature}</li>
               ))}
             </S.FeatureList>
 
-            <S.UpgradeButton>
-              플랜 업그레이드
+            <S.UpgradeButton
+              // 스타일 결정을 위해 prop 전달
+              $isCurrentPlan={isCurrentPlan}
+              // 클릭 가능한 경우에만 핸들러 적용
+              onClick={isClickable ? () => handlePlanChange(plan.title) : undefined}
+              // 현재 플랜일 경우 버튼 비활성화
+              disabled={isCurrentPlan}
+            >
+              {buttonText}
             </S.UpgradeButton>
           </S.SubscriptionCard>
-        ))}
-      </S.SubscriptionCardContainer>
-    </S.CreditBox>
+        );
+      })}
+    </S.SubscriptionCardContainer>
+  </S.CreditBox>
 );
 
 export default function ShopPage() {
-  const [selectedShop, setSelectedShop] = useState(SHOP[0]);
+  const [currentPlan, setCurrentPlan] = useState(profiles[0].plan);
 
-  const handleShopClick = (shopName) => {
-    setSelectedShop(shopName);
+  const handlePlanChange = (newPlan) => {
+    if (newPlan === currentPlan) {
+      return;
+    }
+
+    // profiles.js에서 불러온 데이터 원본 업데이트 (메모리 내 객체 변경)
+    profiles[0].plan = newPlan;
+
+    // React 상태 업데이트
+    setCurrentPlan(newPlan);
   };
+
 
   return (
     <>
@@ -116,112 +134,43 @@ export default function ShopPage() {
           <S.ShopText>상점</S.ShopText>
           <S.TopAndCredit>
             <S.Top>
-              <S.ShopButtonFrame>
-                {SHOP.map((shop) => (
-                  <S.ShopButton
-                    key={shop}
-                    onClick={() => handleShopClick(shop)}
-                    $isSelected={selectedShop === shop}
-                  >
-                    {shop}
-                  </S.ShopButton>
-                ))}
-              </S.ShopButtonFrame>
-              
-              {selectedShop === "크레딧 구매" && (
-                <S.HaveCredit>
-                  <S.TextFrame>
+              {/* <S.ShopButtonFrame> 섹션은 요청에 따라 제거되었습니다. */}
+
+              {/* 1. 현재 보유 크레딧 (HaveCredit) - 항상 표시 */}
+              <S.HaveCredit>
+                <S.TextFrame>
+                  <S.TextButton>
                     <S.HaveCreditText
                       FontSize={"22px"}
                       FontWeight={"600"}>
                       현재 보유 크래딧
                     </S.HaveCreditText>
-                    <S.HaveCreditText
-                      FontSize={"28px"}
-                      FontWeight={"600"}>
-                      {userCredit}{" "}<S.SpanText>크래딧</S.SpanText>
-                    </S.HaveCreditText>
-                    <S.CreditHistoryFrame>
-                      <S.CreditHistoryBtn>
-                        사용 내역 보기
-                      </S.CreditHistoryBtn>
-                      <S.CreditHistoryBtn>
-                        충전 내역
-                      </S.CreditHistoryBtn>
-                    </S.CreditHistoryFrame>
-                  </S.TextFrame>
-                  <S.Cricle>
+                    <Link to="/shop/credit">
+                      <S.GoCredit src="/assets/Arrow.svg" />
+                    </Link>
+                  </S.TextButton>
 
-                  </S.Cricle>
-                  <S.Cricle second>
-                    
-                  </S.Cricle>
-                </S.HaveCredit>
-              )}
+                  <S.HaveCreditText
+                    FontSize={"28px"}
+                    FontWeight={"600"}>
+                    {userCredit}{" "}<S.SpanText>크래딧</S.SpanText>
+                  </S.HaveCreditText>
+                </S.TextFrame>
+                <S.Cricle>
+
+                </S.Cricle>
+                <S.Cricle second>
+
+                </S.Cricle>
+              </S.HaveCredit>
             </S.Top>
 
-            {selectedShop === "크레딧 구매" ? (
-              <S.CreditBox>
-                  <S.BoxText>
-                    크레딧 패키지
-                  </S.BoxText>
-
-                  <S.CardContainer>
-                    {CREDIT.map((item, index) => (
-                      <S.CreditCard key={index}>
-                        
-                        <S.BoxTop>
-                          
-                          <S.TextContainer>
-                              <S.CreditText 
-                                FontSize={"32px"} 
-                                FontWeight={"700"} 
-                                Color={"#883CBE"} 
-                              >
-                                {item.credit}
-                              </S.CreditText>
-                              
-                              <S.CreditText 
-                                FontSize={"16px"} 
-                                FontWeight={"500"}
-                                Color={"#696969"}
-                                PaddingBottom={"3px"}
-                              >
-                                크레딧
-                              </S.CreditText>
-                          </S.TextContainer>
-
-
-                          <S.CreditText 
-                            FontSize={"24px"} 
-                            FontWeight={"500"}
-                            Color={"#404040"}
-                          >
-                            ₩{item.won}
-                          </S.CreditText>
-
-                          <S.CreditText 
-                            FontSize={"16px"} 
-                            FontWeight={"500"}
-                            Color={item.description.includes('할인') ? "#4b295d" : "#883CBE"}
-                            MarginBottom={"20px"} 
-                          >
-                            {item.description}
-                          </S.CreditText>
-                          
-                        </S.BoxTop>
-                        <S.CoinIcon src={item.icon}></S.CoinIcon>
-                        <S.PurchaseButton>
-                          지금 구매
-                        </S.PurchaseButton>
-                      </S.CreditCard>
-                    ))}
-                  </S.CardContainer>
-              </S.CreditBox>
-            ) : (
-              <SubscriptionPlan />
-            )}
-
+            {/* 2. 구독 플랜 패키지 (SubscriptionPlan) - 항상 표시 */}
+            <SubscriptionPlan
+              currentUserPlan={currentPlan}
+              handlePlanChange={handlePlanChange}
+              SUBSCRIPTION_PLANS={SUBSCRIPTION_PLANS}
+            />
           </S.TopAndCredit>
         </S.Frame>
       </S.Container>
