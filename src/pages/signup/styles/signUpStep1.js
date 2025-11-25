@@ -127,7 +127,7 @@ export const BottomSection = styled.div`
   gap: 10px;
 `;
 
-export const NextButton = styled.div`
+export const NextButton = styled.button`
   width: 100%;
   height: 52px;
   border-radius: 8px;
@@ -159,7 +159,7 @@ export const YesAccLabel = styled.div`
   color: #666666;
 `;
 
-export const YesAccLink = styled.a`
+export const YesAccLink = styled.span`
   color: #ab66dd;
   text-decoration: none;
 `;

@@ -2,6 +2,7 @@ import * as S from "./styles/sideBarFolded";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alarm } from "@/toasts/Alarm";
+import { Toaster } from "react-hot-toast";
 
 const menu = [
   { url: "/home", logo: "/assets/home-icon.svg", alt: "홈 아이콘" },
@@ -53,6 +54,7 @@ export default function SideBarFolded() {
                 <S.MenuItem onClick={moreClicked}>
                   <S.MenuIcon src="/assets/more-icon2.svg" alt="설정 아이콘" />
                 </S.MenuItem>
+                <Toaster position="top-right" />
               </S.NavigationBottom>
             </S.NavigationWrapper>
           </S.Navigation>
