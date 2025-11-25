@@ -27,8 +27,8 @@ export const Top = styled.div`
 
 export const Bottom = styled.div`
   display: flex;
-  gap: 14px;
   flex-wrap: wrap;
+  gap: 24px;
 `;
 
 export const Box = styled.div`
@@ -126,7 +126,7 @@ export const ProjectInputText = styled.div`
 
 export const ProjectInput = styled.input`
   width: 100%;
-  height: 48px;
+  height: 46px;
   padding: 0 12px;
   border: 1px solid #ccc;
   border-radius: 8px;

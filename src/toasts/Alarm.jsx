@@ -43,7 +43,7 @@ export const Alarm = (
       </ToastContainer>
     ),
     {
-      duration: 3000,
+      duration: 2200,
       position: "top-right",
     }
   );

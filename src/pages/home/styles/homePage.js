@@ -186,6 +186,7 @@ export const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 200;
 `;
 
 export const ModalContent = styled.div`
@@ -221,7 +222,7 @@ export const ProjectInputBox = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 `;
 
 export const ProjectInputText = styled.div`
@@ -233,7 +234,7 @@ export const ProjectInputText = styled.div`
 
 export const ProjectInput = styled.input`
   width: 100%;
-  height: 44px;
+  height: 46px;
   padding: 0 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -252,7 +253,7 @@ export const ProjectInput = styled.input`
 
 export const CreateButton = styled.button`
   color: white;
-  font-size: 15px;
+  font-size: 16px;
   background: #883cbe;
   opacity: 0.9;
   border: none;
@@ -315,4 +316,11 @@ export const CheckIcon = styled.img`
   right: 8px;
   width: 20px;
   height: 20px;
+`;
+
+export const JobFrame = styled.div`
+  gap: 6px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;

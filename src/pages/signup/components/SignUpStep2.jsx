@@ -1,16 +1,12 @@
-import * as S from "./styles/signUp2Page";
+import * as S from "../styles/signUpStep2";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Alarm } from "@/toasts/Alarm";
 
-export default function SignUp2Page() {
+export default function SignUpStep2({ goBack }) {
   const [selectedRole, setSelectedRole] = useState(null);
   const navigate = useNavigate();
-
-  const back = () => {
-    navigate("/signup/1");
-  };
 
   const signUp = () => {
     Alarm("🚪", "회원가입 되었습니다.", "#4CAF50", "#E8F5E9");
@@ -21,7 +17,7 @@ export default function SignUp2Page() {
     <>
       <Helmet>
         <title>Devit</title>
-        <link rel="icon" href="./assets/Helmet.svg"></link>
+        <link rel="icon" href="./assets/Helmet.svg" />
       </Helmet>
 
       <S.Container>
@@ -30,18 +26,20 @@ export default function SignUp2Page() {
             <S.LoginWrapperTop>
               <S.DevitLogo src="/assets/devit-logo.svg" alt="Devit Logo" />
               <S.DevitText>개발자와 기획자를 이어주는 플랫폼</S.DevitText>
+
               <S.DevitBottom>
-                <S.ReturnButton onClick={back}>
+                <S.ReturnButton onClick={goBack}>
                   <S.ReturnImg
                     src="/assets/return-icon.svg"
                     alt="돌아가기 버튼"
-                  ></S.ReturnImg>
+                  />
                 </S.ReturnButton>
                 <S.DevitBottomText>2/2</S.DevitBottomText>
               </S.DevitBottom>
             </S.LoginWrapperTop>
 
             <S.LoginWrapperMiddle>
+              {/* 이메일 */}
               <S.EmailInputWrapper>
                 <S.EmailLabel>이메일</S.EmailLabel>
                 <S.EmailInputContainer>
@@ -55,15 +53,17 @@ export default function SignUp2Page() {
                 </S.EmailInputContainer>
               </S.EmailInputWrapper>
 
+              {/* 인증번호 */}
               <S.CodeInputWrapper>
                 <S.CodeLabel>인증번호</S.CodeLabel>
                 <S.CodeInput type="text" placeholder="6자리 숫자 입력" />
               </S.CodeInputWrapper>
 
+              {/* 역할 선택 */}
               <S.RoleSelectWrapper>
                 <S.RoleLabel>내 역할</S.RoleLabel>
                 <S.RoleButtons>
-                  {["개발자", "의뢰자", "TBD"].map((role) => (
+                  {["개발자", "의뢰인", "TBD"].map((role) => (
                     <S.RoleButton
                       key={role}
                       type="button"
@@ -80,6 +80,7 @@ export default function SignUp2Page() {
 
           <S.LoginWrapperBottom>
             <S.SigninButton onClick={signUp}>회원가입</S.SigninButton>
+
             <S.NoAccWrapper>
               <S.YesAccLabel>계정이 있으신가요?</S.YesAccLabel>
               <Link to="/signin">

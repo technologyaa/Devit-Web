@@ -28,9 +28,17 @@ export default function HomePage() {
   };
 
   const complete = () => {
+    if (!selectedJob) {
+      Alarm("⚠️", "직무를 선택해주세요.", "#FF9800", "#FFF3E0");
+      return;
+    }
+
+    localStorage.setItem("userJob", selectedJob);
+    localStorage.setItem("userIntro", intro);
+
     console.log("선택한 직무:", selectedJob);
     console.log("소개:", intro);
-    Alarm("✅", "정보 수정이 완료 되었습니다.", "#4CAF50", "#E8F5E9");
+    Alarm("💾", "정보가 저장되었습니다.", "#4CAF50", "#E8F5E9");
     setIsModalOpen(false);
   };
 
@@ -56,7 +64,7 @@ export default function HomePage() {
               <S.Goto>
                 {icons.map((icon, index) => {
                   return (
-                    <S.styledLink to={icon.url}>
+                    <S.styledLink to={icon.url} key={index}>
                       <S.Card gradient={icon.gradient}>
                         <S.ElementPlace>
                           <S.IconButton>
@@ -79,9 +87,9 @@ export default function HomePage() {
           <S.Bottom>
             <S.Text>추천 개발자</S.Text>
             <S.RecommendDev>
-              {devlopers.map((devloper) => {
+              {devlopers.map((devloper, index) => {
                 return (
-                  <S.Devloper>
+                  <S.Devloper key={index}>
                     <S.Profile
                       src="./assets/dummy-profile.svg"
                       alt="개발자 프로필"
@@ -124,26 +132,30 @@ export default function HomePage() {
                   onChange={(e) => setIntro(e.target.value)}
                 />
               </S.ProjectInputBox>
-              <S.JobSelectGrid>
-                {jobList.map((job) => (
-                  <S.JobBox
-                    key={job.id}
-                    isSelected={selectedJob === job.name}
-                    onClick={() => setSelectedJob(job.name)}
-                  >
-                    <S.JobIcon src={job.icon} alt={`${job.name} 아이콘`} />
+              <S.JobFrame>
+                <S.ProjectInputText>직무</S.ProjectInputText>
+                <S.JobSelectGrid>
+                  {jobList.map((job) => (
+                    <S.JobBox
+                      key={job.id}
+                      isSelected={selectedJob === job.name}
+                      onClick={() => setSelectedJob(job.name)}
+                    >
+                      <S.JobIcon src={job.icon} alt={`${job.name} 아이콘`} />
 
-                    <span>{job.name}</span>
+                      <span>{job.name}</span>
 
-                    {selectedJob === job.name && (
-                      <S.CheckIcon
-                        src="/assets/job-icons/check.svg"
-                        alt="선택됨"
-                      />
-                    )}
-                  </S.JobBox>
-                ))}
-              </S.JobSelectGrid>
+                      {selectedJob === job.name && (
+                        <S.CheckIcon
+                          src="/assets/job-icons/check.svg"
+                          alt="선택됨"
+                        />
+                      )}
+                    </S.JobBox>
+                  ))}
+                </S.JobSelectGrid>
+              </S.JobFrame>
+
               <S.ButtonGroup>
                 <S.CreateButton onClick={complete}>완료</S.CreateButton>
               </S.ButtonGroup>
