@@ -6,7 +6,7 @@ const profiles = [
     img: "/assets/profile-icon.svg",
     CompletedProjects: "2", // -일때 짝대기 최대로 가는거 변경 해야함
     Temp: "65",
-    credit: "12,500",
+    credit: "1,000",
     plan: "무료 플랜",
     projectList: [
       { name: "서비스 Devit의 홈 화면 디자인", points: "+300" },
