@@ -34,14 +34,14 @@ export const ShopText = styled.div`
 `;
 
 export const ShopButtonFrame = styled.div`
-  height: 4rem;
+  height: 3.1rem;
   display: flex;
   align-items: center;
   gap: 10px;
   border-radius: 22px;
   border: 1px solid #B0B0B0;
   background: #FFF;
-  padding: 10px
+  padding: 8px
 `;
 
 export const ShopButton = styled.button`
@@ -75,7 +75,7 @@ export const ShopButton = styled.button`
 
 export const HaveCredit = styled.div`
   width: 100%;
-  height: 13rem;
+  height: 10rem;
   border-radius: 22px;
   border: 2px solid #DBDBDB;
   background: #A63CBE;
@@ -92,6 +92,17 @@ export const TextFrame = styled.div`
   gap: 24px;
   position: relative;
   z-index: 2;
+`;
+
+export const TextButton = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const GoCredit = styled.img`
+  width: 30px;
+  cursor: pointer;
 `;
 
 export const HaveCreditText = styled.p`
@@ -112,22 +123,6 @@ export const CreditBox = styled.div`
 
 export const SpanText = styled.span`
   font-size: 16px;
-`;
-
-export const CreditHistoryFrame = styled.div`
-  width: 100%;
-  display: flex;
-  gap: 8px;
-`;
-
-export const CreditHistoryBtn = styled.button`
-  font-size: 16px;
-  border-radius: 0.625rem;
-  border: 1px solid #D1D1D1;
-  background: rgba(226, 187, 255, 0.50);
-  color: #ffffff;
-  padding: 12px 17px;
-  cursor: pointer;
 `;
 
 export const Cricle = styled.div`
@@ -158,69 +153,7 @@ export const BoxText = styled.div`
   padding: 24px 20px;
 `;
 
-export const CardContainer = styled.div`
-  padding:20px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  box-sizing: border-box;
-`;
 
-export const CreditCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 30px 20px; /* 상하 패딩 조정 */
-  height: 20rem; /* 높이 조정 */
-  border-radius: 1.25rem;
-  border: 1px solid #B0B0B0; /* 기본 테두리 유지 */
-  background: #FFF;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-`;
-
-export const TextContainer = styled.div`
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-`;
-
-export const CreditText = styled.span`
-  font-size: ${(props) => props.FontSize};
-  font-weight: ${(props) => props.FontWeight};
-  color: ${(props) => props.Color || '#000'};
-  padding-bottom: ${(props) => props.PaddingBottom || 0}
-`;
-
-export const PurchaseButton = styled.button`
-  width: 90%;
-  padding: 15px 0;
-  background: #883CBE;
-  color: #ffff;
-  font-size: 18px;
-  font-weight: 500;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s;
-
-  &:hover {
-    background: #6a2e99;
-  }
-`;
-export const BoxTop = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-`;
-
-export const CoinIcon = styled.img`
-  width: 24%
-`;
 
 export const SubscriptionCardContainer = styled.div`
   padding: 20px;
@@ -247,7 +180,6 @@ export const SubscriptionCard = styled.div`
   /* $borderColor 값에 따라 테두리와 그림자 동적 적용 */
   ${(props) => props.$borderColor && `
     border: 2px solid ${props.$borderColor};
-    /* 테두리 색상을 기반으로 그림자 효과 적용 (50은 투명도) */
     box-shadow: 0 0 15px ${props.$borderColor}50; 
   `}
 `;
@@ -305,7 +237,13 @@ export const FeatureList = styled.ul`
 export const UpgradeButton = styled.button`
   width: 100%;
   padding: 15px 0;
-  background: #000;
+  
+  /* 1. 기본 배경색: 내 플랜(회색) / 업그레이드(검정) / 다운그레이드(보라색) */
+  background: ${(props) => 
+    props.$isCurrentPlan 
+      ? "#8A8A8A" // 내 플랜 (짙은 회색)
+      : (props.children === "플랜 업그레이드" ? "#000" : "#000") // 업그레이드: 검정, 다운그레이드: 보라색 계열
+  }; 
   color: #ffff;
   font-size: 18px;
   font-weight: 500;
@@ -316,6 +254,22 @@ export const UpgradeButton = styled.button`
   margin-top: 10px;
 
   &:hover {
-    background: #333;
+    /* 2. 호버 배경색 */
+    background: ${(props) => 
+      props.$isCurrentPlan 
+        ? "#666666" // 내 플랜 (더 짙은 회색)
+        : (props.children === "플랜 업그레이드" ? "#333" : "#333") // 업그레이드: 진한 검정, 다운그레이드: 진한 보라색
+    };
+  }
+  
+  /* 3. disabled 스타일 추가 (내 플랜일 때 적용됨) */
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 1; 
+    
+    &:hover {
+      /* disabled 상태에서 hover 시 배경색이 바뀌지 않도록 고정 */
+      background: #8A8A8A;
+    }
   }
 `;
