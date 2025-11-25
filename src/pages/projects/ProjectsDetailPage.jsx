@@ -1,8 +1,7 @@
 import * as S from "./styles/projectsDetailPage";
 import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
-import { projectList } from "@/data/project-list";
+import { useState, useEffect } from "react";
 import profiles from "@/data/profile";
 import { Alarm } from "@/toasts/Alarm";
 import { API_URL } from "@/constants/api";
@@ -10,14 +9,43 @@ import { API_URL } from "@/constants/api";
 export default function ProjectsDetailPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const project = projectList.find((p) => p.id == +projectId) ?? [];
+
+  const [project, setProject] = useState(null); // 프로젝트 데이터
+  const [tasks, setTasks] = useState([]); // 업무 리스트
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newDescription, setNewDescription] = useState("");
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
+  const [newTitle, setNewTitle] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+
   const userCredit = profiles[0].credit;
+
+  // 프로젝트 불러오기
+  useEffect(() => {
+    fetchProjectDetail();
+    fetchTasks();
+  }, [projectId]);
+
+  const fetchProjectDetail = async () => {
+    try {
+      const res = await fetch(`${API_URL}/projects/${projectId}`);
+      const data = await res.json();
+      setProject(data);
+    } catch (err) {
+      console.error("프로젝트 로딩 실패:", err);
+    }
+  };
+
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch(`${API_URL}/projects/${projectId}/tasks`);
+      const data = await res.json();
+      setTasks(data);
+    } catch (err) {
+      console.error("업무 로딩 실패:", err);
+    }
+  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -29,72 +57,57 @@ export default function ProjectsDetailPage() {
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
+  const moreClicked = () => {
+    setIsMoreOpen((prev) => !prev);
+  };
+
+  // 업무 생성
+  const handleAddTask = async () => {
+    if (newTitle.trim() === "")
+      return Alarm("‼️", "업무 이름을 입력하세요!", "#FF1E1E", "#FFEAEA");
+
+    try {
+      const res = await fetch(`${API_URL}/projects/${projectId}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: newTitle,
+          description: newDescription,
+        }),
+      });
+
+      if (!res.ok) throw new Error();
+
+      Alarm("✅", "업무가 추가되었습니다!", "#4CAF50", "#E8F5E9");
+
+      closeModal();
+      fetchTasks();
+    } catch (err) {
+      Alarm("❌", "업무 생성에 실패했습니다.", "#FF1E1E", "#FFEAEA");
+    }
+  };
+
+  // 프로젝트 삭제
   const deleteProject = async () => {
     try {
       const res = await fetch(`${API_URL}/projects/${projectId}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
       });
 
-      if (res.ok) {
-        const index = projectList.findIndex((p) => p.id === +projectId);
-        if (index !== -1) {
-          projectList.splice(index, 1);
-        }
-        closeDeleteModal();
-        Alarm("🗑️", "프로젝트가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
-        navigate("/projects");
-      } else {
-        const errorData = await res.json();
-        Alarm(
-          "❌",
-          `프로젝트 삭제에 실패했습니다: ${errorData.message || res.status}`,
-          "#FF1E1E",
-          "#FFEAEA"
-        );
-      }
+      if (!res.ok) throw new Error();
+
+      Alarm("🗑️", "프로젝트가 삭제되었습니다.", "#FF1E1E", "#FFEAEA");
+
+      closeDeleteModal();
+      navigate("/projects");
     } catch (err) {
-      console.error("Failed to delete project:", err);
-      Alarm(
-        "❌",
-        "네트워크 오류로 프로젝트 삭제에 실패했습니다.",
-        "#FF1E1E",
-        "#FFEAEA"
-      );
+      Alarm("❌", "프로젝트 삭제 실패", "#FF1E1E", "#FFEAEA");
     }
   };
 
-  const moreClicked = () => {
-    setIsMoreOpen((prevIsMoreOpen) => !prevIsMoreOpen);
-  };
-
-  const handleAddProject = () => {
-    if (newTitle.trim() === "")
-      return Alarm("‼️", "업무 이름을 입력하세요!", "#FF1E1E", "#FFEAEA");
-    const targetProject = projectList.find((p) => p.id === +projectId);
-    if (!targetProject)
-      return Alarm("‼️", "프로젝트를 찾을 수 없습니다.!", "#FF1E1E", "#FFEAEA");
-
-    targetProject.tasks = targetProject.tasks ?? [];
-
-    targetProject.tasks = targetProject.tasks.map((t, i) => ({
-      ...t,
-      id: i + 1,
-    }));
-
-    const newTask = {
-      id: targetProject.tasks.length + 1,
-      title: newTitle,
-      description: newDescription,
-      isDone: false,
-    };
-
-    targetProject.tasks.push(newTask);
-    closeModal();
-  };
+  if (!project) return <p style={{ padding: "30px" }}>로딩중...</p>;
 
   return (
     <>
@@ -112,7 +125,7 @@ export default function ProjectsDetailPage() {
                   onClick={() => navigate("/projects")}
                   src="/assets/back-icon.svg"
                 />
-                <S.ProjectText>{project?.title}</S.ProjectText>
+                <S.ProjectText>{project.title}</S.ProjectText>
               </S.TopLeft>
 
               <S.ProjectSettingsIcon
@@ -147,14 +160,14 @@ export default function ProjectsDetailPage() {
           </S.Top>
 
           <S.Bottom>
-            <S.Banner $backgroundImage={project.thumbnail}></S.Banner>
+            <S.Banner $backgroundImage={project.thumbnail} />
             <S.BottomWrapper>
               <S.BottomLeft>
                 <S.BottomTop>
                   <S.TaskBoxTitle>업무</S.TaskBoxTitle>
                   <S.TaskBoxAddButton
                     src="/assets/plus-icon.svg"
-                    alt="새 프로젝트 추가"
+                    alt="새 업무 추가"
                     style={{
                       width: "18px",
                       cursor: "pointer",
@@ -165,8 +178,8 @@ export default function ProjectsDetailPage() {
                 </S.BottomTop>
 
                 <S.TaskBoxWrapper>
-                  {project.tasks?.length ? (
-                    project.tasks.map((task) => (
+                  {tasks.length ? (
+                    tasks.map((task) => (
                       <S.TaskBox
                         key={task.id}
                         onClick={() =>
@@ -238,7 +251,7 @@ export default function ProjectsDetailPage() {
 
               <S.ButtonGroup>
                 <S.CancelButton onClick={closeModal}>취소</S.CancelButton>
-                <S.CreateButton onClick={handleAddProject}>생성</S.CreateButton>
+                <S.CreateButton onClick={handleAddTask}>생성</S.CreateButton>
               </S.ButtonGroup>
             </S.ModalWrapper>
           </S.ModalContent>
