@@ -8,6 +8,7 @@ import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ProjectsDetailPage from "@/pages/projects/ProjectsDetailPage";
 import TaskDetailPage from "@/pages/tasks/TaskDetailPage";
 import ShopPage from "@/pages/shop/ShopPage";
+import CreditPage from "@/pages/shop/Credit";
 import ProfilePage from "@/pages/profile/ProfilePage";
 import Layout from "@/widgets/layout/Layout/Layout";
 import ErrorPage from "@/pages/errorpage/ErrorPage";
@@ -54,7 +55,19 @@ export const router = createBrowserRouter([
       },
       { path: "/chat", element: <ChatPage /> },
       { path: "/offer/dev", element: <DevelopersPage /> },
-      { path: "/shop", element: <ShopPage /> },
+      { 
+        path: "/shop", 
+        children: [
+          {
+            index: true,
+            element: <ShopPage />
+          },
+          {
+            path: ":credit",
+            element: <CreditPage/>
+          }
+        ]
+      },
       { path: "/profile", element: <ProfilePage /> },
       { index: true, element: <HomePage /> },
     ],

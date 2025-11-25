@@ -153,8 +153,6 @@ export const BoxText = styled.div`
   padding: 24px 20px;
 `;
 
-
-
 export const SubscriptionCardContainer = styled.div`
   padding: 20px;
   width: 100%;

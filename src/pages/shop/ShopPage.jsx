@@ -134,9 +134,6 @@ export default function ShopPage() {
           <S.ShopText>상점</S.ShopText>
           <S.TopAndCredit>
             <S.Top>
-              {/* <S.ShopButtonFrame> 섹션은 요청에 따라 제거되었습니다. */}
-
-              {/* 1. 현재 보유 크레딧 (HaveCredit) - 항상 표시 */}
               <S.HaveCredit>
                 <S.TextFrame>
                   <S.TextButton>
