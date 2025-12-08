@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as S from "./styles/signInPage";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import { Alarm } from "@/toasts/Alarm";
 import { Toaster } from "react-hot-toast";
+import { API_URL } from "@/constants/api";
 
 export default function SignInPage() {
+
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 

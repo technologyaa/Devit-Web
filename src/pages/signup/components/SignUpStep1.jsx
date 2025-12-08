@@ -4,16 +4,16 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Alarm } from "@/toasts/Alarm";
 
-export default function SignUpStep1({ goNext }) {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+export default function SignUpStep1({ data, onChange, onNext }) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     // 폼 submit로 들어올 경우 새로고침 방지
     if (e) e.preventDefault();
 
-    // 1) 빈 항목 확인
+    // 부모가 준 data 주머니에서 username(아이디)과 password를 꺼냅니다.
+    const { username: id, password } = data; 
+
     if (!id || !password || !passwordConfirm) {
       Alarm("‼️", "모든 항목을 입력해주세요.", "#FF1E1E", "#FFEAEA");
       return;
@@ -37,8 +37,19 @@ export default function SignUpStep1({ goNext }) {
       return;
     }
 
+    if (password.length <= 7){
+      Alarm("‼️", "비밀번호가 8자리 미만입니다.", "#FF1E1E", "#FFEAEA");
+      return;
+    }
+    const specialCharRegex = /[!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]/;
+    
+    if (!specialCharRegex.test(password)) {
+      Alarm("‼️", "비밀번호에 특수문자를 포함해야 합니다.", "#FF1E1E", "#FFEAEA")
+      return;
+    }
+
     // 모든 조건 통과 → 다음 단계 이동
-    goNext({ id, password });
+    onNext();
   };
 
   return (
@@ -66,8 +77,9 @@ export default function SignUpStep1({ goNext }) {
                   <S.Input
                     placeholder="영문/숫자만 입력하세요."
                     type="text"
-                    value={id}
-                    onChange={(e) => setId(e.target.value)}
+                    name="username"        // 중요: 부모 State 키값과 일치시켜야 함
+                    value={data.username}  // 부모 데이터 사용
+                    onChange={onChange}    // 부모 함수 사용
                   />
                 </S.InputWrapper>
 
@@ -78,8 +90,9 @@ export default function SignUpStep1({ goNext }) {
                     <S.Input
                       placeholder="8자 이상 입력하세요."
                       type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      name="password"       // 중요: 부모 State 키값과 일치
+                      value={data.password} // 부모 데이터 사용
+                      onChange={onChange}   // 부모 함수 사용
                     />
                   </S.InputContainer>
                 </S.InputWrapper>
@@ -91,6 +104,7 @@ export default function SignUpStep1({ goNext }) {
                     <S.Input
                       placeholder="비밀번호를 입력하세요."
                       type="password"
+                      // 얘는 여기서만 쓰니까 그냥 로컬 state 사용
                       value={passwordConfirm}
                       onChange={(e) => setPasswordConfirm(e.target.value)}
                     />
