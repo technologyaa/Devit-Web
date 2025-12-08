@@ -116,7 +116,7 @@ export const EmailInput = styled.input`
 `;
 
 export const SendCodeButton = styled.button`
-  height: 46px;
+  height: 100%;
   width: 21%;
   background-color: #883cbe;
   color: white;
@@ -203,7 +203,7 @@ export const LoginWrapperBottom = styled.div`
   gap: 10px;
 `;
 
-export const SigninButton = styled.div`
+export const SigninButton = styled.button`
   width: 100%;
   height: 52px;
   border-radius: 8px;
@@ -235,7 +235,7 @@ export const YesAccLabel = styled.div`
   color: #666666;
 `;
 
-export const YesAccLink = styled.a`
+export const YesAccLink = styled.span`
   color: #ab66dd;
   text-decoration: none;
 `;

@@ -1,12 +1,13 @@
 import { useState } from "react";
-import axios from "axios"; // ★ axios import 필수
+import axios from "axios";
 import SignUpStep1 from "./components/SignUpStep1";
 import SignUpStep2 from "./components/SignUpStep2";
 import { Toaster } from "react-hot-toast";
 import { API_URL } from "@/constants/api";
+import { Alarm } from "@/toasts/Alarm";
 
 export default function SignUpPage() {
-  
+
   // 1. 변수명 소문자 formData로 변경 (권장)
   const [formData, setFormData] = useState({
     username: "",
@@ -28,20 +29,35 @@ export default function SignUpPage() {
     setStep(2);
   };
 
+  const handleBackStep = () => {
+    setStep(1);
+  }
+
   const handleFinalSubmit = async () => {
     try {
-      console.log('최종 전송 데이터:', formData);
-
-      // 2. 대소문자 주의: formData (소문자)
-      const response = await axios.post(`${API_URL}/auth/signup`, formData);
-
-      if (response.status === 200 || response.status === 201) {
-        alert('회원가입 성공!');
-        // navigate('/login'); // 페이지 이동이 필요하면 추가
+      const response = await axios.post(`${API_URL}/auth/signup`, {
+        username: formData.username,
+        password: formData.password,
+        email: formData.email,
+        role: formData.role,
+      })
+      if (response.status === 200) {
+        Alarm("✅", "회원가입이 완료되었습니다.", "#3CAF50", "#E8F5E9")
+        
+        setTimeout(()=> {
+          navigator("/signin");
+        }, 1000)
       }
     } catch (error) {
-      console.error(error);
-      alert('가입 실패..');
+      if (error.response) {
+        // 서버가 응답을 줬으나 상태 코드가 2xx가 아닌 경우 (예: 400, 409, 500)
+        alert(`가입 실패: ${error.response.data.message || '알 수 없는 오류'}`);
+      } else if (error.request) {
+        // 요청은 보냈으나 응답을 받지 못한 경우 (네트워크 문제 등)
+        alert('서버와 통신할 수 없습니다.');
+      } else {
+        alert('요청 중 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -51,21 +67,22 @@ export default function SignUpPage() {
         <SignUpStep1
           data={formData}          // 소문자 formData
           onChange={handleInputChange}
-          onNext={handleNextStep} 
+          onNext={handleNextStep}
         />
       )}
-      
+
       {step === 2 && (
         <SignUpStep2
           data={formData}          // 소문자 formData
+          onBack={handleBackStep}
           onChange={handleInputChange}
-          onSubmit={handleFinalSubmit} 
+          onSubmit={handleFinalSubmit}
         />
       )}
-      
+
       {/* 디버깅용 로그 (나중에 삭제) */}
       {console.log("현재 데이터:", formData)}
-      
+
       <Toaster position="top-right" />
     </>
   );

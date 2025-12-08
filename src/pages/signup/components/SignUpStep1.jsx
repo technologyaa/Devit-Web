@@ -7,7 +7,7 @@ import { Alarm } from "@/toasts/Alarm";
 export default function SignUpStep1({ data, onChange, onNext }) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     // 폼 submit로 들어올 경우 새로고침 방지
     if (e) e.preventDefault();
 
@@ -41,8 +41,12 @@ export default function SignUpStep1({ data, onChange, onNext }) {
       Alarm("‼️", "비밀번호가 8자리 미만입니다.", "#FF1E1E", "#FFEAEA");
       return;
     }
-
-    if (password)
+    const specialCharRegex = /[!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]/;
+    
+    if (!specialCharRegex.test(password)) {
+      Alarm("‼️", "비밀번호에 특수문자를 포함해야 합니다.", "#FF1E1E", "#FFEAEA")
+      return;
+    }
 
     // 모든 조건 통과 → 다음 단계 이동
     onNext();
