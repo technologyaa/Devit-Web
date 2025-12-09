@@ -117,10 +117,12 @@ export const EmailInput = styled.input`
 
 export const SendCodeButton = styled.button`
   height: 100%;
-  width: 21%;
+  width: 23%;
   background-color: #883cbe;
   color: white;
   font-size: 14px;
+  padding: 0;
+  text-align: center;
   border: none;
   border-radius: 8px;
   white-space: nowrap;

@@ -6,11 +6,13 @@ import axios from "axios";
 import { API_URL } from "@/constants/api";
 import { useState, useEffect } from "react";
 
-export default function SignUpStep2({ data, onChange, onSubmit, onBack}) {
+export default function SignUpStep2({ data, onChange, onSubmit, onBack }) {
 
   const [inputCode, setInputCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+
+  const [timeLeft, setTimeLeft] = useState(0);
 
   const ROLE_OPTIONS = [
     { label: "개발자", value: "ROLE_DEVELOPER" },
@@ -21,9 +23,20 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack}) {
   useEffect(() => {
     setIsVerified(false);
     setIsCodeSent(false);
+    setTimeLeft(0);
     setInputCode("");
   }, [data.email]);
 
+  useEffect(() => {
+    if (timeLeft === 0) return; // 0이면 아무것도 안 함
+
+    const intervalId = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    // 컴포넌트 언마운트되거나 timeLeft가 0이 되면 인터벌 정리
+    return () => clearInterval(intervalId);
+  }, [timeLeft]);
 
   // [수정됨 2] 버튼 클릭 시 부모의 onChange를 '인위적으로' 호출하는 함수
   const handleRoleClick = (roleValue) => {
@@ -46,6 +59,7 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack}) {
       await axios.post(`${API_URL}/email/send`, { email: data.email });
       Alarm("📨", "인증번호가 전송되어있습니다.", "#3CAF50", "#E8F5E9");
       setIsCodeSent(true); // useState 값 변경
+      setTimeLeft(60);
     } catch (error) {
       console.error(error);
       Alarm("‼️", "인증번호 전송 실패. 다시 시도해주세요.", "#FF1E1E", "#FFEAEA")
@@ -61,17 +75,18 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack}) {
       email: data.email,
       authNum: inputCode
     })
-    .then((response) => {
-      if (response.status === 200) {
-        Alarm("✅", "이메일 인증이 완료되었습니다!", "#4CAF50", "#E8F5E9");
-        setIsVerified(true);
-      }
-    })
-    .catch((error) => {
-      Alarm("‼️", "인증번호가 일치하지 않습니다.", "#FF1E1E", "#FFEAEA");
-      setIsVerified(false);
-      console.log(error)
-    })
+      .then((response) => {
+        if (response.status === 200) {
+          Alarm("✅", "이메일 인증이 완료되었습니다!", "#4CAF50", "#E8F5E9");
+          setIsVerified(true);
+          setTimeLeft(0);
+        }
+      })
+      .catch((error) => {
+        Alarm("‼️", "인증번호가 일치하지 않습니다.", "#FF1E1E", "#FFEAEA");
+        setIsVerified(false);
+        console.log(error)
+      })
   }
 
 
@@ -91,6 +106,13 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack}) {
 
     // 모든 검증 통과 시 부모의 API 요청 함수 실행
     onSubmit();
+  };
+
+  const getButtonText = () => {
+    if (isVerified) return "인증완료";
+    if (timeLeft > 0) return `${timeLeft}초 후 재전송`;
+    if (isCodeSent) return "재전송";
+    return "인증번호 전송";
   };
 
   return (
@@ -136,9 +158,9 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack}) {
                   <S.SendCodeButton
                     type="button"
                     onClick={handleSendCode}
-                    disabled={isVerified}
+                    disabled={isVerified || timeLeft > 0}
                   >
-                    {isVerified ? "인증완료" : (isCodeSent ? "재전송" : "인증번호 전송")}
+                    {getButtonText()}
                   </S.SendCodeButton>
                 </S.EmailInputContainer>
               </S.EmailInputWrapper>

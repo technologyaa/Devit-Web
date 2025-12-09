@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SignUpStep1 from "./components/SignUpStep1";
 import SignUpStep2 from "./components/SignUpStep2";
 import { Toaster } from "react-hot-toast";
 import { API_URL } from "@/constants/api";
-import { Alarm } from "@/toasts/Alarm";
 
 export default function SignUpPage() {
 
@@ -15,6 +15,8 @@ export default function SignUpPage() {
     email: "",
     role: "ROLE_DEVELOPER" // 기본값 설정해두면 좋음
   });
+
+  const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
 
@@ -41,12 +43,13 @@ export default function SignUpPage() {
         email: formData.email,
         role: formData.role,
       })
-      if (response.status === 200) {
-        Alarm("✅", "회원가입이 완료되었습니다.", "#3CAF50", "#E8F5E9")
-        
-        setTimeout(()=> {
-          navigator("/signin");
-        }, 1000)
+      if (response.status === 200 || response.status === 201) {
+        navigate("/signin", {
+          state: {
+            message: "회원가입이 완료되었습니다. 로그인 해주세요!",
+            success: true
+          }
+        })
       }
     } catch (error) {
       if (error.response) {
@@ -79,9 +82,6 @@ export default function SignUpPage() {
           onSubmit={handleFinalSubmit}
         />
       )}
-
-      {/* 디버깅용 로그 (나중에 삭제) */}
-      {console.log("현재 데이터:", formData)}
 
       <Toaster position="top-right" />
     </>

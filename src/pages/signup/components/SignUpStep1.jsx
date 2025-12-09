@@ -7,7 +7,7 @@ import { Alarm } from "@/toasts/Alarm";
 export default function SignUpStep1({ data, onChange, onNext }) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const handleNext = async (e) => {
+  const handleNext = (e) => {
     // 폼 submit로 들어올 경우 새로고침 방지
     if (e) e.preventDefault();
 
