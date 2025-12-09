@@ -47,7 +47,10 @@ export default function SignInPage() {
       const response = await axios.post(`${API_URL}/auth/signin`, {
         username: id,
         password: password
-      })
+      },
+        {
+          withCredentials: true
+        })
       if (response.status === 200) {
         navigate("/home")
       }
