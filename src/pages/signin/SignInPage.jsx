@@ -53,6 +53,7 @@ export default function SignInPage() {
         })
       if (response.status === 200) {
         navigate("/home")
+        Alarm("✅", "로그인 완료!", "#3CAF50", "#E8F5E9")
       }
     } catch (error) {
       console.error(error);
@@ -76,7 +77,7 @@ export default function SignInPage() {
         <link rel="icon" href="./assets/Helmet.svg"></link>
       </Helmet>
       <S.Container>
-        <S.LoginWrapper>
+        <S.LoginWrapper as="form" onSubmit={signIn}>
           <S.TopOfTop>
             <S.Top>
               <S.DevitLogo src="/assets/devit-logo.svg" alt="logo" />
@@ -147,7 +148,6 @@ export default function SignInPage() {
         <S.BackgroundCircle4 />
         <Toaster position="top-right" />
       </S.Container>
-      {console.log("현재 데이터:", logInData)}
     </>
   );
 }
