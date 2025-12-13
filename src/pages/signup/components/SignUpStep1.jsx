@@ -3,6 +3,8 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Alarm } from "@/toasts/Alarm";
+import axios from "axios";
+import { API_URL } from "@/constants/api";
 
 export default function SignUpStep1({ data, onChange, onNext }) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -12,7 +14,7 @@ export default function SignUpStep1({ data, onChange, onNext }) {
     if (e) e.preventDefault();
 
     // 부모가 준 data 주머니에서 username(아이디)과 password를 꺼냅니다.
-    const { username: id, password } = data; 
+    const { username: id, password } = data;
 
     if (!id || !password || !passwordConfirm) {
       Alarm("‼️", "모든 항목을 입력해주세요.", "#FF1E1E", "#FFEAEA");
@@ -37,19 +39,31 @@ export default function SignUpStep1({ data, onChange, onNext }) {
       return;
     }
 
-    if (password.length <= 7){
+    if (password.length <= 7) {
       Alarm("‼️", "비밀번호가 8자리 미만입니다.", "#FF1E1E", "#FFEAEA");
       return;
     }
     const specialCharRegex = /[!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]/;
-    
+
     if (!specialCharRegex.test(password)) {
       Alarm("‼️", "비밀번호에 특수문자를 포함해야 합니다.", "#FF1E1E", "#FFEAEA")
       return;
     }
 
-    // 모든 조건 통과 → 다음 단계 이동
-    onNext();
+    axios.post(`${API_URL}/auth/check`, { username: id })
+      .then((response) => {
+        if (response.status === 200) {
+          onNext();
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 409) {
+          Alarm("‼️", "이미 사용 중인 아이디입니다.", "#FF1E1E", "#FFEAEA")
+        } else {
+          Alarm("‼️", "오류가 발생했습니다. 다시 시도해주세요.", "#FF1E1E", "#FFEAEA");
+          console.error(error);
+        }
+      })
   };
 
   return (
