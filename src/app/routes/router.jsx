@@ -1,4 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
+import Cookies from "js-cookie";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import ChatPage from "@/pages/chat/ChatPage";
 import DevelopersPage from "@/pages/developers/DevelopersPage";
 import SignUpPage from "@/pages/signup/SignUpPage";
@@ -13,6 +14,16 @@ import ProfilePage from "@/pages/profile/ProfilePage";
 import Layout from "@/widgets/layout/Layout/Layout";
 import ErrorPage from "@/pages/errorpage/ErrorPage";
 
+const authLoader = () => {
+  const token = Cookies.get("accessToken");
+
+  if (!token) {
+    return redirect("/signin");
+  }
+
+  return null;
+}
+
 export const router = createBrowserRouter([
   {
     path: "/signup",
@@ -26,6 +37,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     errorElement: <ErrorPage />,
+    loader: authLoader,
     children: [
       {
         path: "/home",
