@@ -12,5 +12,3 @@ function App() {
 }
 
 export default App;
-
-// 님들은 석기당하지 마세요
