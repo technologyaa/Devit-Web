@@ -243,3 +243,26 @@ export const ProjectPoints = styled.div`
   font-weight: 600;
   color: #AB66DD;
 `;
+
+export const ChatButton = styled.button`
+  width: 100%;
+  height: 48px;
+  margin-top: 20px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #883CBE;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #AB66DD;
+  }
+
+  &:active {
+    background-color: #6B2A9B;
+  }
+`;

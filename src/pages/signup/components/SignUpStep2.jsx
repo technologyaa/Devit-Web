@@ -56,12 +56,23 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack }) {
       return;
     }
     try {
-      await axios.post(`${API_URL}/email/send`, { email: data.email });
-      Alarm("📨", "인증번호가 전송되어있습니다.", "#3CAF50", "#E8F5E9");
-      setIsCodeSent(true); // useState 값 변경
+      // 스웨거 스펙: { "email": "string", "authNum": "string" } - authNum은 선택사항일 수 있음
+      await axios.post(`${API_URL}/email/send`, { email: data.email }, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      });
+      // 스웨거 응답: { "status": 0, "data": {} }
+      Alarm("📨", "인증번호가 전송되었습니다.", "#3CAF50", "#E8F5E9");
+      setIsCodeSent(true);
       setTimeLeft(60);
     } catch (error) {
-      console.error(error);
+      console.error("Email send error:", error);
+      if (error.response) {
+        console.error("Server Error Data:", error.response.data);
+        console.error("Server Error Status:", error.response.status);
+      }
       Alarm("‼️", "인증번호 전송 실패. 다시 시도해주세요.", "#FF1E1E", "#FFEAEA")
     }
   }
@@ -74,8 +85,14 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack }) {
     axios.post(`${API_URL}/email/check`, {
       email: data.email,
       authNum: inputCode
+    }, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
     })
       .then((response) => {
+        // 스웨거 응답: { "status": 0, "data": {} }
         if (response.status === 200) {
           Alarm("✅", "이메일 인증이 완료되었습니다!", "#4CAF50", "#E8F5E9");
           setIsVerified(true);
@@ -83,9 +100,13 @@ export default function SignUpStep2({ data, onChange, onSubmit, onBack }) {
         }
       })
       .catch((error) => {
+        console.error("Email check error:", error);
+        if (error.response) {
+          console.error("Server Error Data:", error.response.data);
+          console.error("Server Error Status:", error.response.status);
+        }
         Alarm("‼️", "인증번호가 일치하지 않습니다.", "#FF1E1E", "#FFEAEA");
         setIsVerified(false);
-        console.log(error)
       })
   }
 
