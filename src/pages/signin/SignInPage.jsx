@@ -48,21 +48,42 @@ export default function SignInPage() {
       const response = await axios.post(`${API_URL}/auth/signin`, {
         username: id,
         password: password
-      },
-        {
-          withCredentials: true
-        })
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      })
+      
       if (response.status === 200) {
-        // Assuming the backend might return the token, or we just set a flag for the client-side router
-        const accessToken = response.data.accessToken || "logged-in";
-        const refreshToken = response.data.refreshToken || "refresh-token";
-        Cookies.set("accessToken", accessToken);
-        Cookies.set("refreshToken", refreshToken);
+        // 스웨거 응답 구조: { "status": 0, "data": {} }
+        const responseData = response.data;
+        console.log("SignIn Response:", responseData);
+        
+        // 토큰은 헤더나 쿠키에 있을 수 있음
+        const accessToken = response.headers["authorization"] || 
+                           response.headers["access-token"] ||
+                           responseData.data?.accessToken ||
+                           "logged-in";
+        const refreshToken = response.headers["refresh-token"] ||
+                           responseData.data?.refreshToken;
+        
+        if (accessToken && accessToken !== "logged-in") {
+          Cookies.set("accessToken", accessToken);
+          if (refreshToken) {
+            Cookies.set("refreshToken", refreshToken);
+          }
+        }
+        
         navigate("/home")
         Alarm("✅", "로그인 완료!", "#3CAF50", "#E8F5E9")
       }
     } catch (error) {
-      console.error(error);
+      console.error("SignIn Error:", error);
+      if (error.response) {
+        console.error("Server Error Data:", error.response.data);
+        console.error("Server Error Status:", error.response.status);
+      }
       Alarm(
         "❌",
         <>
