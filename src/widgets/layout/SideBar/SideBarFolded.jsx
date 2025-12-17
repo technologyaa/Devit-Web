@@ -2,6 +2,7 @@ import * as S from "./styles/sideBarFolded";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alarm } from "@/toasts/Alarm";
+import Cookies from "js-cookie";
 import { Toaster } from "react-hot-toast";
 
 const menu = [
@@ -19,6 +20,8 @@ export default function SideBarFolded() {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const logout = () => {
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
     navigate("/signin");
     Alarm("🚪", "로그아웃 되었습니다.", "#FF1E1E", "#FFEAEA");
   };

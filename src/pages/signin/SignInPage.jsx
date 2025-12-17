@@ -53,6 +53,11 @@ export default function SignInPage() {
           withCredentials: true
         })
       if (response.status === 200) {
+        // Assuming the backend might return the token, or we just set a flag for the client-side router
+        const accessToken = response.data.accessToken || "logged-in";
+        const refreshToken = response.data.refreshToken || "refresh-token";
+        Cookies.set("accessToken", accessToken);
+        Cookies.set("refreshToken", refreshToken);
         navigate("/home")
         Alarm("✅", "로그인 완료!", "#3CAF50", "#E8F5E9")
       }
