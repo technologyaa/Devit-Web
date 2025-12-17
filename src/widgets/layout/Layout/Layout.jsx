@@ -14,9 +14,9 @@ const Layout = () => {
   const isChatPage = location.pathname.startsWith("/chat");
 
   return (
-    <S.Wrapper isChatPage={isChatPage}>
+    <S.Wrapper $isChatPage={isChatPage}>
       {isChatPage ? <SideBarFolded /> : <SideBar />}
-      <S.Content isChatPage={isChatPage}>
+      <S.Content $isChatPage={isChatPage}>
         <Outlet />
       </S.Content>
     </S.Wrapper>

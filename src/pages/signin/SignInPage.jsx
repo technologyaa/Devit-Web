@@ -54,10 +54,23 @@ export default function SignInPage() {
         })
       if (response.status === 200) {
         // Assuming the backend might return the token, or we just set a flag for the client-side router
-        const accessToken = response.data.accessToken || "logged-in";
-        const refreshToken = response.data.refreshToken || "refresh-token";
-        Cookies.set("accessToken", accessToken);
-        Cookies.set("refreshToken", refreshToken);
+        console.log("SignIn Response:", response.data);
+        console.log("SignIn Headers:", response.headers);
+
+        const responseData = response.data.data || response.data;
+        const accessToken = responseData.accessToken || response.headers["authorization"];
+        const refreshToken = responseData.refreshToken || response.headers["refresh-token"];
+
+        if (accessToken) {
+          Cookies.set("accessToken", accessToken);
+          Cookies.set("refreshToken", refreshToken); // Might be undefined
+        } else {
+          console.warn("No access token found in response body or headers");
+          // If we rely on HttpOnly cookies, we might not need to set anything here, 
+          // BUT router.jsx checks Cookies.get("accessToken"). 
+          // So if we don't set it, user can't access protected routes.
+          // This implies backend MUST return it, or router.jsx logic is incompatible with HttpOnly.
+        }
         navigate("/home")
         Alarm("✅", "로그인 완료!", "#3CAF50", "#E8F5E9")
       }
