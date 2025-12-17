@@ -5,6 +5,7 @@ import SignUpStep1 from "./components/SignUpStep1";
 import SignUpStep2 from "./components/SignUpStep2";
 import { Toaster } from "react-hot-toast";
 import { API_URL } from "@/constants/api";
+import { Alarm } from "@/toasts/Alarm";
 
 export default function SignUpPage() {
 
@@ -42,8 +43,15 @@ export default function SignUpPage() {
         password: formData.password,
         email: formData.email,
         role: formData.role,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
       })
+      
       if (response.status === 200 || response.status === 201) {
+        // 스웨거 응답 구조: { "status": 0, "data": {} }
         navigate("/signin", {
           state: {
             message: "회원가입이 완료되었습니다. 로그인 해주세요!",
@@ -52,14 +60,18 @@ export default function SignUpPage() {
         })
       }
     } catch (error) {
+      console.error("SignUp Error:", error);
       if (error.response) {
-        // 서버가 응답을 줬으나 상태 코드가 2xx가 아닌 경우 (예: 400, 409, 500)
-        alert(`가입 실패: ${error.response.data.message || '알 수 없는 오류'}`);
+        console.error("Server Error Data:", error.response.data);
+        console.error("Server Error Status:", error.response.status);
+        const errorMessage = error.response.data?.message || 
+                           error.response.data?.error || 
+                           `가입 실패 (${error.response.status})`;
+        Alarm("❌", errorMessage, "#FF1E1E", "#FFEAEA");
       } else if (error.request) {
-        // 요청은 보냈으나 응답을 받지 못한 경우 (네트워크 문제 등)
-        alert('서버와 통신할 수 없습니다.');
+        Alarm("❌", "서버와 통신할 수 없습니다.", "#FF1E1E", "#FFEAEA");
       } else {
-        alert('요청 중 오류가 발생했습니다.');
+        Alarm("❌", "요청 중 오류가 발생했습니다.", "#FF1E1E", "#FFEAEA");
       }
     }
   };

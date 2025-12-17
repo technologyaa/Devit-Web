@@ -50,18 +50,33 @@ export default function SignUpStep1({ data, onChange, onNext }) {
       return;
     }
 
-    axios.post(`${API_URL}/auth/check`, { username: id })
+    axios.post(`${API_URL}/auth/check`, { username: id }, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    })
       .then((response) => {
-        if (response.status === 200) {
+        // 스웨거 응답: true (boolean)
+        if (response.status === 200 && response.data === true) {
           onNext();
+        } else {
+          Alarm("‼️", "아이디 중복 확인에 실패했습니다.", "#FF1E1E", "#FFEAEA");
         }
       })
       .catch((error) => {
-        if (error.response && error.response.status === 409) {
-          Alarm("‼️", "이미 사용 중인 아이디입니다.", "#FF1E1E", "#FFEAEA")
+        console.error("Username check error:", error);
+        if (error.response) {
+          console.error("Server Error Data:", error.response.data);
+          console.error("Server Error Status:", error.response.status);
+          // 409는 중복, 200이 아니면 중복으로 간주
+          if (error.response.status === 409 || error.response.data === false) {
+            Alarm("‼️", "이미 사용 중인 아이디입니다.", "#FF1E1E", "#FFEAEA")
+          } else {
+            Alarm("‼️", "오류가 발생했습니다. 다시 시도해주세요.", "#FF1E1E", "#FFEAEA");
+          }
         } else {
-          Alarm("‼️", "오류가 발생했습니다. 다시 시도해주세요.", "#FF1E1E", "#FFEAEA");
-          console.error(error);
+          Alarm("‼️", "서버와 통신할 수 없습니다.", "#FF1E1E", "#FFEAEA");
         }
       })
   };
