@@ -2,43 +2,22 @@ import * as S from "./styles/projectsPage";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { projectList as initialProjects } from "@/data/project-list";
 import { Alarm } from "@/toasts/Alarm";
 import profiles from "@/data/profile";
 import { useEffect } from "react";
 import { API_URL } from "@/constants/api";
-import Cookies from "js-cookie";
-import axios from "axios";
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState(initialProjects);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [newThumbnail, setNewThumbnail] = useState(null); // Preview URL
-  const [newThumbnailFile, setNewThumbnailFile] = useState(null); // Actual File object
-  const [job, setJob] = useState("BACKEND"); // Project major field
+  const [newThumbnail, setNewThumbnail] = useState(null);
 
   useEffect(() => {
     fetchProjects();
-
-    // Diagnostic: Check if "my-projects" endpoint works (to see if it's just GET /projects that's broken)
-    const checkMyProjects = async () => {
-      try {
-        const token = Cookies.get("accessToken");
-        if (token && token !== "logged-in") {
-          const res = await axios.get(`${API_URL}/projects/my-projects`, {
-            headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-            withCredentials: true
-          });
-          console.log("Diagnostic /projects/my-projects SUCCESS:", res.data);
-        }
-      } catch (err) {
-        console.error("Diagnostic /projects/my-projects FAILED:", err.response ? err.response.status : err);
-      }
-    };
-    checkMyProjects();
-
   }, []);
 
   const userName = profiles[0].id;
@@ -50,7 +29,6 @@ export default function ProjectsPage() {
     setNewTitle("");
     setNewDescription("");
     setNewThumbnail(null);
-    setNewThumbnailFile(null);
   };
 
   const handleFileChange = (e) => {
@@ -58,7 +36,6 @@ export default function ProjectsPage() {
     if (file) {
       const imageURL = URL.createObjectURL(file);
       setNewThumbnail(imageURL);
-      setNewThumbnailFile(file);
     }
   };
 
@@ -86,109 +63,40 @@ export default function ProjectsPage() {
     }
 
     try {
-      const token = Cookies.get("accessToken");
-      const headers = { "Content-Type": "application/json" };
-      if (token) headers["Authorization"] = `Bearer ${token}`;
-
-      const res = await axios.post(`${API_URL}/projects`, {
-        title: newTitle,
-        content: newDescription,
-        major: job
-      }, {
-        headers: headers,
-        withCredentials: true
+      const res = await fetch(`${API_URL}/projects`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: newTitle,
+          content: newDescription,
+          major: "BACKEND",
+        }),
       });
 
-      if (res.status === 200 || res.status === 201) {
-        const createdProject = res.data;
-        // If there's an image to upload, do it now
-        if (newThumbnailFile && createdProject && createdProject.projectId) {
-          try {
-            const formData = new FormData();
-            formData.append("file", newThumbnailFile); // Assuming 'file' is the key
-
-            const imgHeaders = {};
-            if (token) imgHeaders["Authorization"] = `Bearer ${token}`;
-
-            await axios.put(`${API_URL}/projects/profile/image/${createdProject.projectId}`, formData, {
-              headers: {
-                ...imgHeaders,
-                "Content-Type": "multipart/form-data"
-              },
-              withCredentials: true
-            });
-            console.log("Image uploaded successfully");
-          } catch (imgErr) {
-            console.error("Failed to upload image during creation:", imgErr);
-            Alarm("⚠️", "프로젝트는 생성되었으나 이미지 업로드에 실패했습니다.", "#FFB74D", "#FFF3E0");
-          }
-        }
-
-        Alarm("✅", "프로젝트가 생성되었습니다.", "#3CAF50", "#E8F5E9");
-        setIsModalOpen(false);
-        setNewTitle("");
-        setNewDescription("");
-        setNewThumbnail(null);
-        setNewThumbnailFile(null);
-        setJob("BACKEND"); // Reset to default
-        await fetchProjects();
-      } else {
-        // Handle other successful but unexpected statuses if necessary
-        console.warn("Project creation returned unexpected status:", res.status, res.data);
-        Alarm("❌", "프로젝트 생성에 실패했습니다.", "#FF1E1E", "#FFEAEA");
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${ㄱㄷㄴ.status}`);
       }
+      const data = await res.json();
+      console.log(data);
+
+      Alarm("✅", "프로젝트가 생성되었습니다!", "#4CAF50", "#E8F5E9");
+      await fetchProjects();
+      closeModal();
     } catch (err) {
       console.error("Failed to create project:", err);
-      if (err.response) {
-        console.error("Server Error Data:", err.response.data);
-        console.error("Server Error Status:", err.response.status);
-      }
       Alarm("❌", "프로젝트 생성에 실패했습니다.", "#FF1E1E", "#FFEAEA");
     }
   };
 
   const fetchProjects = async () => {
     try {
-      const token = Cookies.get("accessToken");
-      console.log("Current Token:", token);
-
-      const isTokenValid = token && token !== "logged-in";
-      const headers = {
-        "Accept": "application/json",
-      };
-
-      if (isTokenValid) {
-        headers["Authorization"] = `Bearer ${token}`;
-      } else if (token === "logged-in") {
-        console.warn("Invalid legacy token detected. Clearing cookie.");
-        Cookies.remove("accessToken");
-        Cookies.remove("refreshToken");
-      }
-
-      const response = await axios.get(`${API_URL}/projects`, {
-        headers: headers,
-        withCredentials: true,
-      });
-
-      console.log("Fetched projects:", response.data);
-
-      const data = response.data;
-      if (Array.isArray(data)) {
-        setProjects(data);
-      } else if (data.data && Array.isArray(data.data)) {
-        setProjects(data.data);
-      } else {
-        console.error("Projects data is not an array:", data);
-        setProjects([]);
-      }
+      const data = await (await fetch(`${API_URL}/projects`)).json();
+      console.log(data);
+      setProjects(data);
     } catch (err) {
-      console.error("Fetch Projects Error:", err);
-      // Optional: Log server error response if available
-      if (err.response) {
-        console.error("Server Error Data:", err.response.data);
-        console.error("Server Error Status:", err.response.status);
-      }
-      setProjects([]);
+      console.error(err);
     }
   };
 
