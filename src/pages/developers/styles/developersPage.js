@@ -96,28 +96,47 @@ export const CategoryButton = styled.button`
   }
 `;
 
-// 신규 추가: 필터 그룹 스타일
-export const FilterGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px; /* 체크박스와 드롭다운 사이 간격 */
-`;
-
-// 신규 추가: 드롭다운 버튼 모형
-export const DropdownButton = styled.button`
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid #cccccc;
-  background-color: white;
+export const DropdownWrapper = styled.div`
+  width: 140px;
+  position: relative;
   font-size: 14px;
-  color: #2f2f2f;
-  cursor: pointer;
-  font-weight: 500;
+  z-index: 50;
 
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  .Dropdown-control {
+    background-color: #fff;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .Dropdown-menu {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .Dropdown-option {
+    padding: 10px 15px;
+    cursor: pointer;
+    &:hover {
+      background-color: #f5f5f5;
+    }
+    &.is-selected {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+  }
 `;
+
 // ⭐️ 개발자 목록 컨테이너 (DevUser 업데이트)
 export const DevUser = styled.div`
   display: grid;
@@ -125,30 +144,37 @@ export const DevUser = styled.div`
   gap: 24px;
 `;
 
-// ⭐️ 개별 개발자 카드 (이미지 디자인 반영)
 export const DeveloperCard = styled.div`
   width: 100%;
   height: auto; /* 내용에 따라 높이가 결정됨 */
-  position: relative; 
+  position: relative;
   border-radius: 8px;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   cursor: pointer;
 `;
 
-// ⭐️ 프로필 이미지 영역 (카드 상단 절반 차지)
 export const ProfileArea = styled.div`
   width: 100%;
-  padding-bottom: 100%; 
+  padding-bottom: 100%; /* 1:1 비율(정사각형)을 강제하는 핵심 코드 */
   height: 0;
   flex-shrink: 0;
-  position: relative; /* 내부 요소 위치의 기준이 됨 */
+  position: relative; /* 내부 이미지의 절대 위치 기준점 */
+
+  overflow: hidden;
+  border-radius: 0.625rem;
+  border: solid 1px #cccccc;
 `;
 
 export const ProfileImg = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  border: solid 1px #cccccc;
-  border-radius: 0.625rem;
+  height: 100%;
+
+  object-fit: cover;
+
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -157,7 +183,7 @@ export const ProfileImg = styled.img`
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
-  -o-user-drag: none; // 사진 드래그 방지
+  -o-user-drag: none;
 `;
 
 // ⭐️ 온도 표시 막대 색상 로직 (0~100 기준)
