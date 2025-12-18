@@ -74,23 +74,17 @@ export default function SideBar() {
           <S.Navigation>
             <S.NavigationWrapper>
               <S.NavigationTop>
-                {menu.map((item) => {
-                  return (
-                    <>
-                      <Link to={item.url}>
-                        <S.MenuItem
-                          key={item.text}
-                          type="button"
-                          selected={location.pathname.match(item.url)}
-                          onClick={() => setSelectedMenu(item.text)}
-                        >
-                          <S.MenuIcon src={item.logo} alt={item.alt} />
-                          <S.MenuText>{item.text}</S.MenuText>
-                        </S.MenuItem>
-                      </Link>
-                    </>
-                  );
-                })}
+                {menu.map((item) => (
+                  <Link key={item.url} to={item.url}>
+                    <S.MenuItem
+                      type="button"
+                      selected={location.pathname.match(item.url)}
+                    >
+                      <S.MenuIcon src={item.logo} alt={item.alt} />
+                      <S.MenuText>{item.text}</S.MenuText>
+                    </S.MenuItem>
+                  </Link>
+                ))}
               </S.NavigationTop>
               <S.NavigationBottom>
                 <S.MenuItem onClick={moreClicked}>

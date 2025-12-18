@@ -146,7 +146,12 @@ export const ProfileArea = styled.div`
 `;
 
 export const ProfileImg = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지를 영역에 맞춰 자르기 */
   border: solid 1px #cccccc;
   border-radius: 0.625rem;
   -webkit-user-select: none;

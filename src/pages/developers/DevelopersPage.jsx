@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alarm } from "@/toasts/Alarm";
 import users from "@/data/user-list";
-import { API_URL } from "@/constants/api";
+import { API_URL, getImageUrl } from "@/constants/api";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -104,11 +104,18 @@ export default function DevelopersPage() {
         const major = dev.major || dev.Major || dev.majorField || dev.developerInfo?.major || null;
         console.log(`Developer ${index} major:`, major);
         
+        // 이미지 URL 처리 및 로깅
+        const rawImagePath = dev.profile;
+        const processedImageUrl = getImageUrl(rawImagePath);
+        if (index < 3) { // 처음 몇 개만 로그 출력
+          console.log(`Developer ${index} image - raw:`, rawImagePath, "processed:", processedImageUrl);
+        }
+        
         return {
           id: memberId, // memberId만 사용 (없으면 undefined)
           name: dev.githubId || dev.username || (memberId ? `개발자 ${memberId}` : `개발자 ${index}`),
           job: major || "BACKEND", // major가 없으면 기본값
-          img: dev.profile || "/assets/dummy-profile.svg",
+          img: processedImageUrl || "/assets/dummy-profile.svg",
           info: dev.introduction || "",
           temp: dev.temperature || 0,
           memberId: memberId, // 원본 memberId도 저장
@@ -231,7 +238,18 @@ export default function DevelopersPage() {
                 <S.DeveloperCard key={user.id} onClick={() => handleCardClick(user.id)}>
                   <S.ProfileArea>
                     <S.TemperatureBar $temp={user.temp} />
-                    <S.ProfileImg src={user.img}></S.ProfileImg>
+                    <S.ProfileImg 
+                      src={user.img || "/assets/dummy-profile.svg"} 
+                      onError={(e) => {
+                        console.error("Developer image failed to load:", user.img);
+                        if (e.target.src !== "/assets/dummy-profile.svg") {
+                          e.target.src = "/assets/dummy-profile.svg";
+                        }
+                      }}
+                      onLoad={() => {
+                        console.log("Developer image loaded successfully:", user.img);
+                      }}
+                    />
                   </S.ProfileArea>
 
                   <S.CardInfoArea>
