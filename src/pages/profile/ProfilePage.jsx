@@ -880,11 +880,11 @@ export default function ProfilePage() {
               memberIds: [Number(targetMemberId)]
             };
             
-            // 현재 사용자 ID가 있고 서버가 필요로 할 수도 있음 (선택사항)
-            // 서버가 자동으로 추가한다면 이 부분은 주석 처리
-            // if (currentUserId && !requestBody.memberIds.includes(currentUserId)) {
-            //   requestBody.memberIds.push(Number(currentUserId));
-            // }
+            // 현재 사용자 ID를 명시적으로 포함 (백엔드가 자동 추가하더라도 명시적으로 포함)
+            if (currentUserId && !requestBody.memberIds.includes(Number(currentUserId))) {
+              requestBody.memberIds.push(Number(currentUserId));
+              console.log("Added current user ID to memberIds:", currentUserId);
+            }
             
             const postResponse = await axios.post(
               `${API_URL}/chat/rooms`,

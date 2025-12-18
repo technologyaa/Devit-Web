@@ -66,10 +66,10 @@ export const ChatItem = styled.div`
   border-bottom: 1px solid #d9dce0;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  background-color: ${(props) => (props.isActive ? "#f8f9fa" : "transparent")};
+  background-color: ${(props) => (props.$isActive ? "#f8f9fa" : "transparent")};
 
   &:hover {
-    background-color: ${(props) => (props.isActive ? "#f8f9fa" : "#f8f9fa")};
+    background-color: ${(props) => (props.$isActive ? "#f8f9fa" : "#f8f9fa")};
   }
 `;
 
@@ -119,12 +119,12 @@ export const ChatRoomUserName = styled.div`
 export const MessageRow = styled.div`
   display: flex;
   align-items: flex-end;
-  justify-content: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
+  justify-content: ${(props) => (props.$isMine ? "flex-end" : "flex-start")};
   gap: 6px;
   margin-bottom: 4px;
   ${(props) =>
-    !props.isMine &&
-    props.isLastOfGroup &&
+    !props.$isMine &&
+    props.$isLastOfGroup &&
     `
       margin-bottom: 10px;
     `}
@@ -144,9 +144,9 @@ export const MessageBubble = styled.div`
   border-radius: 12px;
   font-size: 14px;
   line-height: 1.4;
-  border: ${(props) => (props.isMine ? "none" : "1px solid #f1f1f1ff")};
-  background-color: ${(props) => (props.isMine ? "#883cbe" : "#ffffff")};
-  color: ${(props) => (props.isMine ? "#fff" : "black")};
+  border: ${(props) => (props.$isMine ? "none" : "1px solid #f1f1f1ff")};
+  background-color: ${(props) => (props.$isMine ? "#883cbe" : "#ffffff")};
+  color: ${(props) => (props.$isMine ? "#fff" : "black")};
   white-space: pre-line;
   word-break: break-word;
 `;
