@@ -17,6 +17,7 @@ export const ChatList = styled.div`
   flex-direction: column;
   border-right: 1px solid #ccc;
   background-color: #fff;
+  overflow: visible;
 `;
 
 /* 오른쪽: 채팅방 영역 */
@@ -51,6 +52,7 @@ export const ChatItemList = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: visible;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -62,11 +64,14 @@ export const ChatItem = styled.div`
   height: 68px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 12px 0 16px;
   border-bottom: 1px solid #d9dce0;
   cursor: pointer;
   transition: background-color 0.2s ease;
   background-color: ${(props) => (props.$isActive ? "#f8f9fa" : "transparent")};
+  position: relative;
+  overflow: visible;
+  box-sizing: border-box;
 
   &:hover {
     background-color: ${(props) => (props.$isActive ? "#f8f9fa" : "#f8f9fa")};
@@ -87,6 +92,26 @@ export const ChatInfo = styled.div`
   margin-left: 12px;
   gap: 6px;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  margin-right: 8px;
+`;
+
+export const UnreadBadge = styled.div`
+  margin-left: 8px;
+  margin-right: 0;
+  min-width: 20px;
+  height: 20px;
+  background-color: #883cbe;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 6px;
+  flex-shrink: 0;
 `;
 
 /* ----------------------------- */
@@ -97,9 +122,37 @@ export const ChatRoomHeader = styled.div`
   height: 80px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 24px;
   border-bottom: 1px solid #d9dce0;
   background-color: #fff;
+`;
+
+export const ChatRoomHeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+`;
+
+export const LeaveChatButton = styled.button`
+  padding: 8px 16px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: #cc0000;
+  }
+  
+  &:active {
+    background-color: #990000;
+  }
 `;
 
 export const ChatRoomProfile = styled.img`
