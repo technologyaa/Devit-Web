@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import profiles from "@/data/profile";
-import { API_URL } from "@/constants/api";
+import { API_URL, getImageUrl } from "@/constants/api";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Alarm } from "@/toasts/Alarm";
@@ -570,11 +570,19 @@ export default function ProfilePage() {
         const displayJob = getDisplayJob(finalMajor || data.major, data.role);
         console.log("getDisplayJob result:", displayJob);
         
+        // 이미지 URL 처리 및 로깅
+        const rawImagePath = data.profile || data.profileImage;
+        const processedImageUrl = getImageUrl(rawImagePath);
+        console.log("=== IMAGE URL DEBUG ===");
+        console.log("Raw image path from API:", rawImagePath);
+        console.log("Processed image URL:", processedImageUrl);
+        console.log("=== END IMAGE URL DEBUG ===");
+        
         const profileData = {
           id: userName,
           email: data.email || "",
           job: displayJob || finalMajor || data.major || "", // 최대한 많은 소스에서 시도
-          img: data.profile || data.profileImage || "/assets/profile-icon.svg",
+          img: processedImageUrl || "/assets/profile-icon.svg",
           CompletedProjects: String(data.career || data.completedProjects || 0),
           Temp: String(data.temperature || data.temp || 0),
           projectList: data.projectList || [],
@@ -771,92 +779,177 @@ export default function ProfilePage() {
       let chatRoomId = null;
       const targetMemberId = memberId;
 
+      console.log("=== CHAT ROOM CREATION DEBUG ===");
+      console.log("Target memberId:", targetMemberId);
+      console.log("Current user profile:", userProfile);
+
+      // 먼저 기존 채팅방이 있는지 확인
       try {
-        // POST /chat/rooms/create 또는 POST /chat/rooms
-        console.log("Attempting to create chat room with memberId:", targetMemberId);
-        const response = await axios.post(
-          `${API_URL}/chat/rooms/create`,
-          { memberId: targetMemberId },
-          { 
-            headers,
-            withCredentials: true 
-          }
-        );
-        const roomData = response.data?.data || response.data;
-        chatRoomId = roomData?.id || roomData?.roomId || roomData?.chatRoomId;
-        console.log("Chat room created:", chatRoomId);
-      } catch (createError) {
-        console.log("First endpoint failed, trying alternative:", createError);
+        console.log("Checking existing rooms first...");
+        const roomsResponse = await axios.get(`${API_URL}/chat/rooms/my-rooms`, {
+          headers,
+          withCredentials: true
+        });
+        const roomsData = roomsResponse.data?.data || roomsResponse.data || [];
+        const rooms = Array.isArray(roomsData) ? roomsData : [];
+        console.log("Existing rooms:", rooms);
         
-        // CORS 오류 체크
-        if (!createError.response && createError.message?.includes("CORS")) {
-          console.error("CORS Error detected:", createError);
-          Alarm(
-            "⚠️", 
-            "CORS 오류가 발생했습니다. 백엔드 CORS 설정을 확인해주세요.",
-            "#FF9800", 
-            "#FFF3E0"
-          );
-          // CORS 오류면 기존 채팅방 확인으로 넘어감
-        } else if (createError.response?.status === 404) {
-          console.log("Endpoint not found, trying alternative");
+        // 해당 사용자와의 채팅방 찾기
+        const existingRoom = rooms.find(room => {
+          // 다양한 방법으로 매칭 시도
+          if (room.members && Array.isArray(room.members)) {
+            return room.members.some(m => 
+              String(m.id) === String(targetMemberId) || 
+              String(m.memberId) === String(targetMemberId)
+            );
+          }
+          if (room.memberIds && Array.isArray(room.memberIds)) {
+            return room.memberIds.includes(targetMemberId) || 
+                   room.memberIds.some(id => String(id) === String(targetMemberId));
+          }
+          if (room.partnerId) {
+            return String(room.partnerId) === String(targetMemberId);
+          }
+          if (room.name && userProfile.id) {
+            return room.name === userProfile.id || room.name.includes(userProfile.id);
+          }
+          return false;
+        });
+        
+        if (existingRoom) {
+          chatRoomId = existingRoom.id || existingRoom.roomId;
+          console.log("✅ Found existing room:", chatRoomId);
         }
-        
-        // 다른 엔드포인트 시도
+      } catch (roomsError) {
+        console.warn("Failed to check existing rooms:", roomsError);
+      }
+
+      // 기존 채팅방이 없으면 새로 생성
+      // 스웨거에 따르면 1:1 채팅방은 GET /chat/rooms/private/{memberId}로 조회/생성
+      if (!chatRoomId) {
         try {
-          const response = await axios.post(
-            `${API_URL}/chat/rooms`,
-            { memberId: targetMemberId },
-            { 
-              headers,
-              withCredentials: true 
-            }
-          );
-          const roomData = response.data?.data || response.data;
-          chatRoomId = roomData?.id || roomData?.roomId || roomData?.chatRoomId;
-          console.log("Chat room created (alternative):", chatRoomId);
-        } catch (altError) {
-          console.log("Alternative endpoint failed, checking existing rooms:", altError);
-          
-          // CORS 오류 체크
-          if (!altError.response && altError.message?.includes("CORS")) {
-            console.error("CORS Error in alternative endpoint:", altError);
-          }
-          
-          // 이미 채팅방이 있는지 확인
-          try {
-            const roomsResponse = await axios.get(`${API_URL}/chat/rooms/my-rooms`, {
+          console.log(`🔍 Trying 1:1 chat room API: GET /chat/rooms/private/${targetMemberId}`);
+          const privateRoomResponse = await axios.get(
+            `${API_URL}/chat/rooms/private/${targetMemberId}`,
+            {
               headers,
               withCredentials: true
-            });
-            const rooms = roomsResponse.data?.data || roomsResponse.data || [];
-            // 해당 사용자와의 채팅방 찾기 (API 응답 구조에 따라 수정 필요)
-            const existingRoom = rooms.find(room => 
-              room.members?.some(m => m.id === targetMemberId || m.memberId === targetMemberId) ||
-              room.memberIds?.includes(targetMemberId) ||
-              room.name === userProfile.id
-            );
-            if (existingRoom) {
-              chatRoomId = existingRoom.id;
-              console.log("Found existing room:", chatRoomId);
             }
-          } catch (roomsError) {
-            console.error("Failed to check existing rooms:", roomsError);
-            if (!roomsError.response && roomsError.message?.includes("CORS")) {
-              console.error("CORS Error when checking existing rooms:", roomsError);
+          );
+          
+          console.log("✅ 1:1 chat room response:", privateRoomResponse);
+          const roomData = privateRoomResponse.data?.data || privateRoomResponse.data || {};
+          chatRoomId = roomData.id || roomData.roomId;
+          
+          if (chatRoomId) {
+            console.log(`✅✅ 1:1 chat room found/created:`, chatRoomId);
+            Alarm("✅", "채팅방이 생성되었습니다.", "#3CAF50", "#E8F5E9");
+          }
+        } catch (privateRoomError) {
+          console.warn("1:1 chat room API failed, trying POST /chat/rooms:", privateRoomError);
+          
+          // GET 실패 시 POST /chat/rooms 시도 (memberIds 배열 사용)
+          // 500 에러가 발생하면 서버 로그 확인 필요
+          try {
+            // 현재 사용자 ID 가져오기 (필요할 수 있음)
+            let currentUserId = null;
+            try {
+              const meResponse = await axios.get(`${API_URL}/auth/me`, {
+                headers,
+                withCredentials: true
+              });
+              const meData = meResponse.data?.data || meResponse.data || {};
+              currentUserId = meData.id || meData.memberId;
+              console.log("Current user ID for chat room:", currentUserId);
+            } catch (meError) {
+              console.warn("Failed to get current user ID:", meError);
+            }
+
+            console.log(`🔄 Trying POST /chat/rooms with memberIds array`);
+            console.log("Request payload:", {
+              name: "",
+              description: "",
+              type: "PRIVATE",
+              memberIds: [Number(targetMemberId)]
+            });
+            
+            const requestBody = {
+              name: "",
+              description: "",
+              type: "PRIVATE",
+              memberIds: [Number(targetMemberId)]
+            };
+            
+            // 현재 사용자 ID가 있고 서버가 필요로 할 수도 있음 (선택사항)
+            // 서버가 자동으로 추가한다면 이 부분은 주석 처리
+            // if (currentUserId && !requestBody.memberIds.includes(currentUserId)) {
+            //   requestBody.memberIds.push(Number(currentUserId));
+            // }
+            
+            const postResponse = await axios.post(
+              `${API_URL}/chat/rooms`,
+              requestBody,
+              {
+                headers: {
+                  ...headers,
+                  "Content-Type": "application/json"
+                },
+                withCredentials: true
+              }
+            );
+            
+            console.log("✅ POST /chat/rooms response:", postResponse);
+            console.log("✅ Response status:", postResponse.status);
+            console.log("✅ Response data:", JSON.stringify(postResponse.data, null, 2));
+            
+            const roomData = postResponse.data?.data || postResponse.data || {};
+            chatRoomId = roomData.id || roomData.roomId;
+            
+            if (chatRoomId) {
+              console.log(`✅✅ Chat room created via POST:`, chatRoomId);
+              Alarm("✅", "채팅방이 생성되었습니다.", "#3CAF50", "#E8F5E9");
+            } else {
+              console.warn("⚠️ Response received but no roomId found:", roomData);
+            }
+          } catch (postError) {
+            console.error("❌ POST /chat/rooms failed:", postError);
+            if (postError.response) {
+              console.error("Error status:", postError.response.status);
+              console.error("Error data:", JSON.stringify(postError.response.data, null, 2));
+              console.error("Error headers:", postError.response.headers);
+              
+              // 500 에러는 서버 내부 오류 - 서버 로그 확인 필요
+              if (postError.response.status === 500) {
+                const errorMsg = postError.response.data?.message || 
+                                postError.response.data?.code || 
+                                "서버 내부 오류가 발생했습니다.";
+                Alarm(
+                  "❌", 
+                  `서버 오류: ${errorMsg}`,
+                  "#FF1E1E", 
+                  "#FFEAEA"
+                );
+                console.error("Full error response:", JSON.stringify(postError.response.data, null, 2));
+              }
+            } else {
+              console.error("Network error:", postError.message);
             }
           }
         }
       }
 
+      console.log("=== END CHAT ROOM CREATION DEBUG ===");
+
       // 채팅 페이지로 이동 (채팅방 ID가 있으면 전달)
       if (chatRoomId) {
+        console.log("Navigating to chat room:", chatRoomId);
         navigate(`/chat?roomId=${chatRoomId}`);
         Alarm("✅", "채팅방으로 이동합니다.", "#3CAF50", "#E8F5E9");
       } else {
+        console.warn("No chat room ID found, navigating to chat page without roomId");
         // 채팅방 ID가 없어도 채팅 페이지로 이동 (채팅 페이지에서 목록 조회 후 선택)
         navigate("/chat");
-        Alarm("✅", "채팅 페이지로 이동합니다. 기존 채팅방이 있다면 목록에서 확인할 수 있습니다.", "#3CAF50", "#E8F5E9");
+        Alarm("⚠️", "채팅방을 생성하지 못했습니다. 채팅 페이지로 이동합니다.", "#FF9800", "#FFF3E0");
       }
     } catch (error) {
       console.error("Failed to start chat:", error);
@@ -902,7 +995,19 @@ export default function ProfilePage() {
             <S.Profile>
               <S.ProfileInfo>
                 <S.ImgContainer>
-                  <S.ProfileImg src={profile.img} alt="프로필 이미지" />
+                  <S.ProfileImg 
+                    src={profile.img || "/assets/profile-icon.svg"} 
+                    alt="프로필 이미지"
+                    onError={(e) => {
+                      console.error("Profile image failed to load:", profile.img);
+                      if (e.target.src !== "/assets/profile-icon.svg") {
+                        e.target.src = "/assets/profile-icon.svg";
+                      }
+                    }}
+                    onLoad={() => {
+                      console.log("Profile image loaded successfully:", profile.img);
+                    }}
+                  />
                   <S.CameraIcon src="/assets/camera-icon.svg" />
                 </S.ImgContainer>
                 <S.NameContainer>

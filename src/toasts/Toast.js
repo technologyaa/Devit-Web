@@ -24,8 +24,8 @@ export const ToastContainer = styled.div`
   gap: 12px;
 
   background: ${(props) =>
-    `linear-gradient(135deg, ${props.bgColor}aa, ${props.bgColor}ee)`};
-  color: ${(props) => props.color || "#222"};
+    `linear-gradient(135deg, ${props.$bgColor}aa, ${props.$bgColor}ee)`};
+  color: ${(props) => props.$color || "#222"};
 
   backdrop-filter: blur(10px) saturate(160%);
   -webkit-backdrop-filter: blur(10px) saturate(160%);
@@ -59,7 +59,7 @@ export const ToastContainer = styled.div`
     width: 100%;
     border-radius: 0 0 18px 18px;
 
-    background: ${(props) => props.color}55;
+    background: ${(props) => props.$color}55;
     animation: ${shrink} 3s linear forwards;
   }
 
@@ -80,13 +80,13 @@ export const ToastIcon = styled.div`
   height: 26px;
 
   border-radius: 50%;
-  background: ${(props) => props.color}22;
+  background: ${(props) => props.$color}22;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: ${(props) => props.color};
+  color: ${(props) => props.$color};
 
   svg {
     width: 18px;

@@ -29,8 +29,8 @@ export const Alarm = (
     (t) => (
       <ToastContainer
         id={`toast-${t.id}`} // DOM 요소에 id 추가
-        color={textColor}
-        bgColor={bgColor}
+        $color={textColor}
+        $bgColor={bgColor}
         onClick={(e) => {
           e.stopPropagation();
           toast.dismiss(t.id);

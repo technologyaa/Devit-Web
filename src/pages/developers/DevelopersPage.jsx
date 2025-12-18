@@ -2,12 +2,13 @@ import * as S from "./styles/developersPage";
 import { Helmet } from "react-helmet";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "@/constants/api";
+import { Alarm } from "@/toasts/Alarm";
+import users from "@/data/user-list";
+import { API_URL, getImageUrl } from "@/constants/api";
 import ReactDropdown from "react-dropdown";
 import 'react-dropdown/style.css';
 import axios from "axios";
 import Cookies from "js-cookie";
-import users from "@/data/user-list"; // fallback 데이터
 
 // 직무 카테고리
 const CATEGORIES = [
@@ -104,14 +105,26 @@ export default function DevelopersPage() {
       // 데이터 포맷팅
       let formattedDevelopers = data.map((dev, index) => {
         const memberId = dev.memberId || dev.id;
+        // memberId가 없으면 해당 개발자를 제외하거나 경고
+        if (!memberId) {
+          console.warn(`Developer at index ${index} has no memberId:`, dev);
+        }
+        
         // API 응답 필드명 차이 대응 (major vs Major vs developerInfo.major)
         const majorField = dev.major || dev.Major || dev.majorField || dev.developerInfo?.major || null;
-
+        
+        // 이미지 URL 처리 및 로깅
+        const rawImagePath = dev.profile;
+        const processedImageUrl = getImageUrl(rawImagePath);
+        if (index < 3) { // 처음 몇 개만 로그 출력
+          console.log(`Developer ${index} image - raw:`, rawImagePath, "processed:", processedImageUrl);
+        }
+        
         return {
           id: memberId,
           name: dev.githubId || dev.username || (memberId ? `개발자 ${memberId}` : `개발자 ${index}`),
           job: majorField || "BACKEND",
-          img: dev.profile || "/assets/dummy-profile.svg",
+          img: processedImageUrl || "/assets/dummy-profile.svg",
           info: dev.introduction || "",
           temp: dev.temperature || 0, // 온도 필드 매핑
           memberId: memberId,
@@ -237,7 +250,18 @@ export default function DevelopersPage() {
                 <S.DeveloperCard key={user.id} onClick={() => handleCardClick(user.id)}>
                   <S.ProfileArea>
                     <S.TemperatureBar $temp={user.temp} />
-                    <S.ProfileImg src={user.img}></S.ProfileImg>
+                    <S.ProfileImg 
+                      src={user.img || "/assets/dummy-profile.svg"} 
+                      onError={(e) => {
+                        console.error("Developer image failed to load:", user.img);
+                        if (e.target.src !== "/assets/dummy-profile.svg") {
+                          e.target.src = "/assets/dummy-profile.svg";
+                        }
+                      }}
+                      onLoad={() => {
+                        console.log("Developer image loaded successfully:", user.img);
+                      }}
+                    />
                   </S.ProfileArea>
 
                   <S.CardInfoArea>
