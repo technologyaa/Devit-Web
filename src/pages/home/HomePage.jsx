@@ -3,6 +3,9 @@ import { Helmet } from "react-helmet";
 import devlopers from "@/data/developer-list";
 import icons from "@/data/icon-list";
 import { useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { API_URL } from "@/constants/api";
 import { Alarm } from "@/toasts/Alarm";
 
 const gradients = {};
@@ -17,7 +20,13 @@ const jobList = [
 ];
 
 export default function HomePage() {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(() => {
+    try {
+      return localStorage.getItem("profileCompleted") !== "true";
+    } catch (e) {
+      return true;
+    }
+  });
   const [intro, setIntro] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
 
@@ -39,7 +48,73 @@ export default function HomePage() {
     console.log("선택한 직무:", selectedJob);
     console.log("소개:", intro);
     Alarm("💾", "정보가 저장되었습니다.", "#4CAF50", "#E8F5E9");
-    setIsModalOpen(false);
+
+    (async () => {
+      try {
+        // 현재 로그인된 사용자 정보 조회 (/auth/me)
+        const token = Cookies.get("accessToken");
+        const headers = { Accept: "application/json" };
+        if (token && token !== "logged-in") headers["Authorization"] = `Bearer ${token}`;
+
+        let memberId = null;
+        let githubId = null;
+
+        try {
+          const meRes = await axios.get(`${API_URL}/auth/me`, {
+            headers,
+            withCredentials: true,
+          });
+          const meData = meRes.data?.data || meRes.data || {};
+          memberId = meData.memberId || meData.id || null;
+          githubId = meData.githubId || meData.username || null;
+        } catch (meErr) {
+          console.warn("/auth/me 조회 실패, memberId를 가져오지 못했습니다:", meErr);
+        }
+
+        // memberId가 있으면 개발자 생성 API 호출
+        if (memberId) {
+          const JOB_TO_MAJOR = {
+            웹: "FRONTEND",
+            서버: "BACKEND",
+            Android: "ANDROID",
+            iOS: "IOS",
+            게임: "GAME",
+            디자인: "DESIGN",
+          };
+
+          const body = {
+            introduction: intro,
+            career: 0,
+            githubId: githubId || "",
+            major: JOB_TO_MAJOR[selectedJob] || "BACKEND",
+            blog: "",
+          };
+
+          try {
+            await axios.post(`${API_URL}/developers/${memberId}`, body, {
+              headers: { ...headers, "Content-Type": "application/json" },
+              withCredentials: true,
+            });
+            console.log("개발자 생성 API 호출 성공", memberId, body);
+            Alarm("💾", "서버에 정보가 저장되었습니다.", "#4CAF50", "#E8F5E9");
+            localStorage.setItem("profileCompleted", "true");
+          } catch (postErr) {
+            console.error("개발자 생성 API 실패:", postErr);
+            Alarm("⚠️", "서버 저장에 실패했습니다.", "#F44336", "#FFEBEE");
+            // 그래도 모달은 닫아 사용자 경험을 방해하지 않음
+            localStorage.setItem("profileCompleted", "true");
+          }
+        } else {
+          // memberId를 얻지 못한 경우 로컬에 완료 플래그만 세팅
+          localStorage.setItem("profileCompleted", "true");
+          console.warn("memberId가 없어 서버에 개발자 생성 요청을 보내지 않았습니다.");
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsModalOpen(false);
+      }
+    })();
   };
 
   return (
