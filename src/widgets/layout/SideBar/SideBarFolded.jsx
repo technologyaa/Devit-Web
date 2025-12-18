@@ -55,11 +55,8 @@ export default function SideBarFolded() {
         const validCount = isNaN(count) ? 0 : count;
         return sum + validCount;
       }, 0);
-
-      console.log("📊 SideBarFolded - Total unread count:", total);
       setTotalUnreadCount(total);
     } catch (error) {
-      console.error("Failed to fetch unread count:", error);
       setTotalUnreadCount(0);
     }
   };
@@ -72,9 +69,7 @@ export default function SideBarFolded() {
     
     // 채팅방 목록 업데이트 이벤트 리스너
     const handleChatUpdate = (event) => {
-      console.log("📨 SideBarFolded - chatListUpdated event received:", event.detail);
       if (event.detail && event.detail.totalUnreadCount !== undefined) {
-        console.log("📊 SideBarFolded - Setting totalUnreadCount to:", event.detail.totalUnreadCount);
         setTotalUnreadCount(event.detail.totalUnreadCount);
       } else {
         fetchUnreadCount();

@@ -81,36 +81,36 @@ const isSystemRole = (role) => {
 // major 또는 role을 표시용 직무명으로 변환
 const getDisplayJob = (major, role) => {
   console.log("getDisplayJob called with:", { major, role });
-  
+
   // major가 있으면 우선 사용
   if (major) {
     // major 값이 문자열인지 확인하고 trim
     const majorStr = String(major).trim();
     console.log("Checking major:", majorStr, "in MAJOR_TO_DISPLAY:", MAJOR_TO_DISPLAY[majorStr]);
-    
+
     if (MAJOR_TO_DISPLAY[majorStr]) {
       console.log("Found display name:", MAJOR_TO_DISPLAY[majorStr]);
       return MAJOR_TO_DISPLAY[majorStr];
     }
-    
+
     // 대소문자 무시하고 찾기
     const majorUpper = majorStr.toUpperCase();
     if (MAJOR_TO_DISPLAY[majorUpper]) {
       console.log("Found display name (uppercase):", MAJOR_TO_DISPLAY[majorUpper]);
       return MAJOR_TO_DISPLAY[majorUpper];
     }
-    
+
     // 매핑에 없으면 원본 반환 (나중에 처리)
     console.log("Major not in mapping, returning original:", majorStr);
     return majorStr;
   }
-  
+
   // major가 없고 role이 시스템 역할이 아니면 role 사용
   if (!major && role && !isSystemRole(role)) {
     console.log("Using role (not system role):", role);
     return role;
   }
-  
+
   // 둘 다 없거나 시스템 역할만 있으면 빈 문자열
   console.log("No valid job found, returning empty string");
   return "";
@@ -123,7 +123,7 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isMyProfile, setIsMyProfile] = useState(!id); // id가 없으면 내 프로필
   const [memberId, setMemberId] = useState(null); // 프로필 사용자의 memberId 저장
-  
+
   console.log("ProfilePage rendered with id:", id);
 
   // 프로필 정보 조회
@@ -134,7 +134,7 @@ export default function ProfilePage() {
       const headers = {
         "Accept": "application/json"
       };
-      
+
       if (token && token !== "logged-in") {
         headers["Authorization"] = `Bearer ${token}`;
       }
@@ -148,7 +148,7 @@ export default function ProfilePage() {
         let devData = null;
         let majorFromDevelopersList = null;
         let majorFromSessionStorage = null;
-        
+
         // sessionStorage에서 개발자 정보 가져오기 (개발자 페이지에서 저장한 정보)
         try {
           const sessionInfo = sessionStorage.getItem('currentDeveloperInfo');
@@ -163,7 +163,7 @@ export default function ProfilePage() {
         } catch (e) {
           console.warn("Failed to read sessionStorage:", e);
         }
-        
+
         // 먼저 /auth/developers에서 전체 목록을 가져와서 해당 사용자 찾기
         try {
           const devsResponse = await axios.get(`${API_URL}/auth/developers`, {
@@ -173,17 +173,17 @@ export default function ProfilePage() {
           const devsData = devsResponse.data?.data || devsResponse.data || [];
           const devs = Array.isArray(devsData) ? devsData : [];
           console.log("All developers list:", devs);
-          
+
           // id로 개발자 찾기 (id가 memberId일 수도 있고, 실제 id일 수도 있음)
           const foundDev = devs.find(dev => {
             const devId = dev.id;
             const devMemberId = dev.memberId;
             const searchId = typeof id === 'string' ? parseInt(id) : id;
-            return devId === id || devId === searchId || 
-                   devMemberId === id || devMemberId === searchId ||
-                   String(devId) === String(id) || String(devMemberId) === String(id);
+            return devId === id || devId === searchId ||
+              devMemberId === id || devMemberId === searchId ||
+              String(devId) === String(id) || String(devMemberId) === String(id);
           });
-          
+
           if (foundDev) {
             console.log("Found developer in list:", foundDev);
             console.log("Developer object keys:", Object.keys(foundDev));
@@ -196,7 +196,7 @@ export default function ProfilePage() {
         } catch (devsListError) {
           console.warn("Failed to fetch developers list:", devsListError);
         }
-        
+
         // /developers/{id}도 시도 (없으면 위에서 찾은 정보 사용)
         if (!devData) {
           try {
@@ -204,12 +204,12 @@ export default function ProfilePage() {
               headers: headers,
               withCredentials: true
             });
-            
+
             // 스웨거 응답 구조 확인
             devData = response.data?.data || response.data;
             console.log("Developer API Response:", devData);
             console.log("Developer ID requested:", id);
-            
+
             // devData가 비어있거나 유효하지 않으면 null로 설정
             if (!devData || (!devData.memberId && !devData.id)) {
               console.warn("Invalid developer data received:", devData);
@@ -228,7 +228,7 @@ export default function ProfilePage() {
             }
           }
         }
-        
+
         // 개발자 정보가 있으면 사용
         if (devData || majorFromDevelopersList) {
           const profileMemberId = devData?.memberId || id;
@@ -242,10 +242,10 @@ export default function ProfilePage() {
             blog: devData?.blog,
             temperature: devData?.temperature
           };
-          
+
           console.log("Parsed developer data:", data);
           console.log("Developer major from API:", devData.major);
-          
+
           // 사용자 기본 정보 가져오기 - memberId 사용
           // 주의: major는 개발자 정보에서 가져온 값을 유지해야 함
           try {
@@ -258,8 +258,8 @@ export default function ProfilePage() {
             console.log("User profile data:", userData);
             console.log("Before merge - data.major:", data.major, "userData.major:", userData.major);
             // major는 개발자 정보에서 가져온 값을 우선 유지
-            data = { 
-              ...userData, 
+            data = {
+              ...userData,
               ...data, // 개발자 정보(major 포함)가 나중에 오도록 하여 덮어쓰기 방지
               major: data.major || userData.major // major는 개발자 정보 우선
             };
@@ -279,22 +279,22 @@ export default function ProfilePage() {
               });
               const membersData = membersResponse.data?.data || membersResponse.data || {};
               const members = Array.isArray(membersData) ? membersData : (membersData.members || []);
-              
+
               // memberId로 사용자 찾기 (숫자와 문자열 모두 비교)
               const member = members.find(m => {
                 const mId = m.id || m.memberId;
                 const searchId = typeof profileMemberId === 'string' ? parseInt(profileMemberId) : profileMemberId;
                 return mId === profileMemberId || mId === searchId || String(mId) === String(profileMemberId);
               });
-              
+
               if (member) {
                 console.log("Found member:", member);
                 console.log("Before merge with member - data.major:", data.major, "majorFromDevelopersList:", majorFromDevelopersList);
-                
+
                 // major는 개발자 정보에서 가져온 값을 우선 유지 (majorFromDevelopersList 포함)
                 const finalMajor = data.major || majorFromDevelopersList;
-                
-                data = { 
+
+                data = {
                   ...data, // 개발자 정보(major 포함)를 먼저
                   username: member.username || data.githubId,
                   email: member.email || data.email || "",
@@ -317,11 +317,11 @@ export default function ProfilePage() {
             });
             const profileData = response.data?.data || response.data || {};
             console.log("Profile data from /profile/{id}:", profileData);
-            
+
             // memberId 저장
             const profileMemberId = profileData.memberId || profileData.id || id;
             setMemberId(profileMemberId);
-            
+
             // 프로필 데이터가 유효한지 확인
             if (profileData && (profileData.username || profileData.githubId || profileData.memberId || profileData.id)) {
               data = profileData;
@@ -335,54 +335,54 @@ export default function ProfilePage() {
                 });
                 const membersData = membersResponse.data?.data || membersResponse.data || {};
                 const members = Array.isArray(membersData) ? membersData : (membersData.members || []);
-                
+
                 // id로 사용자 찾기 (숫자와 문자열 모두 비교)
                 const member = members.find(m => {
                   const mId = m.id || m.memberId;
                   const searchId = typeof id === 'string' ? parseInt(id) : id;
                   return mId === id || mId === searchId || String(mId) === String(id);
                 });
-                
-              if (member) {
-                console.log("Found member from /auth/members:", member);
-                const foundMemberId = member.id || member.memberId;
-                setMemberId(foundMemberId);
-                
-                // major가 없으면 /auth/developers에서 해당 사용자의 개발자 정보 찾기
-                let major = null;
-                try {
-                  const devsResponse = await axios.get(`${API_URL}/auth/developers`, {
-                    headers: headers,
-                    withCredentials: true
-                  });
-                  const devsData = devsResponse.data?.data || devsResponse.data || [];
-                  const devs = Array.isArray(devsData) ? devsData : [];
-                  const developerInfo = devs.find(dev => {
-                    const devMemberId = dev.memberId || dev.id;
-                    return devMemberId === foundMemberId || 
-                           devMemberId === (typeof foundMemberId === 'string' ? parseInt(foundMemberId) : foundMemberId) ||
-                           String(devMemberId) === String(foundMemberId);
-                  });
-                  
-                  if (developerInfo && developerInfo.major) {
-                    console.log("Found developer info with major:", developerInfo.major);
-                    major = developerInfo.major;
+
+                if (member) {
+                  console.log("Found member from /auth/members:", member);
+                  const foundMemberId = member.id || member.memberId;
+                  setMemberId(foundMemberId);
+
+                  // major가 없으면 /auth/developers에서 해당 사용자의 개발자 정보 찾기
+                  let major = null;
+                  try {
+                    const devsResponse = await axios.get(`${API_URL}/auth/developers`, {
+                      headers: headers,
+                      withCredentials: true
+                    });
+                    const devsData = devsResponse.data?.data || devsResponse.data || [];
+                    const devs = Array.isArray(devsData) ? devsData : [];
+                    const developerInfo = devs.find(dev => {
+                      const devMemberId = dev.memberId || dev.id;
+                      return devMemberId === foundMemberId ||
+                        devMemberId === (typeof foundMemberId === 'string' ? parseInt(foundMemberId) : foundMemberId) ||
+                        String(devMemberId) === String(foundMemberId);
+                    });
+
+                    if (developerInfo && developerInfo.major) {
+                      console.log("Found developer info with major:", developerInfo.major);
+                      major = developerInfo.major;
+                    }
+                  } catch (devsError) {
+                    console.warn("Failed to fetch developers list:", devsError);
                   }
-                } catch (devsError) {
-                  console.warn("Failed to fetch developers list:", devsError);
+
+                  data = {
+                    username: member.username,
+                    email: member.email || "",
+                    profile: member.profile,
+                    role: member.role,
+                    major: major,
+                    memberId: foundMemberId
+                  };
+                } else {
+                  throw new Error("Member not found");
                 }
-                
-                data = {
-                  username: member.username,
-                  email: member.email || "",
-                  profile: member.profile,
-                  role: member.role,
-                  major: major,
-                  memberId: foundMemberId
-                };
-              } else {
-                throw new Error("Member not found");
-              }
               } catch (memberError) {
                 console.error("Failed to find member:", memberError);
                 throw new Error("Profile not found");
@@ -398,18 +398,18 @@ export default function ProfilePage() {
               });
               const membersData = membersResponse.data?.data || membersResponse.data || {};
               const members = Array.isArray(membersData) ? membersData : (membersData.members || []);
-              
+
               const member = members.find(m => {
                 const mId = m.id || m.memberId;
                 const searchId = typeof id === 'string' ? parseInt(id) : id;
                 return mId === id || mId === searchId || String(mId) === String(id);
               });
-              
+
               if (member) {
                 console.log("Found member as fallback:", member);
                 const foundMemberId = member.id || member.memberId;
                 setMemberId(foundMemberId);
-                
+
                 // major가 없으면 /auth/developers에서 해당 사용자의 개발자 정보 찾기
                 let major = null;
                 try {
@@ -421,11 +421,11 @@ export default function ProfilePage() {
                   const devs = Array.isArray(devsData) ? devsData : [];
                   const developerInfo = devs.find(dev => {
                     const devMemberId = dev.memberId || dev.id;
-                    return devMemberId === foundMemberId || 
-                           devMemberId === (typeof foundMemberId === 'string' ? parseInt(foundMemberId) : foundMemberId) ||
-                           String(devMemberId) === String(foundMemberId);
+                    return devMemberId === foundMemberId ||
+                      devMemberId === (typeof foundMemberId === 'string' ? parseInt(foundMemberId) : foundMemberId) ||
+                      String(devMemberId) === String(foundMemberId);
                   });
-                  
+
                   if (developerInfo && developerInfo.major) {
                     console.log("Found developer info with major:", developerInfo.major);
                     major = developerInfo.major;
@@ -433,7 +433,7 @@ export default function ProfilePage() {
                 } catch (devsError) {
                   console.warn("Failed to fetch developers list:", devsError);
                 }
-                
+
                 data = {
                   username: member.username,
                   email: member.email || "",
@@ -450,7 +450,7 @@ export default function ProfilePage() {
             }
           }
         }
-        
+
         // memberId가 아직 설정되지 않았으면 id로 설정
         if (!memberId && id) {
           setMemberId(id);
@@ -472,104 +472,104 @@ export default function ProfilePage() {
         console.log("Data keys:", Object.keys(data));
         console.log("Username from data:", data.username);
         console.log("GithubId from data:", data.githubId);
-        
+
         // major가 없으면 sessionStorage에서 확인 (최종 시도)
         // 내 프로필이 아닐 때만 sessionStorage 확인
         let finalMajor = data.major;
         if (id) {
           // 다른 사용자 프로필일 때만 sessionStorage 확인
           finalMajor = data.major || majorFromSessionStorage;
-          
+
           if (!finalMajor) {
-          console.log("⚠️ Major not found in data, trying /auth/developers one more time with id:", id);
-          try {
-            const token = Cookies.get("accessToken");
-            const headers = {
-              "Accept": "application/json"
-            };
-            if (token && token !== "logged-in") {
-              headers["Authorization"] = `Bearer ${token}`;
-            }
-            
-            const devsResponse = await axios.get(`${API_URL}/auth/developers`, {
-              headers: headers,
-              withCredentials: true
-            });
-            const devsData = devsResponse.data?.data || devsResponse.data || [];
-            const devs = Array.isArray(devsData) ? devsData : [];
-            console.log("Final attempt - All developers count:", devs.length);
-            
-            // 여러 방법으로 찾기 (id, memberId 모두 시도)
-            const searchId = typeof id === 'string' ? parseInt(id) : id;
-            const memberIdToSearch = data.memberId || id;
-            
-            const foundDev = devs.find(dev => {
-              const devId = dev.id;
-              const devMemberId = dev.memberId;
-              
-              return devId === id || devId === searchId || 
-                     devMemberId === id || devMemberId === searchId ||
-                     devId === memberIdToSearch || devMemberId === memberIdToSearch ||
-                     String(devId) === String(id) || String(devMemberId) === String(id) ||
-                     String(devId) === String(memberIdToSearch) || String(devMemberId) === String(memberIdToSearch);
-            });
-            
-            if (foundDev) {
-              console.log("✅ FOUND DEVELOPER in final attempt:", foundDev);
-              console.log("Developer object keys:", Object.keys(foundDev));
-              console.log("Developer full object:", JSON.stringify(foundDev, null, 2));
-              
-              // /auth/developers 응답에 major가 없으므로, /developers/{id} API 재시도
-              // 하지만 500 에러가 발생했으므로, 개발자 페이지에서 이미 가져온 정보를 확인
-              // 또는 다른 방법으로 major 정보 가져오기
-              
-              // 일단 /developers/{id} API를 다시 시도 (다른 파라미터나 헤더로)
-              try {
-                const devDetailResponse = await axios.get(`${API_URL}/developers/${foundDev.id || id}`, {
-                  headers: headers,
-                  withCredentials: true
-                });
-                const devDetail = devDetailResponse.data?.data || devDetailResponse.data;
-                console.log("Developer detail from /developers/{id}:", devDetail);
-                
-                if (devDetail && devDetail.major) {
-                  console.log("✅ FOUND MAJOR from /developers/{id}:", devDetail.major);
-                  finalMajor = devDetail.major;
-                  data.major = devDetail.major;
-                }
-              } catch (devDetailError) {
-                console.warn("Failed to fetch developer detail, trying alternative approach:", devDetailError);
-                
-                // 개발자 페이지에서 이미 표시된 정보 확인
-                // localStorage나 sessionStorage에 저장되어 있을 수 있음
-                // 또는 개발자 페이지 컴포넌트에서 전달받을 수 있음
-                
-                // 임시 해결책: 개발자 페이지에서 카드에 표시된 job 정보 활용
-                // 하지만 이건 현재 불가능하므로, API 구조 확인 필요
-                console.warn("Cannot get major from /developers/{id} API. Please check API response structure.");
+            console.log("⚠️ Major not found in data, trying /auth/developers one more time with id:", id);
+            try {
+              const token = Cookies.get("accessToken");
+              const headers = {
+                "Accept": "application/json"
+              };
+              if (token && token !== "logged-in") {
+                headers["Authorization"] = `Bearer ${token}`;
               }
-            } else {
-              console.warn("❌ Developer not found in /auth/developers list");
+
+              const devsResponse = await axios.get(`${API_URL}/auth/developers`, {
+                headers: headers,
+                withCredentials: true
+              });
+              const devsData = devsResponse.data?.data || devsResponse.data || [];
+              const devs = Array.isArray(devsData) ? devsData : [];
+              console.log("Final attempt - All developers count:", devs.length);
+
+              // 여러 방법으로 찾기 (id, memberId 모두 시도)
+              const searchId = typeof id === 'string' ? parseInt(id) : id;
+              const memberIdToSearch = data.memberId || id;
+
+              const foundDev = devs.find(dev => {
+                const devId = dev.id;
+                const devMemberId = dev.memberId;
+
+                return devId === id || devId === searchId ||
+                  devMemberId === id || devMemberId === searchId ||
+                  devId === memberIdToSearch || devMemberId === memberIdToSearch ||
+                  String(devId) === String(id) || String(devMemberId) === String(id) ||
+                  String(devId) === String(memberIdToSearch) || String(devMemberId) === String(memberIdToSearch);
+              });
+
+              if (foundDev) {
+                console.log("✅ FOUND DEVELOPER in final attempt:", foundDev);
+                console.log("Developer object keys:", Object.keys(foundDev));
+                console.log("Developer full object:", JSON.stringify(foundDev, null, 2));
+
+                // /auth/developers 응답에 major가 없으므로, /developers/{id} API 재시도
+                // 하지만 500 에러가 발생했으므로, 개발자 페이지에서 이미 가져온 정보를 확인
+                // 또는 다른 방법으로 major 정보 가져오기
+
+                // 일단 /developers/{id} API를 다시 시도 (다른 파라미터나 헤더로)
+                try {
+                  const devDetailResponse = await axios.get(`${API_URL}/developers/${foundDev.id || id}`, {
+                    headers: headers,
+                    withCredentials: true
+                  });
+                  const devDetail = devDetailResponse.data?.data || devDetailResponse.data;
+                  console.log("Developer detail from /developers/{id}:", devDetail);
+
+                  if (devDetail && devDetail.major) {
+                    console.log("✅ FOUND MAJOR from /developers/{id}:", devDetail.major);
+                    finalMajor = devDetail.major;
+                    data.major = devDetail.major;
+                  }
+                } catch (devDetailError) {
+                  console.warn("Failed to fetch developer detail, trying alternative approach:", devDetailError);
+
+                  // 개발자 페이지에서 이미 표시된 정보 확인
+                  // localStorage나 sessionStorage에 저장되어 있을 수 있음
+                  // 또는 개발자 페이지 컴포넌트에서 전달받을 수 있음
+
+                  // 임시 해결책: 개발자 페이지에서 카드에 표시된 job 정보 활용
+                  // 하지만 이건 현재 불가능하므로, API 구조 확인 필요
+                  console.warn("Cannot get major from /developers/{id} API. Please check API response structure.");
+                }
+              } else {
+                console.warn("❌ Developer not found in /auth/developers list");
+              }
+            } catch (error) {
+              console.warn("Final attempt to find major failed:", error);
             }
-          } catch (error) {
-            console.warn("Final attempt to find major failed:", error);
-          }
           }
         } else {
           // 내 프로필일 때는 /auth/me 응답의 major를 그대로 사용
           finalMajor = data.major;
           console.log("My profile - using major from /auth/me:", finalMajor);
         }
-        
+
         // 직무 표시명 변환 (major 우선, 시스템 role 무시)
         console.log("=== JOB CONVERSION DEBUG ===");
         console.log("data.major:", data.major);
         console.log("finalMajor:", finalMajor);
         console.log("data.role:", data.role);
-        
+
         const displayJob = getDisplayJob(finalMajor || data.major, data.role);
         console.log("getDisplayJob result:", displayJob);
-        
+
         // 이미지 URL 처리 및 로깅
         const rawImagePath = data.profile || data.profileImage;
         const processedImageUrl = getImageUrl(rawImagePath);
@@ -577,7 +577,7 @@ export default function ProfilePage() {
         console.log("Raw image path from API:", rawImagePath);
         console.log("Processed image URL:", processedImageUrl);
         console.log("=== END IMAGE URL DEBUG ===");
-        
+
         const profileData = {
           id: userName,
           email: data.email || "",
@@ -590,10 +590,10 @@ export default function ProfilePage() {
           githubId: data.githubId || "",
           blog: data.blog || ""
         };
-        
+
         console.log("Final job value:", profileData.job);
         console.log("=== END JOB CONVERSION DEBUG ===");
-        
+
         console.log("Final profile data:", profileData);
         setUserProfile(profileData);
       } else {
@@ -727,7 +727,7 @@ export default function ProfilePage() {
       // 스웨거 응답: { "status": 0, "data": {} }
       if (response.status === 200) {
         const newImageUrl = URL.createObjectURL(file);
-        
+
         // 로컬 상태 업데이트
         setUserProfile((prevProfile) => ({
           ...prevProfile,
@@ -735,7 +735,7 @@ export default function ProfilePage() {
         }));
 
         Alarm("✅", "프로필 사진이 변경되었습니다.", "#3CAF50", "#E8F5E9");
-        
+
         // 프로필 다시 조회하여 서버에서 최신 이미지 URL 가져오기
         await fetchProfile();
       }
@@ -770,7 +770,7 @@ export default function ProfilePage() {
       const headers = {
         "Accept": "application/json"
       };
-      
+
       if (token && token !== "logged-in") {
         headers["Authorization"] = `Bearer ${token}`;
       }
@@ -793,19 +793,19 @@ export default function ProfilePage() {
         const roomsData = roomsResponse.data?.data || roomsResponse.data || [];
         const rooms = Array.isArray(roomsData) ? roomsData : [];
         console.log("Existing rooms:", rooms);
-        
+
         // 해당 사용자와의 채팅방 찾기
         const existingRoom = rooms.find(room => {
           // 다양한 방법으로 매칭 시도
           if (room.members && Array.isArray(room.members)) {
-            return room.members.some(m => 
-              String(m.id) === String(targetMemberId) || 
+            return room.members.some(m =>
+              String(m.id) === String(targetMemberId) ||
               String(m.memberId) === String(targetMemberId)
             );
           }
           if (room.memberIds && Array.isArray(room.memberIds)) {
-            return room.memberIds.includes(targetMemberId) || 
-                   room.memberIds.some(id => String(id) === String(targetMemberId));
+            return room.memberIds.includes(targetMemberId) ||
+              room.memberIds.some(id => String(id) === String(targetMemberId));
           }
           if (room.partnerId) {
             return String(room.partnerId) === String(targetMemberId);
@@ -815,7 +815,7 @@ export default function ProfilePage() {
           }
           return false;
         });
-        
+
         if (existingRoom) {
           chatRoomId = existingRoom.id || existingRoom.roomId;
           console.log("✅ Found existing room:", chatRoomId);
@@ -836,18 +836,18 @@ export default function ProfilePage() {
               withCredentials: true
             }
           );
-          
+
           console.log("✅ 1:1 chat room response:", privateRoomResponse);
           const roomData = privateRoomResponse.data?.data || privateRoomResponse.data || {};
           chatRoomId = roomData.id || roomData.roomId;
-          
+
           if (chatRoomId) {
             console.log(`✅✅ 1:1 chat room found/created:`, chatRoomId);
             Alarm("✅", "채팅방이 생성되었습니다.", "#3CAF50", "#E8F5E9");
           }
         } catch (privateRoomError) {
           console.warn("1:1 chat room API failed, trying POST /chat/rooms:", privateRoomError);
-          
+
           // GET 실패 시 POST /chat/rooms 시도 (memberIds 배열 사용)
           // 500 에러가 발생하면 서버 로그 확인 필요
           try {
@@ -872,20 +872,20 @@ export default function ProfilePage() {
               type: "PRIVATE",
               memberIds: [Number(targetMemberId)]
             });
-            
+
             const requestBody = {
               name: "",
               description: "",
               type: "PRIVATE",
               memberIds: [Number(targetMemberId)]
             };
-            
+
             // 현재 사용자 ID를 명시적으로 포함 (백엔드가 자동 추가하더라도 명시적으로 포함)
             if (currentUserId && !requestBody.memberIds.includes(Number(currentUserId))) {
               requestBody.memberIds.push(Number(currentUserId));
               console.log("Added current user ID to memberIds:", currentUserId);
             }
-            
+
             const postResponse = await axios.post(
               `${API_URL}/chat/rooms`,
               requestBody,
@@ -897,14 +897,14 @@ export default function ProfilePage() {
                 withCredentials: true
               }
             );
-            
+
             console.log("✅ POST /chat/rooms response:", postResponse);
             console.log("✅ Response status:", postResponse.status);
             console.log("✅ Response data:", JSON.stringify(postResponse.data, null, 2));
-            
+
             const roomData = postResponse.data?.data || postResponse.data || {};
             chatRoomId = roomData.id || roomData.roomId;
-            
+
             if (chatRoomId) {
               console.log(`✅✅ Chat room created via POST:`, chatRoomId);
               Alarm("✅", "채팅방이 생성되었습니다.", "#3CAF50", "#E8F5E9");
@@ -917,16 +917,16 @@ export default function ProfilePage() {
               console.error("Error status:", postError.response.status);
               console.error("Error data:", JSON.stringify(postError.response.data, null, 2));
               console.error("Error headers:", postError.response.headers);
-              
+
               // 500 에러는 서버 내부 오류 - 서버 로그 확인 필요
               if (postError.response.status === 500) {
-                const errorMsg = postError.response.data?.message || 
-                                postError.response.data?.code || 
-                                "서버 내부 오류가 발생했습니다.";
+                const errorMsg = postError.response.data?.message ||
+                  postError.response.data?.code ||
+                  "서버 내부 오류가 발생했습니다.";
                 Alarm(
-                  "❌", 
+                  "❌",
                   `서버 오류: ${errorMsg}`,
-                  "#FF1E1E", 
+                  "#FF1E1E",
                   "#FFEAEA"
                 );
                 console.error("Full error response:", JSON.stringify(postError.response.data, null, 2));
@@ -953,19 +953,19 @@ export default function ProfilePage() {
       }
     } catch (error) {
       console.error("Failed to start chat:", error);
-      
+
       // CORS 오류 명확히 표시
       if (!error.response && (error.message?.includes("CORS") || error.message?.includes("Network Error"))) {
         Alarm(
-          "⚠️", 
+          "⚠️",
           "CORS 오류: 백엔드 서버의 CORS 설정을 확인해주세요. 채팅 페이지로 이동합니다.",
-          "#FF9800", 
+          "#FF9800",
           "#FFF3E0"
         );
         navigate("/chat");
         return;
       }
-      
+
       if (error.response) {
         console.error("Server Error Data:", error.response.data);
         console.error("Server Error Status:", error.response.status);
@@ -995,8 +995,8 @@ export default function ProfilePage() {
             <S.Profile>
               <S.ProfileInfo>
                 <S.ImgContainer>
-                  <S.ProfileImg 
-                    src={profile.img || "/assets/profile-icon.svg"} 
+                  <S.ProfileImg
+                    src={profile.img || "/assets/profile-icon.svg"}
                     alt="프로필 이미지"
                     onError={(e) => {
                       console.error("Profile image failed to load:", profile.img);
@@ -1040,9 +1040,9 @@ export default function ProfilePage() {
                   <S.EmailInfo style={{ marginTop: "15px" }}>
                     <S.Email>GitHub</S.Email>
                     <S.PersonalEmail>
-                      <a 
-                        href={`https://github.com/${profile.githubId}`} 
-                        target="_blank" 
+                      <a
+                        href={`https://github.com/${profile.githubId}`}
+                        target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: "#883CBE", textDecoration: "none" }}
                       >
@@ -1055,9 +1055,9 @@ export default function ProfilePage() {
                   <S.EmailInfo style={{ marginTop: "15px" }}>
                     <S.Email>블로그</S.Email>
                     <S.PersonalEmail>
-                      <a 
+                      <a
                         href={profile.blog.startsWith("http") ? profile.blog : `https://${profile.blog}`}
-                        target="_blank" 
+                        target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: "#883CBE", textDecoration: "none" }}
                       >

@@ -70,26 +70,17 @@ export default function SideBar() {
         withCredentials: true
       });
 
-      console.log("🔍 SideBar - API Response:", response.data);
       
       let rooms = [];
       if (Array.isArray(response.data)) {
         rooms = response.data;
-        console.log("🔍 SideBar - Using direct array format");
       } else if (response.data?.data) {
         rooms = Array.isArray(response.data.data) ? response.data.data : [];
-        console.log("🔍 SideBar - Using data.data format, rooms count:", rooms.length);
       } else if (response.data?.rooms) {
         rooms = Array.isArray(response.data.rooms) ? response.data.rooms : [];
-        console.log("🔍 SideBar - Using data.rooms format, rooms count:", rooms.length);
       } else {
-        console.warn("⚠️ SideBar - Unknown response format:", response.data);
       }
-      
-      console.log("🔍 SideBar - Parsed rooms:", rooms);
-      if (rooms.length > 0) {
-        console.log("🔍 SideBar - First room sample:", rooms[0]);
-        console.log("🔍 SideBar - First room keys:", Object.keys(rooms[0]));
+            if (rooms.length > 0) {
       }
 
       // 전체 읽지 않은 메시지 개수 합산 (ChatPage와 동일한 방식)
@@ -100,40 +91,32 @@ export default function SideBar() {
         const validCount = isNaN(count) || count < 0 ? 0 : count;
         
         if (validCount > 0) {
-          console.log("📋 Room with unread:", room.id, "unreadCount:", unreadCount, "parsed:", validCount);
         }
         
         return sum + validCount;
       }, 0);
 
-      console.log("📊 Total unread count:", total, "from", rooms.length, "rooms");
       setTotalUnreadCount(total);
     } catch (error) {
       // 에러 발생 시 0으로 설정
-      console.error("Failed to fetch unread count:", error);
       setTotalUnreadCount(0);
     }
   };
 
   useEffect(() => {
     // 즉시 실행
-    console.log("🚀 SideBar - useEffect triggered, fetching unread count...");
     fetchUnreadCount();
     
     // 주기적으로 업데이트 (3초마다 - 더 빠른 업데이트)
     const interval = setInterval(() => {
-      console.log("⏰ SideBar - Periodic update triggered");
       fetchUnreadCount();
     }, 3000);
     
     // 채팅방 목록 업데이트 이벤트 리스너
     const handleChatUpdate = (event) => {
-      console.log("📨 SideBar - chatListUpdated event received:", event.detail);
       if (event.detail && event.detail.totalUnreadCount !== undefined) {
-        console.log("📊 SideBar - Setting totalUnreadCount to:", event.detail.totalUnreadCount);
         setTotalUnreadCount(event.detail.totalUnreadCount);
       } else {
-        console.log("📊 SideBar - Event detail missing, fetching manually");
         fetchUnreadCount();
       }
     };
@@ -141,7 +124,6 @@ export default function SideBar() {
     window.addEventListener('chatListUpdated', handleChatUpdate);
     
     return () => {
-      console.log("🧹 SideBar - Cleanup: removing interval and event listener");
       clearInterval(interval);
       window.removeEventListener('chatListUpdated', handleChatUpdate);
     };
@@ -157,9 +139,6 @@ export default function SideBar() {
   const moreClicked = () => setIsMoreOpen((prev) => !prev);
 
   // 디버깅: totalUnreadCount 값 확인
-  console.log("🔍 SideBar - totalUnreadCount:", totalUnreadCount, "should show badge:", totalUnreadCount > 0);
-  console.log("🔍 SideBar - typeof totalUnreadCount:", typeof totalUnreadCount);
-  console.log("🔍 SideBar - totalUnreadCount > 0:", totalUnreadCount > 0);
 
   return (
     <>
