@@ -24,6 +24,15 @@ export const LogoBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px 0;
+  
+  /* LogoBox 내부의 Link는 중앙 정렬 */
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+  }
 `;
 
 export const Navigation = styled.div`

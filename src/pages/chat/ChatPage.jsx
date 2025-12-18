@@ -27,6 +27,10 @@ export default function ChatPage() {
   const selectedChatRef = useRef(null); // 현재 선택된 채팅방 (ref)
   const chatListRef = useRef([]); // 채팅방 목록 (ref)
   const pendingMessagesRef = useRef(new Set()); // 전송 대기 중인 메시지 추적 (content 기반)
+  const reconnectAttemptsRef = useRef(0); // 재연결 시도 횟수
+  const reconnectTimeoutRef = useRef(null); // 재연결 타이머
+  const isReconnectingRef = useRef(false); // 재연결 중 플래그
+  const connectionTimeoutRef = useRef(null); // 연결 타임아웃 타이머
   // 나간 채팅방 ID를 localStorage에서 로드
   const loadLeftRoomIds = () => {
     try {
@@ -188,12 +192,12 @@ export default function ChatPage() {
         
         // 마지막 메시지 추출 (다양한 필드명 시도)
         let lastMessage = room.lastMessage || 
-                         room.lastMessageContent || 
-                         room.lastMessageText ||
-                         room.latestMessage ||
-                         room.recentMessage ||
-                         room.message ||
-                         "";
+                           room.lastMessageContent || 
+                           room.lastMessageText ||
+                           room.latestMessage ||
+                           room.recentMessage ||
+                           room.message ||
+                           "";
         
         // 의미 없는 메시지 필터링 (빈 문자열, 공백만, 이상한 문자들)
         if (lastMessage) {
@@ -213,8 +217,8 @@ export default function ChatPage() {
         
         // 채팅방 이름에서 자신의 이름 제거하고 상대방 이름만 표시
         let displayName = partnerName;
-        const currentUsername = currentUsernameRef.current || '';
-        
+          const currentUsername = currentUsernameRef.current || '';
+          
         if (partnerName && currentUsername) {
           // 다양한 구분자로 분리: " & ", " , ", ",", "&"
           const nameParts = partnerName.split(/ & | , |,|&/).map(part => part.trim()).filter(part => part !== '');
@@ -240,10 +244,10 @@ export default function ChatPage() {
                 // 자신의 이름이 포함되어 있으면 제거 시도
                 displayName = partnerName.replace(new RegExp(currentUsername, 'gi'), '').replace(/[&,]/g, '').trim();
                 if (!displayName || displayName === '') {
-                  displayName = "채팅방";
-                }
-              } else {
-                displayName = partnerName.replace(/ & /g, ' , ');
+            displayName = "채팅방";
+          }
+        } else {
+          displayName = partnerName.replace(/ & /g, ' , ');
               }
             }
           }
@@ -312,6 +316,20 @@ export default function ChatPage() {
         
         return chatRoom;
       });
+      
+      // URL 파라미터로 나간 채팅방 재활성화 (필터링 전에 처리)
+      // 선택된 채팅방이 있고 그것이 URL의 roomId와 일치하는 경우에만 재활성화
+      // (나가기 직후에는 selectedChatRef.current가 null이므로 재활성화되지 않음)
+      if (roomIdParam && selectedChatRef.current && String(selectedChatRef.current.id) === String(roomIdParam)) {
+        const roomIdStr = String(roomIdParam);
+        if (leftRoomIdsRef.current.has(roomIdStr)) {
+          console.log("🔄 Room from URL is in left rooms list and is currently selected, reactivating:", roomIdParam);
+          // 나간 채팅방이지만 URL로 접근했고 현재 선택된 채팅방이므로 다시 활성화
+          leftRoomIdsRef.current.delete(roomIdStr);
+          saveLeftRoomIds(leftRoomIdsRef.current);
+          console.log("✅ Reactivated room:", roomIdParam);
+        }
+      }
       
       // 나간 채팅방 필터링 (localStorage에서도 확인)
       const filteredRooms = formattedRooms.filter(room => {
@@ -387,8 +405,11 @@ export default function ChatPage() {
         
         const updatedChatList = await Promise.all(
           roomsWithIndex.map(async ({ chat, originalIndex }) => {
-            // 이미 프로필 이미지가 있으면 스킵
-            if (chat.userProfile && chat.userProfile !== "/assets/profile-icon.svg") {
+            // 이미 프로필 이미지가 있고 기본 아이콘이 아닌 경우에만 스킵
+            // 기본 아이콘인 경우에도 실제 프로필 이미지를 가져오도록 함
+            if (chat.userProfile && 
+                chat.userProfile !== "/assets/profile-icon.svg" && 
+                !chat.userProfile.includes("profile-icon.svg")) {
               console.log("⏭️ Skipping chat", chat.id, "already has profile:", chat.userProfile);
               return { chat, originalIndex };
             }
@@ -550,14 +571,27 @@ export default function ChatPage() {
         updatedChatList.sort((a, b) => a.originalIndex - b.originalIndex);
         
         // chat 객체만 추출
-        const finalChatList = updatedChatList.map(item => item.chat);
+        let finalChatList = updatedChatList.map(item => item.chat);
         
-        console.log("🔄 Updated chat list with profile images (order preserved)");
+        // 나간 채팅방 필터링 (업데이트 중에도 필터링 유지)
+        finalChatList = finalChatList.filter(chat => {
+          const roomIdStr = String(chat.id);
+          const shouldKeep = !leftRoomIdsRef.current.has(roomIdStr);
+          if (!shouldKeep) {
+            console.log("🚫 Filtering out left room in updateProfileImages:", chat.id);
+          }
+          return shouldKeep;
+        });
+        
+        console.log("🔄 Updated chat list with profile images (order preserved, filtered)");
         setChatList(finalChatList);
       };
       
       // 프로필 이미지 업데이트 (비동기로 실행, UI 블로킹 방지)
-      updateProfileImages();
+      // 새로고침 시에도 프로필 이미지를 다시 가져오기 위해 항상 실행
+      updateProfileImages().catch(error => {
+        console.error("Failed to update profile images:", error);
+      });
       
       // roomId 파라미터가 있으면 해당 채팅방 선택, 없으면 첫 번째 채팅방 선택
       // 항상 채팅방 선택 및 메시지 로드
@@ -566,11 +600,44 @@ export default function ChatPage() {
         const currentSelectedId = selectedChatRef.current?.id;
         
         if (roomIdParam) {
-          // URL 파라미터로 전달된 roomId 찾기
-          roomToSelect = formattedRooms.find(room => 
+          // URL 파라미터로 전달된 roomId 찾기 (필터링된 목록에서)
+          roomToSelect = filteredRooms.find(room => 
             String(room.id) === String(roomIdParam)
           );
           console.log("🔍 Looking for roomId from URL:", roomIdParam, "Found:", roomToSelect);
+          
+          // URL 파라미터로 찾지 못했으면 해당 채팅방 정보를 직접 가져오기 (나간 채팅방이 아닌 경우에만)
+          if (!roomToSelect && !leftRoomIdsRef.current.has(String(roomIdParam))) {
+            console.log("⚠️ Room from URL not found in list, fetching room detail...");
+            try {
+              const roomDetail = await fetchRoomDetail(Number(roomIdParam));
+              if (roomDetail) {
+                // 채팅방 정보를 포맷팅하여 목록에 추가
+                const formattedRoom = await updatePartnerInfo({
+                  id: Number(roomIdParam),
+                  userName: roomDetail.name || "채팅방",
+                  userProfile: null,
+                  lastMessage: "",
+                  unreadCount: 0,
+                  type: roomDetail.type || "PRIVATE"
+                });
+                
+                // 목록에 추가
+                filteredRooms.push(formattedRoom);
+                setChatList(filteredRooms);
+                roomToSelect = formattedRoom;
+                console.log("✅ Added room from URL to list:", formattedRoom);
+              }
+            } catch (error) {
+              console.error("❌ Failed to fetch room detail for URL roomId:", error);
+              // 에러 발생 시 URL 파라미터 제거
+              setSearchParams({}, { replace: true });
+            }
+          } else if (!roomToSelect && leftRoomIdsRef.current.has(String(roomIdParam))) {
+            // 나간 채팅방이면 URL 파라미터 제거하고 첫 번째 채팅방 선택
+            console.log("🚫 Room from URL was left, removing URL param");
+            setSearchParams({}, { replace: true });
+          }
         }
         // roomId로 찾지 못했거나 roomId가 없으면 기존 선택된 채팅방 또는 첫 번째 채팅방 선택
         if (!roomToSelect) {
@@ -581,7 +648,7 @@ export default function ChatPage() {
           // 기존 선택된 채팅방을 찾지 못했으면 첫 번째 채팅방 선택
           if (!roomToSelect) {
             roomToSelect = formattedRooms[0];
-            console.log("🔍 No roomId in URL or not found, selecting first room:", roomToSelect.id);
+            console.log("🔍 No roomId in URL or not found, selecting first room:", roomToSelect?.id);
           } else {
             console.log("🔍 Keeping previously selected room:", roomToSelect.id);
           }
@@ -637,6 +704,10 @@ export default function ChatPage() {
         }
       } else if (!error.response) {
         console.error("Network error or CORS issue");
+        // CORS 에러인 경우 사용자에게 알림
+        if (error.code === 'ERR_NETWORK' || error.message?.includes('CORS')) {
+          Alarm("⚠️", "서버 연결에 문제가 있습니다. 네트워크를 확인해주세요.", "#FF9800", "#FFF3E0");
+        }
       }
       // 에러 시 빈 배열로 설정 (기본값 사용하지 않음)
       setChatList([]);
@@ -725,6 +796,29 @@ export default function ChatPage() {
                        String(msg.senderId) === String(currentUserIdRef.current) ||
                        String(msg.memberId) === String(currentUserIdRef.current);
         
+        // 이미지 필드 확인 (다양한 필드명 시도)
+        const imageField = msg.image || 
+                          msg.imageUrl || 
+                          msg.imagePath ||
+                          msg.attachment || 
+                          msg.attachmentUrl ||
+                          msg.attachments?.[0] || 
+                          msg.attachments?.[0]?.url ||
+                          msg.file ||
+                          msg.fileUrl ||
+                          null;
+        
+        // 보낸 사람의 프로필 이미지 확인
+        const senderProfileImage = msg.senderProfile || 
+                                  msg.senderImage ||
+                                  msg.sender?.profile ||
+                                  msg.sender?.profileImage ||
+                                  msg.sender?.image ||
+                                  msg.sender?.avatar ||
+                                  msg.profileImage ||
+                                  msg.profile ||
+                                  null;
+        
         const formatted = {
           id: msg.id || msg.messageId || `msg-${index}`,
           sender: senderName,
@@ -732,11 +826,20 @@ export default function ChatPage() {
           time: msg.timestamp || msg.createdAt || msg.sentAt || new Date().toISOString(),
           isMine: isMine,
           roomId: msg.roomId || roomId,
-          type: msg.type || "TALK"
+          type: msg.type || "TALK",
+          image: imageField,
+          senderProfile: senderProfileImage
         };
         
         if (index === 0) {
           console.log("📥 Sample formatted message:", formatted);
+          console.log("📥 Original message object:", msg);
+          console.log("📥 Message keys:", Object.keys(msg));
+          if (imageField) {
+            console.log("🖼️ Image field found:", imageField);
+          } else {
+            console.log("⚠️ No image field found in message");
+          }
         }
         
         return formatted;
@@ -766,7 +869,7 @@ export default function ChatPage() {
                   unreadCount: isCurrentRoom ? 0 : (chat.unreadCount || 0)
                 }
               : chat
-          );
+        );
           
           // 정렬 없이 원래 순서 유지
           return updated;
@@ -1143,27 +1246,43 @@ export default function ChatPage() {
     console.log("📤 ChatPage - Dispatched chatListUpdated event with totalUnreadCount:", totalUnread);
   }, [chatList]);
 
-  // WebSocket 연결 상태 주기적 확인
+  // WebSocket 연결 상태 주기적 확인 (재연결 중이 아닐 때만)
   useEffect(() => {
     if (!selectedChat || !selectedChat.id) return;
 
     const checkConnection = setInterval(() => {
+      // 재연결 중이면 체크 스킵
+      if (isReconnectingRef.current) {
+        return;
+      }
+      
       const ws = wsRef.current;
       if (ws) {
-        console.log("🔍 WebSocket connection check - readyState:", ws.readyState, "OPEN:", WebSocket.OPEN);
+        // 재연결 시도 횟수가 너무 많으면 체크 스킵
+        if (reconnectAttemptsRef.current >= 5) {
+          return;
+        }
+        
         if (ws.readyState !== WebSocket.OPEN) {
-          console.warn("⚠️ WebSocket is not open, reconnecting...");
-          if (currentRoomIdRef.current && currentUsernameRef.current) {
+          console.warn("⚠️ WebSocket is not open, attempting reconnection...");
+          if (currentRoomIdRef.current && currentUsernameRef.current && !isReconnectingRef.current) {
+            isReconnectingRef.current = true;
             connectWebSocket(currentRoomIdRef.current);
           }
         }
       } else {
-        console.warn("⚠️ WebSocket is null, reconnecting...");
-        if (currentRoomIdRef.current && currentUsernameRef.current) {
+        // 재연결 시도 횟수가 너무 많으면 체크 스킵
+        if (reconnectAttemptsRef.current >= 5) {
+          return;
+        }
+        
+        if (currentRoomIdRef.current && currentUsernameRef.current && !isReconnectingRef.current) {
+          console.warn("⚠️ WebSocket is null, attempting reconnection...");
+          isReconnectingRef.current = true;
           connectWebSocket(currentRoomIdRef.current);
         }
       }
-    }, 5000); // 5초마다 체크
+    }, 10000); // 10초마다 체크 (5초에서 10초로 증가)
 
     return () => {
       clearInterval(checkConnection);
@@ -1252,7 +1371,9 @@ export default function ChatPage() {
               time: data.timestamp || data.createdAt || new Date().toISOString(),
               isMine: true,
               roomId: data.roomId || currentRoomIdRef.current,
-              type: data.type || "TALK"
+              type: data.type || "TALK",
+              image: data.image || data.imageUrl || data.attachment || data.attachments?.[0] || null,
+              senderProfile: data.senderProfile || data.senderImage || data.sender?.profile || data.sender?.profileImage || null
             };
 
             const updated = [...prevMessages];
@@ -1269,7 +1390,9 @@ export default function ChatPage() {
           time: data.timestamp || data.createdAt || new Date().toISOString(),
           isMine: isMine,
           roomId: data.roomId || currentRoomIdRef.current,
-          type: data.type || "TALK"
+          type: data.type || "TALK",
+          image: data.image || data.imageUrl || data.attachment || data.attachments?.[0] || null,
+          senderProfile: data.senderProfile || data.senderImage || data.sender?.profile || data.sender?.profileImage || null
         };
 
         // 중복 메시지 체크
@@ -1299,7 +1422,7 @@ export default function ChatPage() {
           chat.id === currentRoomIdRef.current
             ? { ...chat, lastMessage: messageContent, lastMessageTime: messageTime, unreadCount: 0 }
             : chat
-        );
+      );
         
         // 정렬 없이 원래 순서 유지
         return updated;
@@ -1310,13 +1433,67 @@ export default function ChatPage() {
     }
   }, [newWebSocketMessage]);
 
-  // 🔗 링크 자동 감지 함수
+  // 코드인지 감지하는 함수
+  const isCodeMessage = (text) => {
+    if (!text || typeof text !== 'string') return false;
+    
+    // 코드 패턴 감지
+    const codePatterns = [
+      /^\s*(import|export|function|const|let|var|class|interface|type)\s+/m,
+      /;\s*$/m, // 세미콜론으로 끝나는 줄
+      /[{}[\]]/g, // 중괄호나 대괄호
+      /=>\s*{/g, // 화살표 함수
+    ];
+    
+    const hasCodePattern = codePatterns.some(pattern => pattern.test(text));
+    const hasMultipleLines = text.split('\n').length > 3;
+    const isLongText = text.length > 100;
+    
+    // 여러 조건을 만족하면 코드로 간주
+    return hasCodePattern && (hasMultipleLines || isLongText);
+  };
+
+  // 이미지 URL인지 확인하는 함수
+  const isImageUrl = (url) => {
+    if (!url || typeof url !== 'string') return false;
+    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)(\?.*)?$/i;
+    const imagePathPatterns = /\/image|\/images|\/img|\/upload|\/file|\/attachment|\/media/i;
+    const base64Pattern = /^data:image\//i;
+    
+    return imageExtensions.test(url) || 
+           imagePathPatterns.test(url) || 
+           base64Pattern.test(url) ||
+           url.includes('image') ||
+           url.includes('photo') ||
+           url.includes('picture');
+  };
+
+  // 🔗 링크 및 이미지 자동 감지 함수
   const renderMessageWithLinks = (text) => {
+    if (!text || typeof text !== 'string') return text;
+    
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const parts = text.split(urlRegex);
 
     return parts.map((part, index) => {
       if (part.match(urlRegex)) {
+        // 이미지 URL인 경우 이미지로 표시
+        if (isImageUrl(part)) {
+          return (
+            <S.MessageImage
+              key={index}
+              src={getImageUrl(part)}
+              alt="첨부 이미지"
+              onClick={() => window.open(getImageUrl(part), '_blank')}
+              onError={(e) => {
+                // 이미지 로드 실패 시 기본 이미지로 대체하거나 숨김
+                console.error("이미지 로드 실패:", part);
+                e.target.style.display = 'none';
+              }}
+            />
+          );
+        }
+        // 일반 링크인 경우
         return (
           <S.LinkText
             key={index}
@@ -1346,21 +1523,53 @@ export default function ChatPage() {
     // 기존 연결이 있으면 상태 확인
     if (wsRef.current) {
       const existingWs = wsRef.current;
-      console.log("🔍 Existing WebSocket found, readyState:", existingWs.readyState);
+      const readyState = existingWs.readyState;
+      console.log("🔍 Existing WebSocket found, readyState:", readyState);
       console.log("🔍 WebSocket.OPEN =", WebSocket.OPEN);
-      console.log("🔍 Is already open?", existingWs.readyState === WebSocket.OPEN);
+      console.log("🔍 Is already open?", readyState === WebSocket.OPEN);
       
       // 이미 열려있고 같은 roomId면 재연결하지 않음
-      if (existingWs.readyState === WebSocket.OPEN && currentRoomIdRef.current === roomId) {
+      if (readyState === WebSocket.OPEN && currentRoomIdRef.current === roomId) {
         console.log("✅ WebSocket already connected for this room, skipping reconnection");
         return;
       }
       
-      // 기존 연결 닫기
+      // 기존 연결 안전하게 닫기
       console.log("🔌 Closing existing WebSocket connection");
-      existingWs.close();
+      try {
+        // CONNECTING(0) 상태가 아닐 때만 close() 호출
+        if (readyState !== WebSocket.CONNECTING) {
+          existingWs.close(1000, "Reconnecting");
+        } else {
+          // CONNECTING 상태면 onclose 이벤트를 기다리지 않고 즉시 null로 설정
+          console.log("⚠️ WebSocket is still connecting, removing reference without closing");
+        }
+      } catch (error) {
+        console.warn("⚠️ Error closing WebSocket:", error);
+      }
+      // 참조를 즉시 null로 설정
       wsRef.current = null;
+      
+      // 기존 연결이 완전히 닫힐 때까지 약간의 지연 (200ms)
+      // 이렇게 하면 "WebSocket is closed before the connection is established" 에러 방지
+      setTimeout(() => {
+        // 재연결 중이 아니거나 다른 roomId로 변경된 경우 스킵
+        if (isReconnectingRef.current || currentRoomIdRef.current !== roomId) {
+          return;
+        }
+        // 실제 연결 시작
+        createWebSocketConnection(roomId);
+      }, 200);
+      return; // 기존 연결이 있으면 여기서 반환하고 setTimeout에서 새 연결 시작
     }
+
+    // 기존 연결이 없으면 즉시 연결 시작
+    createWebSocketConnection(roomId);
+  };
+
+  // 실제 WebSocket 연결 생성 함수
+  const createWebSocketConnection = (roomId) => {
+    if (!roomId || !currentUsernameRef.current) return;
 
     // 문서에 따르면: wss://devit.run/ws/chat?username={사용자명}
     const wsUrl = `${WS_URL}/ws/chat?username=${encodeURIComponent(currentUsernameRef.current)}`;
@@ -1373,6 +1582,32 @@ export default function ChatPage() {
       wsRef.current = ws;
       currentRoomIdRef.current = roomId;
 
+      // 연결 타임아웃 설정 (10초)
+      connectionTimeoutRef.current = setTimeout(() => {
+        if (wsRef.current && wsRef.current.readyState === WebSocket.CONNECTING) {
+          console.error("❌ WebSocket connection timeout");
+          try {
+            wsRef.current.close();
+          } catch (error) {
+            console.warn("⚠️ Error closing timed-out WebSocket:", error);
+          }
+          wsRef.current = null;
+          
+          // 타임아웃 시 재연결 시도
+          if (currentRoomIdRef.current === roomId && currentUsernameRef.current) {
+            console.warn("⚠️ Connection timeout, will retry...");
+            isReconnectingRef.current = false;
+            reconnectAttemptsRef.current += 1;
+            if (reconnectAttemptsRef.current < 5) {
+              const delay = Math.min(3000 * Math.pow(2, reconnectAttemptsRef.current - 1), 30000);
+              reconnectTimeoutRef.current = setTimeout(() => {
+                connectWebSocket(roomId);
+              }, delay);
+            }
+          }
+        }
+      }, 10000);
+
       ws.onopen = () => {
         console.log("✅ WebSocket connected to:", wsUrl);
         console.log("✅ WebSocket readyState:", ws.readyState);
@@ -1380,7 +1615,27 @@ export default function ChatPage() {
         console.log("✅ WebSocket is ready to receive messages");
         console.log("✅ Current roomId:", currentRoomIdRef.current);
         console.log("✅ Current username:", currentUsernameRef.current);
-        Alarm("✅", "실시간 채팅이 연결되었습니다.", "#3CAF50", "#E8F5E9");
+        
+        // 연결 타임아웃 타이머 취소
+        if (connectionTimeoutRef.current) {
+          clearTimeout(connectionTimeoutRef.current);
+          connectionTimeoutRef.current = null;
+        }
+        
+        // 재연결 성공 시 카운터 리셋
+        reconnectAttemptsRef.current = 0;
+        isReconnectingRef.current = false;
+        
+        // 재연결 타이머 취소
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+          reconnectTimeoutRef.current = null;
+        }
+        
+        // 첫 연결일 때만 알림 표시 (재연결 시에는 표시하지 않음)
+        if (reconnectAttemptsRef.current === 0) {
+          Alarm("✅", "실시간 채팅이 연결되었습니다.", "#3CAF50", "#E8F5E9");
+        }
         
         // 연결 확인: 1초 후 WebSocket 상태 체크
         setTimeout(() => {
@@ -1432,7 +1687,17 @@ export default function ChatPage() {
         console.error("WebSocket error:", error);
         console.error("WebSocket readyState:", ws.readyState);
         console.error("WebSocket URL:", wsUrl);
-        Alarm("⚠️", "채팅 연결에 문제가 발생했습니다.", "#FF9800", "#FFF3E0");
+        
+        // 연결 타임아웃 타이머 취소
+        if (connectionTimeoutRef.current) {
+          clearTimeout(connectionTimeoutRef.current);
+          connectionTimeoutRef.current = null;
+        }
+        
+        // 에러 발생 시 사용자에게 알림 (재연결 시도 중이 아닐 때만)
+        if (!isReconnectingRef.current) {
+          Alarm("⚠️", "채팅 연결에 문제가 발생했습니다.", "#FF9800", "#FFF3E0");
+        }
       };
 
       ws.onclose = (event) => {
@@ -1441,24 +1706,61 @@ export default function ChatPage() {
         console.log("Close reason:", event.reason);
         console.log("Was clean:", event.wasClean);
         
+        // 연결 타임아웃 타이머 취소
+        if (connectionTimeoutRef.current) {
+          clearTimeout(connectionTimeoutRef.current);
+          connectionTimeoutRef.current = null;
+        }
+        
         // 정상 종료(1000)이거나 의도적으로 닫은 경우 재연결하지 않음
         if (event.wasClean && event.code === 1000) {
           console.log("WebSocket closed cleanly, no reconnection needed");
+          reconnectAttemptsRef.current = 0;
+          isReconnectingRef.current = false;
           return;
         }
         
         // 정상 종료가 아닌 경우에만 재연결 시도
         if (!event.wasClean && event.code !== 1000) {
-          console.warn("WebSocket closed unexpectedly, attempting to reconnect in 3 seconds...");
-          // 자동 재연결 로직 (3초 후)
-          setTimeout(() => {
+          // 최대 재연결 시도 횟수 제한 (5회)
+          if (reconnectAttemptsRef.current >= 5) {
+            console.error("❌ Maximum reconnection attempts reached. Please refresh the page.");
+            Alarm("❌", "채팅 연결에 실패했습니다. 페이지를 새로고침해주세요.", "#FF1E1E", "#FFEAEA");
+            reconnectAttemptsRef.current = 0;
+            isReconnectingRef.current = false;
+            return;
+          }
+          
+          // 이미 재연결 중이면 중복 시도 방지
+          if (isReconnectingRef.current) {
+            console.log("⚠️ Reconnection already in progress, skipping...");
+            return;
+          }
+          
+          isReconnectingRef.current = true;
+          reconnectAttemptsRef.current += 1;
+          
+          // 지수 백오프: 3초, 6초, 12초, 24초, 30초
+          const delay = Math.min(3000 * Math.pow(2, reconnectAttemptsRef.current - 1), 30000);
+          console.warn(`WebSocket closed unexpectedly, attempting to reconnect in ${delay/1000} seconds... (attempt ${reconnectAttemptsRef.current}/5)`);
+          
+          // 기존 타이머 취소
+          if (reconnectTimeoutRef.current) {
+            clearTimeout(reconnectTimeoutRef.current);
+          }
+          
+          // 자동 재연결 로직
+          reconnectTimeoutRef.current = setTimeout(() => {
             if (currentRoomIdRef.current && selectedChatRef.current?.id === currentRoomIdRef.current) {
               console.log("Attempting to reconnect WebSocket...");
+              isReconnectingRef.current = false;
               connectWebSocket(currentRoomIdRef.current);
             } else {
               console.log("Room changed or no room selected, skipping reconnection");
+              isReconnectingRef.current = false;
+              reconnectAttemptsRef.current = 0;
             }
-          }, 3000);
+          }, delay);
         }
       };
     } catch (error) {
@@ -1469,8 +1771,32 @@ export default function ChatPage() {
 
   // WebSocket 연결 해제
   const disconnectWebSocket = () => {
+    // 재연결 타이머 취소
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
+    
+    // 연결 타임아웃 타이머 취소
+    if (connectionTimeoutRef.current) {
+      clearTimeout(connectionTimeoutRef.current);
+      connectionTimeoutRef.current = null;
+    }
+    
+    // 재연결 플래그 및 카운터 리셋
+    isReconnectingRef.current = false;
+    reconnectAttemptsRef.current = 0;
+    
     if (wsRef.current) {
-      wsRef.current.close();
+      try {
+        const readyState = wsRef.current.readyState;
+        // CONNECTING(0) 상태가 아닐 때만 close() 호출
+        if (readyState !== WebSocket.CONNECTING) {
+          wsRef.current.close(1000, "Disconnecting");
+        }
+      } catch (error) {
+        console.warn("⚠️ Error closing WebSocket:", error);
+      }
       wsRef.current = null;
     }
   };
@@ -1584,29 +1910,45 @@ export default function ChatPage() {
       return;
     }
 
-    // 나간 채팅방 ID를 추적에 추가 (localStorage에도 저장)
+    // 나간 채팅방 ID를 추적에 추가 (localStorage에도 저장) - 즉시 추가하여 UI에서 제거
     leftRoomIdsRef.current.add(String(roomId));
     saveLeftRoomIds(leftRoomIdsRef.current);
     console.log("🚪 Added room to left rooms list:", roomId, "Total left rooms:", leftRoomIdsRef.current.size);
     
-    // 먼저 클라이언트에서 즉시 제거 (UI 반응성 향상)
+    // 즉시 클라이언트에서 목록에서 제거 (UI 반응성 향상)
     console.log("🚪 Removing chat room from UI immediately:", roomId);
     setChatList((prevChatList) => {
-      const filtered = prevChatList.filter(chat => chat.id !== roomId);
+      const filtered = prevChatList.filter(chat => {
+        const chatIdStr = String(chat.id);
+        const roomIdStr = String(roomId);
+        const shouldKeep = chatIdStr !== roomIdStr && !leftRoomIdsRef.current.has(chatIdStr);
+        if (!shouldKeep) {
+          console.log("🚫 Removing chat from list:", chat.id, "roomId:", roomId);
+        }
+        return shouldKeep;
+      });
       console.log("📋 Chat list before:", prevChatList.length, "after:", filtered.length);
+      // ref도 즉시 업데이트
+      chatListRef.current = filtered;
       return filtered;
     });
-    
+
     // WebSocket 연결 종료
     if (wsRef.current) {
       wsRef.current.close();
       wsRef.current = null;
     }
 
-    // 선택된 채팅방 해제
+    // 선택된 채팅방 해제 및 URL 파라미터 즉시 제거
+    // URL 파라미터를 먼저 제거하여 재활성화 로직이 작동하지 않도록 함
+    setSearchParams({}, { replace: true });
     setSelectedChat(null);
     setMessages([]);
-    setSearchParams({}, { replace: true });
+    currentRoomIdRef.current = null;
+    selectedChatRef.current = null;
+    
+    // 나가기 직후에는 다른 채팅방을 자동으로 선택하지 않음
+    // 사용자가 직접 선택할 수 있도록 함
 
     try {
       const token = Cookies.get("accessToken");
@@ -1618,75 +1960,65 @@ export default function ChatPage() {
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      // 채팅방 나가기/삭제 API 호출
-      console.log("🚪 Calling API to leave/delete chat room:", roomId);
+      // 채팅방 나가기 API 호출
+      // API 명세: DELETE /chat/rooms/{roomId}/members/me
+      console.log("🚪 Calling API to leave chat room:", roomId);
       
-      // 여러 가능한 엔드포인트 시도 (나가기와 삭제 모두 시도)
-      let success = false;
-      let lastError = null;
-      const endpoints = [
-        `${API_URL}/chat/rooms/${roomId}/leave`,
-        `${API_URL}/chat/rooms/${roomId}`,
-        `${API_URL}/chat/rooms/${roomId}/members/me`,
-        `${API_URL}/chat/rooms/${roomId}/delete`
-      ];
-
-      for (const endpoint of endpoints) {
-        try {
-          console.log(`🔍 Trying endpoint: ${endpoint}`);
-          const response = await axios.delete(endpoint, {
-            headers,
-            withCredentials: true
-          });
-          
-          console.log(`✅ Response from ${endpoint}:`, response.status, response.data);
-          
-          // 200, 204, 201 모두 성공으로 간주
-          if (response.status === 200 || response.status === 204 || response.status === 201) {
-            console.log("✅ Successfully left/deleted chat room:", roomId);
-            success = true;
-            break;
-          }
-        } catch (error) {
-          const status = error.response?.status;
-          const data = error.response?.data;
-          console.log(`⚠️ Failed to leave/delete with ${endpoint}:`, status, data || error.message);
-          lastError = error;
-          
-          // 404는 이미 삭제된 것으로 간주할 수 있음
-          if (status === 404) {
-            console.log("ℹ️ Room not found (404) - may already be deleted");
-            success = true;
-            break;
-          }
-          continue;
+      let apiSuccess = false;
+      const leaveEndpoint = `${API_URL}/chat/rooms/${roomId}/members/me`;
+      
+      try {
+        console.log(`🔍 Calling leave endpoint: ${leaveEndpoint}`);
+        const response = await axios.delete(leaveEndpoint, {
+          headers,
+          withCredentials: true
+        });
+        
+        console.log(`✅ Response from leave endpoint:`, response.status, response.data);
+        
+        // 200, 204, 201 모두 성공으로 간주
+        if (response.status === 200 || response.status === 204 || response.status === 201) {
+          console.log("✅ Successfully left chat room via API:", roomId);
+          apiSuccess = true;
+        }
+      } catch (error) {
+        const status = error.response?.status;
+        const data = error.response?.data;
+        console.error(`❌ Failed to leave chat room:`, status, data || error.message);
+        
+        // 404는 채팅방이 없거나 이미 나간 상태
+        if (status === 404) {
+          console.log("ℹ️ Room not found (404) - may already be left or deleted");
+          // 404도 클라이언트 측에서 이미 처리했으므로 성공으로 간주
+          apiSuccess = true;
+        } else if (status === 403) {
+          console.warn("⚠️ Permission denied (403) - user may not have access to leave this room");
+          Alarm("⚠️", "채팅방을 나갈 권한이 없습니다.", "#FF9800", "#FFF3E0");
+        } else if (status === 401) {
+          console.warn("⚠️ Unauthorized (401) - authentication required");
+          Alarm("⚠️", "인증이 필요합니다. 다시 로그인해주세요.", "#FF1E1E", "#FFEAEA");
+        } else {
+          // 기타 에러는 클라이언트 측 필터링으로 처리
+          console.warn("⚠️ Error leaving chat room, but client-side filtering will be applied");
         }
       }
 
-      // 서버에서 최신 목록을 다시 가져오기 (나간 채팅방이 목록에서 제거되었는지 확인)
-      console.log("🔄 Refreshing chat list after leaving room...");
-      await fetchChatRooms();
+      // 클라이언트 측 필터링은 이미 위에서 처리됨
+      // 서버 API 호출 성공 여부와 관계없이 UI에서는 제거됨
+      console.log("✅ Chat room removed from list (client-side filtering applied)");
       
-      // 새로고침 후에도 해당 채팅방이 있으면 다시 제거
-      setChatList((prevChatList) => {
-        const stillExists = prevChatList.some(chat => chat.id === roomId);
-        if (stillExists) {
-          console.warn("⚠️ Room still exists after refresh, removing again:", roomId);
-          return prevChatList.filter(chat => chat.id !== roomId);
-        }
-        return prevChatList;
-      });
-
-      if (success || lastError?.response?.status === 404) {
+      // API 호출 결과에 따라 메시지 표시
+      if (apiSuccess) {
         Alarm("✅", "채팅방을 나갔습니다.", "#3CAF50", "#E8F5E9");
       } else {
-        Alarm("⚠️", "채팅방 나가기 요청이 완료되지 않았을 수 있습니다. 목록을 새로고침했습니다.", "#FF9800", "#FFF3E0");
+        // API 호출 실패했지만 클라이언트 측에서 처리했으므로 경고 메시지
+        Alarm("⚠️", "채팅방이 로컬에서만 제거되었습니다. 새로고침 시 다시 나타날 수 있습니다.", "#FF9800", "#FFF3E0");
       }
     } catch (error) {
       console.error("❌ Failed to leave chat room:", error);
-      // 에러가 발생해도 이미 클라이언트에서 제거했으므로 목록만 새로고침
-      await fetchChatRooms();
-      Alarm("⚠️", "채팅방 나가기 중 오류가 발생했습니다. 목록을 새로고침했습니다.", "#FF9800", "#FFF3E0");
+      // 에러 발생 시에도 이미 leftRoomIdsRef에 추가되어 있고 UI에서도 제거되어 있으므로
+      // 목록을 다시 가져오지 않고 현재 상태 유지 (페이지 포커스 시 자동으로 새로고침됨)
+      Alarm("⚠️", "채팅방 나가기 중 오류가 발생했습니다.", "#FF9800", "#FFF3E0");
     }
   };
 
@@ -1725,14 +2057,16 @@ export default function ChatPage() {
                 >
                   <S.ChatProfile
                     src={(() => {
-                      const imgSrc = chat.userProfile && 
-                                    chat.userProfile !== "" && 
-                                    chat.userProfile !== "null" && 
-                                    chat.userProfile !== null
-                                    ? chat.userProfile 
-                                    : "/assets/profile-icon.svg";
-                      console.log("🖼️ Rendering profile for chat:", chat.id, "userName:", chat.userName, "src:", imgSrc, "original userProfile:", chat.userProfile);
-                      return imgSrc;
+                      if (chat.userProfile && 
+                          chat.userProfile !== "" && 
+                          chat.userProfile !== "null" && 
+                          chat.userProfile !== null) {
+                        const imgSrc = getImageUrl(chat.userProfile);
+                        console.log("🖼️ Rendering profile for chat:", chat.id, "userName:", chat.userName, "original:", chat.userProfile, "-> processed:", imgSrc);
+                        return imgSrc;
+                      }
+                      console.log("⚠️ No profile for chat:", chat.id, "userName:", chat.userName, "using default");
+                      return "/assets/profile-icon.svg";
                     })()}
                     alt={chat.userName}
                     onError={(e) => {
@@ -1741,8 +2075,8 @@ export default function ChatPage() {
                         e.target.src = "/assets/profile-icon.svg";
                       }
                     }}
-                    onLoad={() => {
-                      console.log("✅ Image loaded successfully for chat:", chat.id, "userName:", chat.userName);
+                    onLoad={(e) => {
+                      console.log("✅ Image loaded successfully for chat:", chat.id, "userName:", chat.userName, "src:", e.target.src);
                     }}
                   />
                   <S.ChatInfo>
@@ -1763,14 +2097,26 @@ export default function ChatPage() {
             <>
               <S.ChatRoomHeader>
                 <S.ChatRoomHeaderLeft>
-                  <S.ChatRoomProfile
-                    src={getImageUrl(selectedChat.userProfile)}
-                    alt={selectedChat.userName}
-                    onError={(e) => {
-                      e.target.src = "/assets/profile-icon.svg";
+                <S.ChatRoomProfile
+                    src={(() => {
+                      const profileUrl = selectedChat?.userProfile 
+                        ? getImageUrl(selectedChat.userProfile) 
+                        : "/assets/profile-icon.svg";
+                      console.log("🖼️ ChatRoomHeader profile:", selectedChat?.userProfile, "->", profileUrl);
+                      return profileUrl;
+                    })()}
+                    alt={selectedChat?.userName || "사용자"}
+                  onError={(e) => {
+                      console.error("❌ ChatRoomHeader profile image load error:", e.target.src);
+                      if (e.target.src !== "/assets/profile-icon.svg" && !e.target.src.includes("profile-icon.svg")) {
+                        e.target.src = "/assets/profile-icon.svg";
+                      }
                     }}
-                  />
-                  <S.ChatRoomUserName>{selectedChat.userName}</S.ChatRoomUserName>
+                    onLoad={(e) => {
+                      console.log("✅ ChatRoomHeader profile image loaded:", e.target.src);
+                  }}
+                />
+                <S.ChatRoomUserName>{selectedChat.userName}</S.ChatRoomUserName>
                 </S.ChatRoomHeaderLeft>
                 <S.LeaveChatButton onClick={handleLeaveChat}>
                   나가기
@@ -1779,34 +2125,87 @@ export default function ChatPage() {
 
               <S.MessageList ref={messageListRef}>
                 {messages.length > 0 && messages.map((msg, index) => {
-                  const isMine = msg.isMine;
-                  const nextMsg = messages[index + 1];
-                  const isLastOfGroup =
-                    !nextMsg || nextMsg.isMine !== msg.isMine;
+                    const isMine = msg.isMine;
+                    const nextMsg = messages[index + 1];
+                    const isLastOfGroup =
+                      !nextMsg || nextMsg.isMine !== msg.isMine;
 
-                  return (
-                    <S.MessageRow
-                      key={msg.id}
-                      $isMine={isMine}
-                      $isLastOfGroup={isLastOfGroup}
-                    >
-                      {!isMine && isLastOfGroup && (
-                        <S.ProfileWrapper>
-                          <S.MessageProfile
-                            src={getImageUrl(selectedChat.userProfile) || "/assets/profile-icon.svg"}
-                            alt={selectedChat.userName}
-                            onError={(e) => {
-                              e.target.src = "/assets/profile-icon.svg";
+                    return (
+                      <S.MessageRow
+                        key={msg.id}
+                        $isMine={isMine}
+                        $isLastOfGroup={isLastOfGroup}
+                      >
+                        {!isMine && isLastOfGroup && (
+                          <S.ProfileWrapper>
+                            <S.MessageProfile
+                            src={(() => {
+                              // 메시지에 보낸 사람의 프로필 이미지가 있으면 사용
+                              if (msg.senderProfile) {
+                                const profileUrl = getImageUrl(msg.senderProfile);
+                                console.log("🖼️ Using sender profile from message:", msg.senderProfile, "->", profileUrl);
+                                return profileUrl;
+                              }
+                              // 없으면 선택된 채팅방의 상대방 프로필 사용
+                              if (selectedChat?.userProfile) {
+                                const profileUrl = getImageUrl(selectedChat.userProfile);
+                                console.log("🖼️ Using selectedChat.userProfile:", selectedChat.userProfile, "->", profileUrl);
+                                return profileUrl;
+                              }
+                              console.log("⚠️ No profile image found, using default");
+                              return "/assets/profile-icon.svg";
+                            })()}
+                            alt={msg.sender || selectedChat?.userName || "사용자"}
+                              onError={(e) => {
+                              console.error("❌ Profile image load error:", e.target.src);
+                              if (e.target.src !== "/assets/profile-icon.svg" && !e.target.src.includes("profile-icon.svg")) {
+                                e.target.src = "/assets/profile-icon.svg";
+                              }
                             }}
-                          />
-                        </S.ProfileWrapper>
-                      )}
+                            onLoad={(e) => {
+                              console.log("✅ Profile image loaded:", e.target.src);
+                              }}
+                            />
+                          </S.ProfileWrapper>
+                        )}
 
-                      <S.MessageBubble $isMine={isMine}>
-                        {renderMessageWithLinks(msg.content)}
-                      </S.MessageBubble>
-                    </S.MessageRow>
-                  );
+                      <S.MessageBubble $isMine={isMine} $isCode={isCodeMessage(msg.content)}>
+                        {(() => {
+                          // 이미지 필드가 있는 경우
+                          if (msg.image) {
+                            console.log("🖼️ Rendering image from msg.image field:", msg.image);
+                            return (
+                              <S.MessageImage
+                                src={getImageUrl(msg.image)}
+                                alt="첨부 이미지"
+                                onClick={() => window.open(getImageUrl(msg.image), '_blank')}
+                                onError={(e) => {
+                                  console.error("❌ Image load failed:", msg.image);
+                                  e.target.style.display = 'none';
+                                }}
+                                onLoad={() => {
+                                  console.log("✅ Image loaded successfully:", msg.image);
+                                }}
+                              />
+                            );
+                          }
+                          
+                          // content에 이미지 URL이 포함된 경우
+                          if (msg.content) {
+                            const urlRegex = /(https?:\/\/[^\s]+)/g;
+                            const urls = msg.content.match(urlRegex);
+                            if (urls && urls.some(url => isImageUrl(url))) {
+                              console.log("🖼️ Found image URL in content:", urls);
+                              return renderMessageWithLinks(msg.content);
+                            }
+                          }
+                          
+                          // 일반 텍스트 렌더링
+                          return msg.content ? renderMessageWithLinks(msg.content) : null;
+                        })()}
+                        </S.MessageBubble>
+                      </S.MessageRow>
+                    );
                 })}
               </S.MessageList>
 
