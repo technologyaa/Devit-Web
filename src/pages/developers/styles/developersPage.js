@@ -172,15 +172,7 @@ export const ProfileImg = styled.img`
   left: 0;
   width: 100%;
   height: 100%;
-<<<<<<< HEAD
   object-fit: cover; /* 이미지를 영역에 맞춰 자르기 */
-  border: solid 1px #cccccc;
-  border-radius: 0.625rem;
-=======
-
-  object-fit: cover;
-
->>>>>>> 7b5bd59 (feat: 드롭다운 추가)
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
