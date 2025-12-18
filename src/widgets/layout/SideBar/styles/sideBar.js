@@ -100,7 +100,8 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
   width: 100%;
-  display: block;
+  display: flex;
+  justify-content: center;
 `;
 
 export const NavigationTop = styled.div`
