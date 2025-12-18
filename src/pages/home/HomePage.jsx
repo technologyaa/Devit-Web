@@ -2,13 +2,11 @@ import * as S from "./styles/homePage";
 import { Helmet } from "react-helmet";
 import devlopers from "@/data/developer-list";
 import icons from "@/data/icon-list";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { API_URL } from "@/constants/api";
 import { Alarm } from "@/toasts/Alarm";
-
-const gradients = {};
 
 const jobList = [
   { id: 1, name: "웹", icon: "/assets/job-icons/web.svg" },
@@ -20,15 +18,61 @@ const jobList = [
 ];
 
 export default function HomePage() {
-  const [isModalOpen, setIsModalOpen] = useState(() => {
-    try {
-      return localStorage.getItem("profileCompleted") !== "true";
-    } catch (e) {
-      return true;
-    }
-  });
+  // 1. 초기값은 false (API 확인 전에는 모달 닫힘 상태)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [intro, setIntro] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
+
+  // 2. 페이지 로드 시 서버에 '내 정보'가 있는지 확인
+  useEffect(() => {
+    // 로컬에 완료 플래그가 있으면 건너뜁니다.
+    if (localStorage.getItem("profileCompleted") === "true") return;
+
+    // 재시도 로직: 로그인 직후 쿠키가 아직 설정되지 않았을 수 있어
+    // 짧게 여러 번 토큰을 확인합니다.
+    let attempts = 0;
+    const maxAttempts = 6; // 약 3초 동안 재시도
+    const delayMs = 500;
+
+    const tryCheck = async () => {
+      attempts += 1;
+      const token = Cookies.get("accessToken");
+
+      if (!token) {
+        if (attempts < maxAttempts) setTimeout(tryCheck, delayMs);
+        return;
+      }
+
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+
+        // 2-1. 로그인된 유저의 기본 ID 조회
+        const meRes = await axios.get(`${API_URL}/auth/me`, { headers, withCredentials: true });
+        const memberId = meRes.data?.data?.memberId || meRes.data?.memberId || meRes.data?.data?.id || meRes.data?.id;
+
+        if (memberId) {
+          try {
+            // 2-2. 개발자 상세 정보 조회 시도
+            await axios.get(`${API_URL}/developers/${memberId}`, { headers, withCredentials: true });
+            // 이미 등록된 유저 -> 플래그 세팅
+            localStorage.setItem("profileCompleted", "true");
+          } catch (error) {
+            if (error.response && error.response.status === 404) {
+              console.log("신규 유저 감지: 팝업 오픈");
+              setIsModalOpen(true);
+            } else {
+              console.warn("개발자 정보 조회 중 에러 (모달 오픈):", error);
+              setIsModalOpen(true);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("유저 프로필 확인 중 오류:", e);
+      }
+    };
+
+    tryCheck();
+  }, []);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -42,16 +86,12 @@ export default function HomePage() {
       return;
     }
 
+    // 우선 로컬 저장
     localStorage.setItem("userJob", selectedJob);
     localStorage.setItem("userIntro", intro);
 
-    console.log("선택한 직무:", selectedJob);
-    console.log("소개:", intro);
-    Alarm("💾", "정보가 저장되었습니다.", "#4CAF50", "#E8F5E9");
-
     (async () => {
       try {
-        // 현재 로그인된 사용자 정보 조회 (/auth/me)
         const token = Cookies.get("accessToken");
         const headers = { Accept: "application/json" };
         if (token && token !== "logged-in") headers["Authorization"] = `Bearer ${token}`;
@@ -59,6 +99,7 @@ export default function HomePage() {
         let memberId = null;
         let githubId = null;
 
+        // memberId 다시 확보
         try {
           const meRes = await axios.get(`${API_URL}/auth/me`, {
             headers,
@@ -68,10 +109,9 @@ export default function HomePage() {
           memberId = meData.memberId || meData.id || null;
           githubId = meData.githubId || meData.username || null;
         } catch (meErr) {
-          console.warn("/auth/me 조회 실패, memberId를 가져오지 못했습니다:", meErr);
+          console.warn("Auth check failed", meErr);
         }
 
-        // memberId가 있으면 개발자 생성 API 호출
         if (memberId) {
           const JOB_TO_MAJOR = {
             웹: "FRONTEND",
@@ -91,28 +131,27 @@ export default function HomePage() {
           };
 
           try {
+            // 개발자 정보 생성 요청
             await axios.post(`${API_URL}/developers/${memberId}`, body, {
               headers: { ...headers, "Content-Type": "application/json" },
               withCredentials: true,
             });
-            console.log("개발자 생성 API 호출 성공", memberId, body);
+            
             Alarm("💾", "서버에 정보가 저장되었습니다.", "#4CAF50", "#E8F5E9");
             localStorage.setItem("profileCompleted", "true");
+            setIsModalOpen(false); // 저장 성공 시 모달 닫기
+            
           } catch (postErr) {
             console.error("개발자 생성 API 실패:", postErr);
             Alarm("⚠️", "서버 저장에 실패했습니다.", "#F44336", "#FFEBEE");
-            // 그래도 모달은 닫아 사용자 경험을 방해하지 않음
-            localStorage.setItem("profileCompleted", "true");
+            // 실패 시 모달 유지
           }
         } else {
-          // memberId를 얻지 못한 경우 로컬에 완료 플래그만 세팅
-          localStorage.setItem("profileCompleted", "true");
-          console.warn("memberId가 없어 서버에 개발자 생성 요청을 보내지 않았습니다.");
+            // memberId가 없는 경우 (예외 상황)
+            setIsModalOpen(false);
         }
       } catch (e) {
         console.error(e);
-      } finally {
-        setIsModalOpen(false);
       }
     })();
   };
@@ -192,6 +231,8 @@ export default function HomePage() {
           </S.Bottom>
         </S.Frame>
       </S.Container>
+      
+      {/* 모달: isModalOpen이 true일 때만 표시 */}
       {isModalOpen && (
         <S.ModalOverlay>
           <S.ModalContent onClick={(e) => e.stopPropagation()}>
