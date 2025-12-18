@@ -9,20 +9,21 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 export default function SignInPage() {
+
   const location = useLocation(); // 1. 넘어온 데이터를 받기 위한 훅
 
   useEffect(() => {
     if (location.state && location.state.success) {
       // 새로고침할때 다시 안뜨도록
-      Alarm("✅", location.state.message, "#3CAF50", "#E8F5E9");
+      Alarm("✅", location.state.message, '#3CAF50', "#E8F5E9");
       window.history.replaceState({}, document.title);
     }
-  }, [location]);
+  }, [location])
 
   const [logInData, setLogInData] = useState({
     username: "",
     password: "",
-  });
+  })
 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -40,47 +41,42 @@ export default function SignInPage() {
   const signIn = async (e) => {
     e.preventDefault();
     if (!id || !password) {
-      Alarm("‼️", "모든 항목을 입력해주세요.", "#FF1E1E", "#FFEAEA");
+      Alarm("‼️", "모든 항목을 입력해주세요.", "#FF1E1E", "#FFEAEA")
       return;
     }
     try {
-      const response = await axios.post(
-        `${API_URL}/auth/signin`,
-        {
-          username: id,
-          password: password,
+      const response = await axios.post(`${API_URL}/auth/signin`, {
+        username: id,
+        password: password
+      }, {
+        headers: {
+          "Content-Type": "application/json"
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-
+        withCredentials: true
+      })
+      
       if (response.status === 200) {
         // 스웨거 응답 구조: { "status": 0, "data": {} }
         const responseData = response.data;
         console.log("SignIn Response:", responseData);
-
+        
         // 토큰은 헤더나 쿠키에 있을 수 있음
-        const accessToken =
-          response.headers["authorization"] ||
-          response.headers["access-token"] ||
-          responseData.data?.accessToken ||
-          "logged-in";
-        const refreshToken =
-          response.headers["refresh-token"] || responseData.data?.refreshToken;
-
+        const accessToken = response.headers["authorization"] || 
+                           response.headers["access-token"] ||
+                           responseData.data?.accessToken ||
+                           "logged-in";
+        const refreshToken = response.headers["refresh-token"] ||
+                           responseData.data?.refreshToken;
+        
         if (accessToken && accessToken !== "logged-in") {
           Cookies.set("accessToken", accessToken);
           if (refreshToken) {
             Cookies.set("refreshToken", refreshToken);
           }
         }
-
-        navigate("/home");
-        Alarm("✅", "로그인 완료!", "#3CAF50", "#E8F5E9");
+        
+        navigate("/home")
+        Alarm("✅", "로그인 완료!", "#3CAF50", "#E8F5E9")
       }
     } catch (error) {
       console.error("SignIn Error:", error);
@@ -118,12 +114,11 @@ export default function SignInPage() {
               <S.MiddleTop>
                 <S.InputWrapper>
                   <S.Label>아이디</S.Label>
-                  <S.Input
-                    placeholder="아이디를 입력하세요."
+                  <S.Input placeholder="아이디를 입력하세요."
                     type="text"
                     name="username"
-                    value={logInData.username} // 부모 데이터 사용
-                    onChange={handleInputChange} // 부모 함수 사용
+                    value={logInData.username}  // 부모 데이터 사용
+                    onChange={handleInputChange}    // 부모 함수 사용
                   />
                 </S.InputWrapper>
                 <S.InputWrapper>
@@ -133,8 +128,8 @@ export default function SignInPage() {
                       placeholder="비밀번호를 입력하세요."
                       type={showPassword ? "text" : "password"}
                       name="password"
-                      value={logInData.password} // 부모 데이터 사용
-                      onChange={handleInputChange} // 부모 함수 사용
+                      value={logInData.password}  // 부모 데이터 사용
+                      onChange={handleInputChange}    // 부모 함수 사용
                     />
                     <S.EyeIcon
                       src={showPassword ? eyeClosed : eyeOpen}
