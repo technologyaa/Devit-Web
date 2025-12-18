@@ -1,9 +1,11 @@
 import * as S from "./styles/sideBarFolded";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Alarm } from "@/toasts/Alarm";
 import Cookies from "js-cookie";
 import { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { API_URL } from "@/constants/api";
 
 const menu = [
   { url: "/home", logo: "/assets/home-icon.svg", alt: "홈 아이콘" },
@@ -18,6 +20,74 @@ export default function SideBarFolded() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [totalUnreadCount, setTotalUnreadCount] = useState(0);
+
+  // 전체 읽지 않은 메시지 개수 가져오기
+  const fetchUnreadCount = async () => {
+    try {
+      const token = Cookies.get("accessToken");
+      const headers = {
+        "Accept": "application/json"
+      };
+      
+      if (token && token !== "logged-in") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await axios.get(`${API_URL}/chat/rooms/my-rooms`, {
+        headers: headers,
+        withCredentials: true
+      });
+
+      let rooms = [];
+      if (Array.isArray(response.data)) {
+        rooms = response.data;
+      } else if (response.data?.data) {
+        rooms = Array.isArray(response.data.data) ? response.data.data : [];
+      } else if (response.data?.rooms) {
+        rooms = Array.isArray(response.data.rooms) ? response.data.rooms : [];
+      }
+
+      // 전체 읽지 않은 메시지 개수 합산
+      const total = rooms.reduce((sum, room) => {
+        const unreadCount = room.unreadCount || room.unreadMessageCount || 0;
+        const count = Number(unreadCount);
+        const validCount = isNaN(count) ? 0 : count;
+        return sum + validCount;
+      }, 0);
+
+      console.log("📊 SideBarFolded - Total unread count:", total);
+      setTotalUnreadCount(total);
+    } catch (error) {
+      console.error("Failed to fetch unread count:", error);
+      setTotalUnreadCount(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnreadCount();
+    
+    // 주기적으로 업데이트 (5초마다)
+    const interval = setInterval(fetchUnreadCount, 5000);
+    
+    // 채팅방 목록 업데이트 이벤트 리스너
+    const handleChatUpdate = (event) => {
+      console.log("📨 SideBarFolded - chatListUpdated event received:", event.detail);
+      if (event.detail && event.detail.totalUnreadCount !== undefined) {
+        console.log("📊 SideBarFolded - Setting totalUnreadCount to:", event.detail.totalUnreadCount);
+        setTotalUnreadCount(event.detail.totalUnreadCount);
+      } else {
+        fetchUnreadCount();
+      }
+    };
+    
+    window.addEventListener('chatListUpdated', handleChatUpdate);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('chatListUpdated', handleChatUpdate);
+    };
+  }, []);
 
   const logout = () => {
     Cookies.remove("accessToken");
@@ -47,7 +117,14 @@ export default function SideBarFolded() {
                       selected={location.pathname.match(item.url)}
                       type="button"
                     >
-                      <S.MenuIcon src={item.logo} alt={item.alt} />
+                      <S.MenuIconWrapper>
+                        <S.MenuIcon src={item.logo} alt={item.alt} />
+                        {item.url === "/chat" && totalUnreadCount > 0 && (
+                          <S.UnreadBadge 
+                            title={`읽지 않은 메시지 ${totalUnreadCount}개`}
+                          />
+                        )}
+                      </S.MenuIconWrapper>
                     </S.MenuItem>
                   </Link>
                 ))}

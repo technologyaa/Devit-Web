@@ -65,8 +65,34 @@ export const MenuItem = styled.button`
   }
 `;
 
+export const MenuIconWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const MenuIcon = styled(Image)`
   width: 20px;
+`;
+
+export const UnreadBadge = styled.div`
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  background-color: #883cbe !important;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  border: 2px solid white !important;
+  box-sizing: border-box;
+  box-shadow: none !important;
 `;
 
 export const NavigationTop = styled.div`
