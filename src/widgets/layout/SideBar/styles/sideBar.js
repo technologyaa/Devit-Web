@@ -1,5 +1,6 @@
 import { Image } from "@/styles/Image";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   width: 100%;
@@ -53,10 +54,29 @@ export const MenuItem = styled.button`
   background-color: ${(props) => (props.selected ? "#f8f9fa" : "white")};
   width: 100%;
   height: 48px;
+  position: relative;
 
   &:hover {
     background-color: #f8f9fa;
   }
+`;
+
+export const UnreadBadge = styled.div`
+  margin-left: auto;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  background-color: #883cbe !important;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 10;
+  position: relative;
+  border: none !important;
+  box-shadow: none !important;
 `;
 
 export const MenuIcon = styled(Image)`
@@ -74,6 +94,13 @@ export const MenuText = styled.div`
 
 export const DevitLogo = styled(Image)`
   height: 40px;
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  display: block;
 `;
 
 export const NavigationTop = styled.div`
