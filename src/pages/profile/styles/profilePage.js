@@ -90,7 +90,7 @@ export const Job = styled.div`
 
 export const EditButton = styled.button`
   display: flex;
-  width: 8rem;
+  width: 9.5rem;
   height: 2.5rem;
   padding: 0.5rem 1.3125rem;
   justify-content: center;
