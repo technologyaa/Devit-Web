@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import { Alarm } from "@/toasts/Alarm";
 
 export default function ChatPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const roomIdParam = searchParams.get("roomId");
   const [chatList, setChatList] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
@@ -17,12 +17,15 @@ export default function ChatPage() {
   const [messageInput, setMessageInput] = useState("");
   const [isComposing, setIsComposing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [newWebSocketMessage, setNewWebSocketMessage] = useState(null); // WebSocket으로 받은 새 메시지
   const isSending = useRef(false);
   const messageListRef = useRef(null);
   const wsRef = useRef(null); // WebSocket 연결 참조
   const currentUserIdRef = useRef(null); // 현재 사용자 ID
   const currentUsernameRef = useRef(null); // 현재 사용자 username (WebSocket용)
   const currentRoomIdRef = useRef(null); // 현재 선택된 채팅방 ID
+  const selectedChatRef = useRef(null); // 현재 선택된 채팅방 (ref)
+  const chatListRef = useRef([]); // 채팅방 목록 (ref)
   const pendingMessagesRef = useRef(new Set()); // 전송 대기 중인 메시지 추적 (content 기반)
 
   // 채팅방 목록 조회
@@ -110,7 +113,7 @@ export default function ChatPage() {
       setChatList(formattedRooms);
       
       // roomId 파라미터가 있으면 해당 채팅방 선택, 없으면 첫 번째 채팅방 선택
-      // 새로고침 시에도 항상 채팅방 선택 및 메시지 로드
+      // 항상 채팅방 선택 및 메시지 로드
       if (formattedRooms.length > 0) {
         let roomToSelect = null;
         if (roomIdParam) {
@@ -126,17 +129,14 @@ export default function ChatPage() {
           console.log("🔍 No roomId in URL or not found, selecting first room:", roomToSelect.id);
         }
         
-        // 새로고침 시 selectedChat이 null이거나 다른 채팅방이면 업데이트
-        if (!selectedChat || selectedChat.id !== roomToSelect.id) {
-          console.log("✅ Selecting chat room:", roomToSelect.id);
-          console.log("✅ Current selectedChat:", selectedChat);
-          setSelectedChat(roomToSelect);
-          // 메시지는 useEffect에서 자동으로 로드됨
-        } else {
-          // 같은 채팅방이면 메시지만 다시 로드 (새로고침 시)
-          console.log("🔄 Reloading messages for existing chat room:", roomToSelect.id);
-          fetchMessages(roomToSelect.id);
+        // 항상 채팅방 선택 (자동 로드)
+        console.log("✅ Selecting chat room:", roomToSelect.id);
+        setSelectedChat(roomToSelect);
+        // URL에 roomId 저장 (새로고침 시 같은 채팅방으로 이동)
+        if (String(roomToSelect.id) !== roomIdParam) {
+          setSearchParams({ roomId: String(roomToSelect.id) });
         }
+        // 메시지는 useEffect에서 자동으로 로드됨
       } else if (formattedRooms.length === 0) {
         console.log("⚠️ No chat rooms found");
         setChatList([]);
@@ -288,7 +288,20 @@ export default function ChatPage() {
           Alarm("⚠️", "인증이 필요합니다. 다시 로그인해주세요.", "#FF1E1E", "#FFEAEA");
         } else if (error.response.status === 500) {
           console.log("⚠️ 서버 오류 (500)");
-          Alarm("❌", "서버 오류가 발생했습니다.", "#FF1E1E", "#FFEAEA");
+          console.error("❌ Server error details:", {
+            status: error.response.status,
+            statusText: error.response.statusText,
+            data: error.response.data,
+            roomId: roomId,
+            userId: currentUserIdRef.current,
+            username: currentUsernameRef.current
+          });
+          // 서버 에러 응답에서 메시지 추출 시도
+          const errorMessage = error.response.data?.message || 
+                              error.response.data?.error || 
+                              error.response.data?.data?.message ||
+                              "서버 오류가 발생했습니다.";
+          Alarm("❌", `서버 오류: ${errorMessage}`, "#FF1E1E", "#FFEAEA");
         }
       } else if (error.request) {
         console.error("❌ No response received:", error.request);
@@ -445,35 +458,42 @@ export default function ChatPage() {
     const getCurrentUser = async () => {
       try {
         const token = Cookies.get("accessToken");
-        if (!token || token === "logged-in") return;
+        if (token && token !== "logged-in") {
+          const headers = {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+          };
 
-        const headers = {
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token}`
-        };
-
-        const response = await axios.get(`${API_URL}/auth/me`, {
-          headers: headers,
-          withCredentials: true
-        });
-        const meData = response.data?.data || response.data || {};
-        currentUserIdRef.current = meData.id || meData.memberId;
-        // username 필드 확인 (다양한 필드명 시도)
-        currentUsernameRef.current = meData.username || meData.name || meData.id || String(meData.memberId || meData.id || "");
-        console.log("Current user ID loaded:", currentUserIdRef.current);
-        console.log("Current username loaded:", currentUsernameRef.current);
-        
-        // 사용자 정보 로드 후 채팅방 목록 가져오기
-        await fetchChatRooms();
+          const response = await axios.get(`${API_URL}/auth/me`, {
+            headers: headers,
+            withCredentials: true
+          });
+          const meData = response.data?.data || response.data || {};
+          currentUserIdRef.current = meData.id || meData.memberId;
+          // username 필드 확인 (다양한 필드명 시도)
+          currentUsernameRef.current = meData.username || meData.name || meData.id || String(meData.memberId || meData.id || "");
+          console.log("Current user ID loaded:", currentUserIdRef.current);
+          console.log("Current username loaded:", currentUsernameRef.current);
+        }
       } catch (error) {
         console.warn("Failed to get current user info:", error);
-        // 사용자 정보 가져오기 실패해도 채팅방 목록은 가져오기
-        await fetchChatRooms();
       }
     };
 
-    getCurrentUser();
+    // 사용자 정보와 채팅방 목록을 병렬로 로드 (빠른 로딩)
+    Promise.all([
+      getCurrentUser(),
+      fetchChatRooms()
+    ]);
   }, []);
+
+  // roomId 파라미터 변경 시 채팅방 목록 다시 로드
+  useEffect(() => {
+    if (currentUsernameRef.current && roomIdParam) {
+      console.log("🔄 roomId param changed, reloading chat rooms:", roomIdParam);
+      fetchChatRooms();
+    }
+  }, [roomIdParam]);
 
   // 선택된 채팅방 변경 시 메시지 조회 및 WebSocket 연결
   useEffect(() => {
@@ -528,6 +548,152 @@ export default function ChatPage() {
     };
   }, [selectedChat?.id]); // selectedChat.id만 의존성으로 사용하여 무한 루프 방지
 
+  // selectedChat과 chatList를 ref에 동기화
+  useEffect(() => {
+    selectedChatRef.current = selectedChat;
+  }, [selectedChat]);
+
+  useEffect(() => {
+    chatListRef.current = chatList;
+  }, [chatList]);
+
+  // WebSocket 연결 상태 주기적 확인
+  useEffect(() => {
+    if (!selectedChat || !selectedChat.id) return;
+
+    const checkConnection = setInterval(() => {
+      const ws = wsRef.current;
+      if (ws) {
+        console.log("🔍 WebSocket connection check - readyState:", ws.readyState, "OPEN:", WebSocket.OPEN);
+        if (ws.readyState !== WebSocket.OPEN) {
+          console.warn("⚠️ WebSocket is not open, reconnecting...");
+          if (currentRoomIdRef.current && currentUsernameRef.current) {
+            connectWebSocket(currentRoomIdRef.current);
+          }
+        }
+      } else {
+        console.warn("⚠️ WebSocket is null, reconnecting...");
+        if (currentRoomIdRef.current && currentUsernameRef.current) {
+          connectWebSocket(currentRoomIdRef.current);
+        }
+      }
+    }, 5000); // 5초마다 체크
+
+    return () => {
+      clearInterval(checkConnection);
+    };
+  }, [selectedChat?.id]);
+
+  // WebSocket으로 받은 새 메시지 처리
+  useEffect(() => {
+    if (!newWebSocketMessage) {
+      return; // null이면 처리하지 않음 (초기화 시 발생)
+    }
+    
+    console.log("📨 Processing new WebSocket message:", newWebSocketMessage);
+    
+    const data = newWebSocketMessage;
+    
+    // 문서에 따르면: roomId로 필터링 (문서 96번째 줄 참고)
+    // "채팅방 메시지인 경우에만 처리 (roomId가 일치하는 경우)"
+    const messageRoomId = data.roomId ? Number(data.roomId) : null;
+    const currentRoomId = currentRoomIdRef.current ? Number(currentRoomIdRef.current) : null;
+    
+    // roomId가 일치하는 경우에만 처리 (문서 기준)
+    const isForCurrentChat = messageRoomId && currentRoomId && messageRoomId === currentRoomId;
+    
+    if (!isForCurrentChat) {
+      console.log("⚠️ Message filtered out - roomId mismatch:", {
+        messageRoomId: messageRoomId,
+        currentRoomId: currentRoomId,
+        sender: data.sender
+      });
+      setNewWebSocketMessage(null);
+      return;
+    }
+    
+    console.log("✅ Message matches current chat room - roomId:", messageRoomId);
+    
+    if (isForCurrentChat) {
+      const isMine = data.sender === currentUsernameRef.current || 
+                    data.senderName === currentUsernameRef.current ||
+                    data.senderId === currentUserIdRef.current;
+      
+      const messageContent = data.content || data.message || "";
+      
+      // 메시지 추가
+      setMessages((prevMessages) => {
+        // 내가 보낸 메시지인 경우, optimistic update로 추가된 임시 메시지 찾아서 교체
+        if (isMine) {
+          const tempMessageIndex = prevMessages.findIndex(msg => 
+            msg.id?.toString().startsWith('temp-') &&
+            msg.content === messageContent &&
+            msg.isMine === true
+          );
+
+          if (tempMessageIndex !== -1) {
+            console.log("🔄 Replacing temporary message with server response");
+            const newMessage = {
+              id: data.id || Date.now(),
+              sender: data.sender || data.senderName || currentUsernameRef.current || "나",
+              content: messageContent,
+              time: data.timestamp || data.createdAt || new Date().toISOString(),
+              isMine: true,
+              roomId: data.roomId || currentRoomIdRef.current,
+              type: data.type || "TALK"
+            };
+
+            const updated = [...prevMessages];
+            updated[tempMessageIndex] = newMessage;
+            return updated;
+          }
+        }
+
+        // 새 메시지 생성
+        const newMessage = {
+          id: data.id || Date.now(),
+          sender: data.sender || data.senderName || "알 수 없음",
+          content: messageContent,
+          time: data.timestamp || data.createdAt || new Date().toISOString(),
+          isMine: isMine,
+          roomId: data.roomId || currentRoomIdRef.current,
+          type: data.type || "TALK"
+        };
+
+        // 중복 메시지 체크
+        const exists = prevMessages.some(msg => {
+          if (msg.id === newMessage.id) return true;
+          if (msg.content === newMessage.content && 
+              msg.sender === newMessage.sender &&
+              Math.abs(new Date(msg.time) - new Date(newMessage.time)) < 3000) {
+            return true;
+          }
+          return false;
+        });
+
+        if (exists) {
+          console.log("⚠️ Duplicate message detected, skipping");
+          return prevMessages;
+        }
+        
+        console.log("✅ Adding new message to UI:", newMessage);
+        return [...prevMessages, newMessage];
+      });
+
+      // 채팅방 목록의 마지막 메시지 업데이트
+      setChatList((prevChatList) => 
+        prevChatList.map((chat) => 
+          chat.id === currentRoomIdRef.current
+            ? { ...chat, lastMessage: messageContent }
+            : chat
+        )
+      );
+      
+      // 메시지 처리 완료 후 상태 초기화
+      setNewWebSocketMessage(null);
+    }
+  }, [newWebSocketMessage]);
+
   // 🔗 링크 자동 감지 함수
   const renderMessageWithLinks = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -561,17 +727,30 @@ export default function ChatPage() {
       return;
     }
     
-    // 기존 연결이 있으면 닫기
+    // 기존 연결이 있으면 상태 확인
     if (wsRef.current) {
-      wsRef.current.close();
+      const existingWs = wsRef.current;
+      console.log("🔍 Existing WebSocket found, readyState:", existingWs.readyState);
+      console.log("🔍 WebSocket.OPEN =", WebSocket.OPEN);
+      console.log("🔍 Is already open?", existingWs.readyState === WebSocket.OPEN);
+      
+      // 이미 열려있고 같은 roomId면 재연결하지 않음
+      if (existingWs.readyState === WebSocket.OPEN && currentRoomIdRef.current === roomId) {
+        console.log("✅ WebSocket already connected for this room, skipping reconnection");
+        return;
+      }
+      
+      // 기존 연결 닫기
+      console.log("🔌 Closing existing WebSocket connection");
+      existingWs.close();
       wsRef.current = null;
     }
 
     // 문서에 따르면: wss://devit.run/ws/chat?username={사용자명}
     const wsUrl = `${WS_URL}/ws/chat?username=${encodeURIComponent(currentUsernameRef.current)}`;
-    console.log("Connecting to WebSocket:", wsUrl);
-    console.log("Username:", currentUsernameRef.current);
-    console.log("Room ID:", roomId);
+    console.log("🔌 Connecting to WebSocket:", wsUrl);
+    console.log("🔌 Username:", currentUsernameRef.current);
+    console.log("🔌 Room ID:", roomId);
 
     try {
       const ws = new WebSocket(wsUrl);
@@ -580,16 +759,32 @@ export default function ChatPage() {
 
       ws.onopen = () => {
         console.log("✅ WebSocket connected to:", wsUrl);
+        console.log("✅ WebSocket readyState:", ws.readyState);
+        console.log("✅ WebSocket.OPEN =", WebSocket.OPEN);
+        console.log("✅ WebSocket is ready to receive messages");
+        console.log("✅ Current roomId:", currentRoomIdRef.current);
+        console.log("✅ Current username:", currentUsernameRef.current);
         Alarm("✅", "실시간 채팅이 연결되었습니다.", "#3CAF50", "#E8F5E9");
+        
+        // 연결 확인: 1초 후 WebSocket 상태 체크
+        setTimeout(() => {
+          if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+            console.log("✅ WebSocket still connected after 1 second");
+          } else {
+            console.warn("⚠️ WebSocket connection lost after 1 second");
+          }
+        }, 1000);
       };
 
       ws.onmessage = (event) => {
+        console.log("🔔 WebSocket onmessage triggered!");
+        console.log("🔔 Raw event.data:", event.data);
+        console.log("🔔 Event type:", typeof event.data);
+        
         try {
           const data = JSON.parse(event.data);
           console.log("📨 WebSocket message received:", data);
-          console.log("📨 Raw message data:", event.data);
-          console.log("📨 Current roomId:", currentRoomIdRef.current);
-          console.log("📨 Message roomId:", data.roomId);
+          console.log("📨 Message type:", data.type);
           console.log("📨 Message sender:", data.sender);
           console.log("📨 Message receiver:", data.receiver);
           console.log("📨 Message content:", data.content);
@@ -597,129 +792,23 @@ export default function ChatPage() {
           // 에러 메시지 처리
           if (data.error) {
             console.error("❌ WebSocket error message:", data.error);
-            console.error("❌ Error details:", data.details);
             Alarm("❌", `메시지 처리 오류: ${data.error}`, "#FF1E1E", "#FFEAEA");
             return;
           }
           
-          // 성공 응답 로깅
-          if (data.id && data.type === "TALK") {
-            console.log("✅ Message successfully saved to DB with ID:", data.id);
-          }
-          
-          // 메시지 타입 확인 및 필터링
-          // 백엔드 DTO: sender, receiver, content, type, id, timestamp
-          // roomId는 지원하지 않음, receiver만 사용 (1:1 메시지)
+          // 메시지 타입 확인
           if (data.type === "TALK" || data.type === "MESSAGE" || data.type === "CHAT" || !data.type) {
-            // 현재 선택된 채팅방의 상대방 username 확인
-            const selectedRoom = chatList.find(chat => chat.id === currentRoomIdRef.current);
-            const currentPartnerUsername = selectedChat?.partnerUsername || selectedRoom?.partnerUsername;
-            
-            // 메시지 필터링 (receiver 기반):
-            // 1. sender가 현재 사용자가 아니고, receiver가 현재 사용자인 경우 (나에게 온 메시지)
-            // 2. sender가 현재 사용자이고, receiver가 현재 선택된 채팅방의 상대방인 경우 (내가 보낸 메시지)
-            // 3. receiver가 현재 채팅방의 상대방이고, sender가 상대방인 경우 (상대방이 보낸 메시지)
-            const isForCurrentChat = 
-              (data.sender !== currentUsernameRef.current && 
-               data.receiver === currentUsernameRef.current) || // 나에게 온 메시지
-              (data.sender === currentUsernameRef.current && 
-               data.receiver === currentPartnerUsername) || // 내가 보낸 메시지 (상대방에게)
-              (data.receiver === currentPartnerUsername && 
-               data.sender === currentPartnerUsername && 
-               data.sender !== currentUsernameRef.current); // 상대방이 보낸 메시지
-            
-            console.log("📨 Message filter - Sender:", data.sender, "Receiver:", data.receiver, 
-                       "Current user:", currentUsernameRef.current, "Partner:", currentPartnerUsername,
-                       "Is for current chat:", isForCurrentChat);
-            
-            if (isForCurrentChat) {
-              console.log("✅ Message matches current chat, adding to UI");
-              const isMine = data.sender === currentUsernameRef.current || 
-                            data.senderName === currentUsernameRef.current ||
-                            data.senderId === currentUserIdRef.current;
-              
-              // 메시지 내용 추출 (스코프 밖에서 사용하기 위해)
-              const messageContent = data.content || data.message || "";
-
-              setMessages((prevMessages) => {
-                // 내가 보낸 메시지인 경우, optimistic update로 추가된 임시 메시지 찾아서 교체
-                if (isMine) {
-                  // 같은 내용의 임시 메시지가 있는지 확인
-                  const tempMessageIndex = prevMessages.findIndex(msg => 
-                    msg.id?.toString().startsWith('temp-') &&
-                    msg.content === messageContent &&
-                    msg.isMine === true
-                  );
-
-                  if (tempMessageIndex !== -1) {
-                    // 임시 메시지를 실제 메시지로 교체
-                    console.log("🔄 Replacing temporary message with server response");
-                    const newMessage = {
-                      id: data.id || Date.now(),
-                      sender: data.sender || data.senderName || currentUsernameRef.current || "나",
-                      content: messageContent,
-                      time: data.timestamp || data.createdAt || new Date().toISOString(),
-                      isMine: true,
-                      roomId: data.roomId || currentRoomIdRef.current,
-                      type: data.type || "TALK"
-                    };
-
-                    const updated = [...prevMessages];
-                    updated[tempMessageIndex] = newMessage;
-                    return updated;
-                  }
-                }
-
-                // 새 메시지 생성
-                const newMessage = {
-                  id: data.id || Date.now(),
-                  sender: data.sender || data.senderName || "알 수 없음",
-                  content: messageContent,
-                  time: data.timestamp || data.createdAt || new Date().toISOString(),
-                  isMine: isMine,
-                  roomId: data.roomId || currentRoomIdRef.current,
-                  type: data.type || "TALK"
-                };
-
-                // 중복 메시지 체크 (ID, 내용+발신자+시간)
-                const exists = prevMessages.some(msg => {
-                  // 같은 ID
-                  if (msg.id === newMessage.id) return true;
-                  // 같은 내용, 같은 발신자, 3초 이내
-                  if (msg.content === newMessage.content && 
-                      msg.sender === newMessage.sender &&
-                      Math.abs(new Date(msg.time) - new Date(newMessage.time)) < 3000) {
-                    return true;
-                  }
-                  return false;
-                });
-
-                if (exists) {
-                  console.log("⚠️ Duplicate message detected, skipping");
-                  return prevMessages;
-                }
-                
-                console.log("✅ Adding new message to UI:", newMessage);
-                return [...prevMessages, newMessage];
-              });
-
-              // 채팅방 목록의 마지막 메시지 업데이트 (messageContent 사용)
-              setChatList((prevList) => 
-                prevList.map((chat) => 
-                  chat.id === currentRoomIdRef.current
-                    ? { ...chat, lastMessage: messageContent }
-                    : chat
-                )
-              );
-            } else {
-              console.log("⚠️ Message not for current chat, ignoring");
-            }
+            console.log("✅ Message type is valid, setting newWebSocketMessage");
+            // 새 메시지를 상태로 업데이트 (useEffect에서 처리)
+            setNewWebSocketMessage(data);
+            console.log("✅ newWebSocketMessage state updated");
           } else {
             console.log("⚠️ Unknown message type:", data.type);
           }
         } catch (error) {
-          console.error("Failed to parse WebSocket message:", error);
-          console.error("Raw message:", event.data);
+          console.error("❌ Failed to parse WebSocket message:", error);
+          console.error("❌ Raw message:", event.data);
+          console.error("❌ Error stack:", error.stack);
         }
       };
 
@@ -768,8 +857,16 @@ export default function ChatPage() {
     if (!messageInput.trim() || !selectedChat) return;
 
     const ws = wsRef.current;
+    console.log("📤 Checking WebSocket before send - ws exists:", !!ws, "readyState:", ws?.readyState, "OPEN:", WebSocket.OPEN);
     if (!ws || ws.readyState !== WebSocket.OPEN) {
+      console.error("❌ WebSocket not ready - ws:", ws, "readyState:", ws?.readyState);
       Alarm("⚠️", "채팅 연결이 되어있지 않습니다.", "#FF9800", "#FFF3E0");
+      // 연결이 끊어졌으면 재연결 시도
+      if (currentRoomIdRef.current && currentUsernameRef.current) {
+        console.log("🔄 Attempting to reconnect WebSocket...");
+        connectWebSocket(currentRoomIdRef.current);
+      }
+      isSending.current = false;
       return;
     }
 
@@ -777,44 +874,22 @@ export default function ChatPage() {
     const messageContent = messageInput.trim();
     const roomId = Number(selectedChat.id);
 
-    // 백엔드 DTO에 맞게 receiver (username) 사용
-    // 상대방 username 찾기
-    let receiverUsername = selectedChat.partnerUsername;
-    
-    // partnerUsername이 없으면 채팅방 상세 정보에서 가져오기
-    if (!receiverUsername) {
-      console.log("⚠️ partnerUsername not found, fetching room detail...");
-      const updatedChat = await updatePartnerInfo(selectedChat);
-      
-      if (updatedChat.partnerUsername) {
-        receiverUsername = updatedChat.partnerUsername;
-        // 상태 업데이트
-        setSelectedChat(updatedChat);
-        setChatList((prevList) =>
-          prevList.map((chat) =>
-            chat.id === roomId ? updatedChat : chat
-          )
-        );
-      }
-    }
-
-    // 가이드에 따른 메시지 필드: sender, receiver, content, roomId, type, id, timestamp
-    // receiver는 필수이며, 상대방 username을 지정해야 함
-    if (!receiverUsername) {
-      Alarm("❌", "상대방 정보를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
+    // 문서에 따르면 채팅방 메시지 전송 형식: { sender, content, roomId, type }
+    // (문서 FRONTEND_WEBSOCKET_GUIDE.md 268-277번째 줄 참고)
+    if (!currentUsernameRef.current) {
+      Alarm("❌", "사용자 정보를 찾을 수 없습니다.", "#FF1E1E", "#FFEAEA");
       isSending.current = false;
       return;
     }
 
     const messagePayload = {
-      type: "TALK",
-      receiver: receiverUsername, // 필수: 상대방 username
-      content: messageContent,
-      roomId: roomId
+      sender: currentUsernameRef.current, // 발신자 사용자명 (필수)
+      content: messageContent, // 메시지 내용 (필수)
+      roomId: roomId, // 채팅방 ID (필수)
+      type: "TALK" // 메시지 타입 (기본값: "TALK")
     };
 
-    console.log("📤 Sending message to receiver:", receiverUsername);
-    console.log("📤 RoomId:", roomId);
+    console.log("📤 Sending message - RoomId:", roomId, "Sender:", currentUsernameRef.current);
 
     // 전송 대기 중인 메시지로 표시 (중복 방지용)
     const messageKey = `${messageContent}-${Date.now()}`;
@@ -840,7 +915,7 @@ export default function ChatPage() {
       console.log("📤 Message sent via WebSocket:", messagePayload);
       console.log("📤 Full payload JSON:", JSON.stringify(messagePayload));
       console.log("📤 WebSocket readyState:", ws.readyState);
-      console.log("📤 RoomId:", roomId, "Receiver:", receiverUsername);
+      console.log("📤 RoomId:", roomId, "Sender:", currentUsernameRef.current);
     } catch (error) {
       console.error("❌ Failed to send message:", error);
       Alarm("❌", "메시지 전송에 실패했습니다.", "#FF1E1E", "#FFEAEA");
@@ -852,6 +927,13 @@ export default function ChatPage() {
     setTimeout(() => {
       isSending.current = false;
     }, 100);
+  };
+
+  // 채팅방 선택 핸들러 (URL도 함께 업데이트)
+  const handleSelectChat = (chat) => {
+    setSelectedChat(chat);
+    // URL에 roomId 저장 (새로고침 시 같은 채팅방으로 이동)
+    setSearchParams({ roomId: String(chat.id) });
   };
 
   // 메시지 추가 시 자동 스크롤
@@ -884,7 +966,7 @@ export default function ChatPage() {
               chatList.map((chat) => (
                 <S.ChatItem
                   key={chat.id}
-                  onClick={() => setSelectedChat(chat)}
+                  onClick={() => handleSelectChat(chat)}
                   $isActive={selectedChat?.id === chat.id}
                 >
                   <S.ChatProfile
