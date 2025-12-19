@@ -2,15 +2,16 @@ import * as S from "./styles/projectsPage";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { projectList as initialProjects } from "@/data/project-list";
 import { Alarm } from "@/toasts/Alarm";
 import profiles from "@/data/profile";
 import { useEffect } from "react";
 import { API_URL } from "@/constants/api";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState(initialProjects);
+  const [projects, setProjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -21,7 +22,6 @@ export default function ProjectsPage() {
   }, []);
 
   const userName = profiles[0].id;
-  console.log(userName);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -39,48 +39,35 @@ export default function ProjectsPage() {
     }
   };
 
-  // const handleAddProject = () => {
-  //   if (newTitle.trim() === "")
-  //     return Alarm("‼️", "프로젝트 이름을 입력하세요.", "#FF1E1E", "#FFEAEA");
-
-  //   const newProject = {
-  //     id: projects.length + 1,
-  //     title: newTitle,
-  //     description: newDescription,
-  //     owner: userName,
-  //     thumbnail: newThumbnail || "/assets/dummy-thumbnail.svg",
-  //     tasks: [],
-  //   };
-
-  //   setProjects([...projects, newProject]);
-  //   initialProjects.push(newProject);
-  //   closeModal();
-  // };
-
   const createProject = async () => {
     if (newTitle.trim() === "") {
       return Alarm("‼️", "프로젝트 이름을 입력하세요.", "#FF1E1E", "#FFEAEA");
     }
 
     try {
-      const res = await fetch(`${API_URL}/projects`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const token = Cookies.get("accessToken");
+      const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+
+      if (token && token !== "logged-in") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await axios.post(
+        `${API_URL}/projects`,
+        {
           title: newTitle,
           content: newDescription,
-          major: "BACKEND",
-        }),
-      });
+        },
+        {
+          headers: headers,
+          withCredentials: true,
+        }
+      );
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${ㄱㄷㄴ.status}`);
-      }
-      const data = await res.json();
-      console.log(data);
-
+      console.log(response.data);
       Alarm("✅", "프로젝트가 생성되었습니다!", "#4CAF50", "#E8F5E9");
       await fetchProjects();
       closeModal();
@@ -92,11 +79,36 @@ export default function ProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const data = await (await fetch(`${API_URL}/projects`)).json();
+      const token = Cookies.get("accessToken");
+      const headers = {
+        Accept: "application/json",
+      };
+
+      if (token && token !== "logged-in") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await axios.get(`${API_URL}/projects/my-projects`, {
+        headers: headers,
+        withCredentials: true,
+      });
+
+      const data = response.data;
       console.log(data);
-      setProjects(data);
+
+      // 스웨거 응답 형식: { status: 0, data: [...] }
+      if (data.data) {
+        setProjects(data.data);
+      } else {
+        setProjects([]);
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Failed to fetch projects:", err);
+      if (err.response) {
+        console.error("Server Error:", err.response.data);
+        console.error("Status:", err.response.status);
+      }
+      setProjects([]);
     }
   };
 
@@ -136,7 +148,7 @@ export default function ProjectsPage() {
                   onClick={() => navigate(`/projects/${project.projectId}`)}
                 >
                   <S.Thumbnail
-                    src="/assets/dummy-thumbnail.svg"
+                    src={project.profile || "/assets/dummy-thumbnail.svg"}
                     alt={`썸네일`}
                   />
                   <S.BoxBottom>

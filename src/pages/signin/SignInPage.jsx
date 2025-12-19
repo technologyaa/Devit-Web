@@ -73,9 +73,11 @@ export default function SignInPage() {
           response.headers["refresh-token"] || responseData.data?.refreshToken;
 
         if (accessToken && accessToken !== "logged-in") {
+          localStorage.setItem("accessToken", accessToken);
           Cookies.set("accessToken", accessToken);
           if (refreshToken) {
             Cookies.set("refreshToken", refreshToken);
+            localStorage.setItem("refreshToken", refreshToken);
           }
         }
 
