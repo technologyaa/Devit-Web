@@ -135,12 +135,71 @@ export const Devloper = styled.div`
   width: 100%;
 `;
 
-export const Profile = styled(Image)`
+export const ProfileWrapper = styled.div`
   width: 100%;
-  object-fit: cover;
+  padding-bottom: 100%; /* 1:1 비율 강제 */
+  height: 0;
+  position: relative;
+  overflow: hidden;
   border-radius: 0.625rem;
   border: 1px solid #ccc;
-  aspect-ratio: 1 / 1;
+`;
+
+export const Profile = styled(Image)`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
+// 온도에 따른 색상 반환 (DevelopersPage와 동일한 기준)
+const getTemperatureColor = (temp) => {
+  if (temp >= 75) return "rgb(220, 60, 60)";
+  if (temp >= 50) return "rgb(240, 120, 120)";
+  if (temp >= 36.5) return "rgb(255, 149, 43)";
+  if (temp >= 30) return "rgb(240, 200, 100)";
+  if (temp >= 15) return "rgb(100, 180, 240)";
+  return "rgb(70, 120, 240)";
+};
+
+export const TempBadge = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: ${(props) =>
+    props.$temp != null ? getTemperatureColor(props.$temp) : "#9b3fee"};
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+`;
+
+// 온도를 막대 형태로 보여주는 컴포넌트 (DevelopersPage와 동일한 스타일)
+export const TemperatureBar = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 60px;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 10;
+
+  &::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: ${(props) => (props.$temp != null ? String(props.$temp) : "0")}%;
+    background-color: ${(props) =>
+      props.$temp != null ? getTemperatureColor(props.$temp) : "#9b3fee"};
+    transition: width 0.3s ease-out;
+    border-radius: 4px;
+  }
 `;
 
 export const DevAndJob = styled.div`

@@ -103,14 +103,14 @@ export default function ProfilePage() {
           if (detailData.memberId) setMemberId(detailData.memberId);
         } catch (e) {
           try {
-             const listRes = await axios.get(`${API_URL}/auth/developers`, { headers, withCredentials: true });
-             const list = listRes.data?.data || listRes.data || [];
-             const found = list.find(d => String(d.id) === String(id) || String(d.memberId) === String(id));
-             if (found) {
-                 detailData = found;
-                 setMemberId(found.memberId);
-             }
-          } catch(err) {}
+            const listRes = await axios.get(`${API_URL}/auth/developers`, { headers, withCredentials: true });
+            const list = listRes.data?.data || listRes.data || [];
+            const found = list.find(d => String(d.id) === String(id) || String(d.memberId) === String(id));
+            if (found) {
+              detailData = found;
+              setMemberId(found.memberId);
+            }
+          } catch (err) { }
         }
 
         const targetId = detailData.memberId || id;
@@ -125,16 +125,16 @@ export default function ProfilePage() {
         // --- 내 프로필 조회 ---
         const meRes = await axios.get(`${API_URL}/auth/me`, { headers, withCredentials: true });
         baseData = meRes.data?.data || meRes.data || {};
-        
+
         const myId = baseData.memberId || baseData.id;
-        
+
         if (myId) {
-            try {
-                const myDevRes = await axios.get(`${API_URL}/developers/${myId}`, { headers, withCredentials: true });
-                detailData = myDevRes.data?.data || myDevRes.data || {};
-            } catch (devErr) {
-                console.warn("내 개발자 정보를 가져오지 못했습니다.");
-            }
+          try {
+            const myDevRes = await axios.get(`${API_URL}/developers/${myId}`, { headers, withCredentials: true });
+            detailData = myDevRes.data?.data || myDevRes.data || {};
+          } catch (devErr) {
+            console.warn("내 개발자 정보를 가져오지 못했습니다.");
+          }
         }
       }
 
@@ -142,7 +142,9 @@ export default function ProfilePage() {
       const merged = { ...baseData, ...detailData };
 
       const displayJob = getDisplayJob(merged.major, merged.role);
-      const rawImage = merged.profile || merged.profileImage || baseData.profile || baseData.profileImage;
+      
+      // [핵심 로직] 이미지 경로 찾기 (가능한 모든 키 확인)
+      const rawImage = merged.profile || merged.profileImage || merged.img || merged.imageUrl || baseData.profile || baseData.profileImage;
       const processedImage = getImageUrl(rawImage);
 
       const projectList = merged.projectList || merged.projects || [];
@@ -154,12 +156,12 @@ export default function ProfilePage() {
         id: merged.username || merged.githubId || merged.name || "사용자",
         email: merged.email || "",
         job: displayJob,
-        img: processedImage || "/assets/profile-icon.svg",
+        // 이미지가 없으면 기본 이미지
+        img: processedImage || "/assets/dummy-profile.svg", 
         CompletedProjects: String(projectCount),
         Temp: String(temperature),
         projectList: projectList,
         introduction: introduction,
-        // githubId, blog는 화면에서 제외하지만 데이터는 유지 가능
       };
 
       setUserProfile(finalProfile);
@@ -189,7 +191,7 @@ export default function ProfilePage() {
   const profile = userProfile;
   const projectsCount = profile.CompletedProjects;
   const tempValue = profile.Temp;
-  
+
   const completedProjectsWidth = Progress(projectsCount, 20);
   const tempWidth = Progress(tempValue, 100);
   const tempColor = getTempColor(tempValue, 100);
@@ -201,12 +203,12 @@ export default function ProfilePage() {
       const token = Cookies.get("accessToken");
       const formData = new FormData();
       formData.append("file", file);
-      
+
       await axios.put(`${API_URL}/auth/profile/image`, formData, {
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "multipart/form-data" },
         withCredentials: true
       });
-      
+
       Alarm("✅", "프로필 사진이 변경되었습니다.", "#3CAF50", "#E8F5E9");
       fetchProfile();
     } catch (e) {
@@ -232,7 +234,16 @@ export default function ProfilePage() {
             <S.Profile>
               <S.ProfileInfo>
                 <S.ImgContainer>
-                  <S.ProfileImg src={profile.img} alt="프로필" />
+                  {/* [핵심] onError 핸들러 추가: 로드 실패 시 더미 이미지로 교체 */}
+                  <S.ProfileImg 
+                    src={profile.img} 
+                    alt="프로필" 
+                    onError={(e) => {
+                      if (e.target.src.indexOf("/assets/dummy-profile.svg") === -1) {
+                         e.target.src = "/assets/dummy-profile.svg";
+                      }
+                    }}
+                  />
                   {isMyProfile && <S.CameraIcon src="/assets/camera-icon.svg" />}
                 </S.ImgContainer>
                 <S.NameContainer>
@@ -240,7 +251,7 @@ export default function ProfilePage() {
                   <S.Job>{profile.job || "직무 미설정"}</S.Job>
                 </S.NameContainer>
               </S.ProfileInfo>
-              
+
               {isMyProfile && (
                 <S.EditButton>
                   프로필 사진 변경
@@ -253,15 +264,15 @@ export default function ProfilePage() {
                   <S.Email>이메일</S.Email>
                   <S.PersonalEmail>{profile.email || "-"}</S.PersonalEmail>
                 </S.EmailInfo>
-                
+
                 {/* 자기소개 */}
                 <S.EmailInfo style={{ marginTop: "15px" }}>
-                    <S.Email>소개</S.Email>
-                    <S.PersonalEmail>
-                        {profile.introduction || <span style={{color:"#aaa"}}>소개글이 없습니다.</span>}
-                    </S.PersonalEmail>
+                  <S.Email>소개</S.Email>
+                  <S.PersonalEmail>
+                    {profile.introduction || <span style={{ color: "#aaa" }}>소개글이 없습니다.</span>}
+                  </S.PersonalEmail>
                 </S.EmailInfo>
-                
+
               </S.PersonalInfo>
             </S.Profile>
 
